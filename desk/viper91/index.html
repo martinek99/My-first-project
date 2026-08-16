@@ -815,7 +815,7 @@ function syncKnob(){
 }
 function setSteerFromClientX(track, clientX, fromMove){
   const r=track.getBoundingClientRect();
-  const pad=22;
+  const pad=56;
   const x=Math.max(pad, Math.min(r.width-pad, clientX-r.left));
   const t=(x-pad)/Math.max(1, r.width-pad*2);
   const next=t*2-1;
