@@ -118,14 +118,16 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
       <button class="btn ghost" id="save">Save to closet</button>
       <button class="btn ghost" id="clear">New piece</button>
     </div>
-    <p class="hint">This page cannot log into Poshmark and post for her. One tap copies the title and the blurb. She pastes once. A posting bot would need her password and would break Poshmark’s rules. I will not do that.</p>
+    <p class="hint">Poshmark does not allow a posting bot. One tap copies the words. She pastes once. eBay does allow an official post, if she ever wants that. Details are under How this works.</p>
     <div class="card out live">
-      <div class="copyrow"><h2>Poshmark title</h2><button class="copy" data-copy="title">Copy</button></div>
+      <div class="copyrow"><h2>Listing title</h2><button class="copy" data-copy="title">Copy</button></div>
       <div class="block" id="outTitle">Tap the squares. The title shows up here.</div>
       <div class="copyrow"><h2>Suggested ask</h2><button class="copy" data-copy="ask">Copy</button></div>
       <div class="block" id="outAsk"></div>
-      <div class="copyrow"><h2>Poshmark paste block</h2><button class="copy" data-copy="posh">Copy</button></div>
+      <div class="copyrow"><h2>Poshmark paste</h2><button class="copy" data-copy="posh">Copy</button></div>
       <div class="block" id="outPosh"></div>
+      <div class="copyrow"><h2>eBay paste</h2><button class="copy" data-copy="ebay">Copy</button></div>
+      <div class="block" id="outEbay"></div>
       <div class="money">
         <div class="stat"><span class="muted">Fee</span><b id="fee">—</b></div>
         <div class="stat"><span class="muted">She keeps</span><b id="keep">—</b></div>
@@ -148,9 +150,19 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
       <p>1. She looks at the piece.</p>
       <p>2. She taps Maker, then the designer. Then Style. Then Color. Then Size. Then Condition. Then the ask.</p>
       <p>3. If a name is missing, she taps Add. That name stays in the square forever, on this iPad.</p>
-      <p>4. She taps Copy the whole listing, opens Poshmark, and pastes.</p>
-      <p>5. Photos stay in her camera roll. This page does not upload them and does not log into Poshmark.</p>
+      <p>4. She taps Copy the whole listing, opens the selling app, and pastes.</p>
+      <p>5. She still finds the piece, steams it, photographs it, packages it, and ships it. This page only writes the words.</p>
       <p>Titles follow her closet: <i>Brand Style in Color Size</i>, with NEW when it is NWT.</p>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h2 style="font-family:var(--serif);margin-top:0">Can a bot post it for her?</h2>
+      <p><b>Poshmark, Depop, Mercari, Facebook Marketplace:</b> No honest bot. Those sites do not give regular sellers a “please post this for me” door. Their rules say no robots. A sneak-around bot would need her password. I will not do that.</p>
+      <p><b>Poshmark’s own Smart List:</b> Allowed. She takes a photo in their app. Poshmark writes a draft. She still taps Post. That is their official helper, not a third-party bot.</p>
+      <p><b>eBay:</b> Yes, honestly. eBay has an official seller door. She would open an eBay seller account, tap Allow once, and then this page could post the listing after she taps through the piece. She still does the physical work. eBay takes a cut. Sizes have to be their standard ones, like S, M, L.</p>
+      <p><b>Her own shop:</b> Yes. A simple shop we put on a page she owns. Then posting is just us putting her piece on her page. Buyers have to find her, though. No Poshmark crowd.</p>
+      <p><b>Etsy:</b> They have an official door, but it is for vintage (about 20 years old) or handmade. Everyday closet brands like lululemon or Free People usually do not belong there.</p>
+      <p><b>Send-it-in places</b> like ThredUp: She boxes the clothes. They list them. Different job. Not her closet voice.</p>
+      <p>Right now the honest move on Poshmark is: tap, copy, paste. If you want the real one-tap post, say <b>do eBay</b> and I will build that next. She would still have to allow it once in eBay.</p>
     </div>
   </section>
 </div>
@@ -250,6 +262,30 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
     var tail=["All measurements are provided in the photos to ensure best fit.","Ships quickly in one day in super cute packaging from sunny California!","Bundle to save, or submit an offer!"];
     return (parts.map(endSent).join(" ")+" "+tail.join(" ")).replace(/\s+/g," ").trim();
   }
+  function ebaySize(size){
+    var s=String(size||"").trim();
+    var map={
+      "XXS":"2XS","2XS":"2XS","XS":"XS","S":"S","Small":"S","M":"M","Medium":"M",
+      "L":"L","Large":"L","XL":"XL","XXL":"XXL","2XL":"XXL","1X":"1X","2X":"2X","3X":"3X"
+    };
+    if(map[s]) return map[s];
+    if(/^\d+(\.\d+)?$/.test(s)) return s;
+    return s;
+  }
+  function ebayBlock(d){
+    var lines=[];
+    lines.push(titleFor(d));
+    if(d.price) lines.push("Ask: $"+d.price);
+    if(d.maker) lines.push("Brand: "+d.maker);
+    if(d.style) lines.push("Style: "+d.style);
+    if(d.color) lines.push("Color: "+d.color);
+    if(d.size) lines.push("Size: "+ebaySize(d.size));
+    var cond={nwt:"New with tags",like_new:"Pre-owned — like new",good:"Pre-owned — good",fair:"Pre-owned — fair"}[d.condition];
+    if(cond) lines.push("Condition: "+cond);
+    lines.push("");
+    lines.push(poshBlock(d).replace(/Bundle to save, or submit an offer!/,"Offers welcome. Ships in one business day from California."));
+    return lines.join("\n");
+  }
   function paint(){
     var d={
       maker:form.maker, style:form.style, color:form.color, size:form.size,
@@ -258,12 +294,14 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
     var title=titleFor(d);
     var ask=d.price?"$"+d.price:"";
     var posh=poshBlock(d);
+    var ebay=ebayBlock(d);
     var fee=poshFee(d.price);
     var keep=d.price?Math.round((d.price-fee)*100)/100:0;
-    blocks.title=title; blocks.ask=ask; blocks.posh=posh;
+    blocks.title=title; blocks.ask=ask; blocks.posh=posh; blocks.ebay=ebay;
     $("outTitle").textContent=title;
     $("outAsk").textContent=ask;
     $("outPosh").textContent=posh;
+    $("outEbay").textContent=ebay;
     $("fee").textContent=d.price?"$"+fee.toFixed(2):"—";
     $("keep").textContent=d.price?"$"+keep.toFixed(2):"—";
     $("tlen").textContent=title.length+" / 80";
@@ -375,7 +413,7 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
   $("addInput").addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); addCurrent(); } });
   $("copyAll").onclick=function(){
     paint();
-    var t=[blocks.title, blocks.ask, "", blocks.posh].filter(Boolean).join("\n");
+    var t=[blocks.title, blocks.ask, "", "POSHMARK", blocks.posh, "", "EBAY", blocks.ebay].filter(Boolean).join("\n");
     copyText(t);
   };
   $("clear").onclick=function(){
