@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="The World">
+<meta name="theme-color" content="#0c1624">
+<meta name="format-detection" content="telephone=no">
+<title>The World by Mark</title>
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@5.23.0/dist/maplibre-gl.css">
+<link rel="apple-touch-icon" href="icon.png">
+<link rel="icon" href="icon.png">
+<style>
+:root{
+  --navy:#0c1624;--navy2:#142033;--ink:#1c1610;--cream:#f3ead6;--paper:#e8dcc4;
+  --gold:#c9a24a;--gold2:#e8c37a;--sage:#7d9a74;--rose:#b56a64;
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Georgia,serif;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%;height:100dvh;background:var(--navy);color:var(--cream);
+  font-family:var(--serif);overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:none}
+#stage{position:fixed;inset:0}
+#globe{position:absolute;inset:0}
+#globe .maplibregl-map{position:absolute;inset:0;width:100%;height:100%}
+#globe .maplibregl-ctrl-logo{display:none}
+#globe .maplibregl-ctrl-attrib{font-size:10px;background:rgba(12,22,36,.45);color:rgba(243,234,214,.7)}
+#globe .maplibregl-ctrl-attrib a{color:rgba(232,195,122,.8)}
+.star-mark{width:28px;height:28px;pointer-events:none;line-height:0;
+  filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
+.veil{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto;
+  padding:calc(var(--st) + 18px) 20px calc(var(--sb) + 18px);
+  background:linear-gradient(180deg,rgba(8,14,22,.22),rgba(8,14,22,.58))}
+.veil.hidden{display:none}
+.card{width:min(100%,400px);color:var(--ink);text-align:center;position:relative;
+  background:linear-gradient(180deg,rgba(255,248,230,.16),transparent 30%),linear-gradient(180deg,#f6efe0,#e8d8b8);
+  border:1px solid rgba(201,162,74,.45);box-shadow:0 1px 0 rgba(255,248,230,.5) inset,0 24px 64px rgba(0,0,0,.48);
+  padding:22px 20px 16px}
+.card:before{content:"";position:absolute;inset:8px;border:1px solid rgba(201,162,74,.28);pointer-events:none}
+.card h1{font-weight:600;font-size:36px;line-height:.95;letter-spacing:.02em;margin:8px 0 0}
+.card .of{font-style:italic;font-weight:400;font-size:17px;color:#6a5a3a;margin:4px 0 0}
+.card .places{font-size:26px;letter-spacing:.28em;text-transform:uppercase;margin:4px 0 0;color:#2a2216}
+.rule{width:88px;height:1px;margin:10px auto;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+.title-brand{grid-area:brand}
+#title .namein{grid-area:name}
+#title .chips{grid-area:chips;margin:10px 0 2px}
+#title .play-row{grid-area:play;margin-top:12px}
+#title .play-row .btn{flex:1 1 0;min-width:0;max-width:200px}
+#title .known{grid-area:known;margin-top:8px}
+#title .card.title-home{width:min(100%,720px)}
+#title .board{grid-area:board;margin-top:8px;max-height:160px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.invite-quiet{grid-area:invite;appearance:none;border:0;background:transparent;cursor:pointer;
+  color:#8a7040;font-family:var(--serif);font-size:12px;letter-spacing:.16em;text-transform:uppercase;
+  min-height:34px;padding:4px 8px;margin-top:6px}
+@media (min-width:640px){
+  #title .card.title-home{width:min(92vw,720px);padding:18px 26px 14px;
+    display:grid;grid-template-columns:1.15fr .85fr;column-gap:28px;align-items:start;
+    grid-template-areas:
+      "brand board"
+      "rule board"
+      "name board"
+      "chips board"
+      "play board"
+      "known board"
+      "invite invite"}
+  #title .card.title-home > .rule{grid-area:rule}
+  #title .card h1{font-size:34px;margin:4px 0 0}
+  #title .board{max-height:220px;margin-top:0}
+  #title .known{margin-top:6px}
+}
+.mm{font-size:11px;letter-spacing:.34em;text-transform:uppercase;color:#8a7040}
+.tag{font-style:italic;font-size:16px;line-height:1.45;color:#4a4030;max-width:18em;margin:0 auto}
+.known{margin-top:14px;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#6a5a3a}
+.chips{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;margin:16px 0 2px}
+.chip{appearance:none;border:1px solid rgba(201,162,74,.55);background:transparent;color:#3a3020;
+  font-family:var(--serif);font-size:12px;letter-spacing:.08em;text-transform:uppercase;
+  padding:8px 11px;min-height:36px;border-radius:2px}
+.chip.on{background:#142033;color:var(--cream);border-color:#142033}
+.row{display:flex;gap:10px;justify-content:center;margin-top:18px}
+.btn{appearance:none;border:0;cursor:pointer;font-family:var(--serif);letter-spacing:.14em;
+  text-transform:uppercase;min-height:50px;padding:0 22px;border-radius:2px;font-size:14px}
+.btn.navy{background:#142033;color:var(--cream);box-shadow:0 3px 0 #0a121c}
+.btn.gold{background:transparent;color:#3a3020;border:1px solid rgba(201,162,74,.7)}
+.btn:active{transform:translateY(1px)}
+
+.namein{pointer-events:auto;user-select:text;-webkit-user-select:text;touch-action:manipulation;
+  width:100%;margin-top:14px;padding:12px 14px;border:1px solid rgba(201,162,74,.55);
+  background:rgba(255,248,230,.45);color:#1c1610;font-family:var(--serif);font-size:18px;
+  text-align:center;border-radius:2px}
+.namein::placeholder{color:#8a7a5c}
+.board{margin-top:16px;text-align:left}
+.board h3{margin:0 0 8px;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:#8a7040;text-align:center}
+.board .rowl{display:grid;grid-template-columns:28px 1fr auto;gap:8px;align-items:center;
+  padding:7px 4px;border-top:1px solid rgba(201,162,74,.22);font-size:15px}
+.board .rowl span:first-child{color:#8a7040}
+.board .rate{font-style:italic;color:#6a5a3a;font-size:13px}
+.board .empty{text-align:center;font-size:14px;color:#6a5a3a;font-style:italic;padding:8px 4px}
+.row.tight{margin-top:10px}
+.fine{margin-top:16px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:#8a7a5c}
+.how-step{display:grid;grid-template-columns:52px 1fr;gap:12px;text-align:left;align-items:center;margin:11px 0}
+.how-step b{display:block;font-size:15px;letter-spacing:.06em;text-transform:uppercase}
+.how-step span{font-size:14px;color:#5a4e3a;line-height:1.35}
+.glyph{width:52px;height:52px;border:1px solid rgba(201,162,74,.45);display:flex;align-items:center;justify-content:center;color:#8a7040;font-size:22px;font-style:italic}
+#hud{position:absolute;inset:0;pointer-events:none}
+#hud.hidden{display:none}
+#plate{pointer-events:auto;position:absolute;top:calc(var(--st) + 12px);left:14px;right:14px;
+  background:linear-gradient(180deg,#f6efe0,#eadcbd);color:var(--ink);
+  border:1px solid rgba(201,162,74,.4);box-shadow:0 10px 28px rgba(0,0,0,.35);
+  padding:12px 16px 12px;text-align:center}
+#plate.explore-sheet{top:auto;bottom:calc(var(--sb) + 10px);left:10px;right:10px;
+  max-height:min(52dvh,460px);overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:10px 14px 12px}
+#plate.explore-slim{top:calc(var(--st) + 12px);bottom:auto;max-height:none;overflow:visible}
+#plate .kicker{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#8a7040}
+
+.namerow{display:flex;align-items:center;justify-content:center;gap:10px;margin:4px 0 2px}
+.flag{width:38px;height:26px;object-fit:cover;border:1px solid rgba(28,22,16,.28);border-radius:2px;flex:0 0 auto}
+.flag.hidden{display:none}
+.flag.big{width:96px;height:64px}
+.chip-head{width:100%;margin:10px 0 2px;font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#8a7040}
+#placeFact{font-size:13px;font-style:italic;color:#6a5a3a;margin-top:2px;line-height:1.35}
+#placeFact.hidden{display:none}
+#placeFact.cardish{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Nunito,sans-serif;font-style:normal;
+  font-size:22px;line-height:1.4;color:#2a2216;text-align:left;margin-top:8px;
+  max-height:none;overflow:visible}
+#placeFact .fact-title{font-size:24px;font-weight:700;letter-spacing:.01em;margin:0 0 8px;color:#1c1610}
+#placeFact .fact-list{margin:0;padding-left:1.2em}
+#placeFact .fact-list li{margin:7px 0}
+.subjects{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:8px 0 0}
+.subjects.hidden{display:none}
+.subjects .chip{min-height:40px;padding:8px 12px;font-size:14px;letter-spacing:.06em;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+#plate{max-height:calc(100dvh - 168px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+.photo-slot{display:none}
+#plate.explore-card .photo-slot{display:block;width:100%;height:72px;max-height:72px;margin:8px auto 0;
+  border:1px solid rgba(201,162,74,.4);background:#d8c9a4;overflow:hidden}
+#plate.explore-card .lmphoto{width:100%;height:100%;max-height:none;object-fit:cover;margin:0;border:0;display:block}
+#plate.explore-card .lmphoto.hidden{visibility:hidden;display:block}
+#plate .name{font-size:clamp(20px,7vw,28px);line-height:1.1;margin:4px 0 2px;font-weight:600}
+#plate .meta{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:#6a5a3a;transition:color .25s,transform .25s}
+#plate .meta.pop{color:#4a7a44;transform:scale(1.06)}
+#plate .home{position:absolute;left:6px;top:6px;min-width:56px;min-height:44px;border:1px solid rgba(201,162,74,.55);
+  background:rgba(255,248,230,.55);color:#3a3020;font-family:var(--serif);font-size:12px;
+  letter-spacing:.12em;text-transform:uppercase;padding:0 10px}
+#homeBtn.hidden,#homeDock.hidden{display:none}
+.lmphoto{display:block;width:100%;max-height:118px;object-fit:cover;margin:8px auto 2px;
+  border:1px solid rgba(201,162,74,.4);background:#d8c9a4}
+.lmphoto.hidden{display:none}
+#homeDock{appearance:none;border:1px solid rgba(232,195,122,.55);background:rgba(12,22,36,.72);
+  color:var(--gold2);font-family:var(--serif);font-size:13px;letter-spacing:.2em;text-transform:uppercase;
+  padding:10px 22px;min-height:44px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+#resumeBtn.hidden{display:none}
+#tools{pointer-events:auto;position:absolute;right:12px;bottom:calc(var(--sb) + 88px);
+  display:flex;flex-direction:column;gap:8px}
+#hud.explore-hud #tools{top:calc(var(--st) + 12px);bottom:auto}
+.tool{width:48px;height:48px;min-width:48px;min-height:48px;border:1px solid rgba(232,195,122,.45);background:rgba(12,22,36,.72);
+  color:var(--gold2);font-family:var(--serif);font-size:24px;padding:0;
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:center}
+.tool.sm{font-size:18px}
+#dock{pointer-events:auto;position:absolute;left:0;right:0;bottom:calc(var(--sb) + 10px);
+  display:flex;flex-direction:column;align-items:center;gap:8px}
+#hintBtn{appearance:none;border:1px solid rgba(232,195,122,.4);background:rgba(12,22,36,.62);
+  color:var(--gold2);font-family:var(--serif);font-size:12px;letter-spacing:.2em;text-transform:uppercase;
+  padding:10px 18px;min-height:42px;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+#hintBtn.hidden,#nextBtn.hidden{display:none}
+#nextBtn{appearance:none;border:0;background:#c9a24a;color:#1c1610;
+  font-family:var(--serif);font-size:14px;letter-spacing:.2em;text-transform:uppercase;
+  padding:12px 28px;min-height:48px;box-shadow:0 3px 0 #7a6128}
+#credit{font-size:10px;letter-spacing:.06em;color:rgba(243,234,214,.45)}
+#toast{position:absolute;left:20px;right:20px;top:46%;text-align:center;pointer-events:none;
+  font-style:italic;font-size:20px;color:var(--cream);text-shadow:0 2px 16px #000;opacity:0;transition:opacity .25s}
+#loadmsg{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--navy);color:var(--gold2);letter-spacing:.22em;text-transform:uppercase;font-size:12px}
+#loadmsg.hidden{display:none}
+
+.dish-picks{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:8px 0 4px}
+.dish-picks .chip{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;min-height:40px}
+.recipe-wrap{overflow:visible;margin-top:8px;max-height:none}
+.recipe{border-collapse:collapse;width:100%;table-layout:fixed;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;color:#1c1610}
+.recipe td{border:1px solid #c4ae7a;padding:7px 8px;vertical-align:middle;background:#fff8e8;white-space:normal;word-break:break-word}
+.recipe td.ing{font-weight:700;background:#efe4c4;text-align:left}
+.recipe td.act{text-align:center}
+.recipe td.merge{background:#f6efe0;font-weight:600}
+.recipe-stack{margin-top:8px;width:100%}
+.recipe-row{border:1px solid #c4ae7a;margin:0 0 7px;background:#fff8e8}
+.recipe-row .ing{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-weight:700;font-size:16px;background:#efe4c4;padding:8px 10px;color:#1c1610}
+.recipe-row .acts{display:flex;flex-direction:column}
+.recipe-row .act{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;padding:7px 10px;border-top:1px solid #c4ae7a;color:#1c1610;background:#fff8e8}
+
+</style>
+<meta property="og:title" content="The World by Mark" />
+<meta property="og:description" content="An interactive globe exploration game featuring geography quizzes and global culinary facts." />
+<meta property="og:url" content="https://wistful-jasper-4s2v.here.now/" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://here.now/api/thumbnails/wistful-jasper-4s2v" />
+<meta name="twitter:card" content="summary_large_image" /></head>
+<body>
+<div id="stage">
+<div id="globe"></div>
+<div id="loadmsg">Unfolding the map<div class="rule"></div></div>
+<div id="toast"></div>
+<div id="hud" class="hidden">
+<div id="plate">
+<button class="home" id="homeBtn" aria-label="Home">Home</button>
+<div class="kicker" id="kicker">Find</div>
+<div class="namerow">
+<img id="placeFlag" class="flag hidden" alt="">
+<div class="name" id="placeName">Portugal</div>
+</div>
+<div class="subjects hidden" id="subjects"></div>
+<div class="fact hidden" id="placeFact"></div>
+<div id="photoSlot" class="photo-slot"><img id="lmPhoto" class="lmphoto hidden" alt=""></div>
+<div class="meta" id="meta">0 pts · streak 0 · 0 known</div>
+</div>
+<div id="tools">
+<button class="tool" id="zoomIn" aria-label="Zoom in">+</button>
+<button class="tool" id="zoomOut" aria-label="Zoom out">-</button>
+<button class="tool sm" id="helpBtn" aria-label="How to use">?</button>
+<button class="tool sm" id="muteBtn" aria-label="Sound">snd</button>
+</div>
+<div id="dock">
+<button id="homeDock">Home</button>
+<button id="hintBtn" class="hidden">Hint · continent</button>
+<button id="nextBtn" class="hidden">Next</button>
+<div id="credit">The World by Mark · v31</div>
+</div>
+</div>
+<div id="title" class="veil">
+<div class="card title-home">
+<div class="title-brand">
+<h1>The World</h1>
+<div class="of">by Mark</div>
+</div>
+<div class="rule"></div>
+<input id="playerName" class="namein" maxlength="24" placeholder="Your name" autocomplete="nickname" enterkeyhint="done">
+<div class="chips" id="setChips"></div>
+<div class="row play-row">
+<button class="btn gold" id="exploreBtn">Explore</button>
+<button class="btn navy" id="quizBtn">Quiz</button>
+<button class="btn navy hidden" id="resumeBtn">Resume</button>
+</div>
+<div class="known" id="titleKnown"></div>
+<div class="board" id="titleBoard"></div>
+<a class="invite-quiet" href="../" style="display:block;text-decoration:none;font-size:16px;letter-spacing:.12em;color:#142033;background:#e8c37a;border-radius:10px;padding:12px 16px;margin-top:10px">← Back to Mark's Desk</a>
+<button class="invite-quiet" id="inviteBtn">Invite friends</button>
+</div>
+</div>
+<div id="howto" class="veil hidden">
+<div class="card">
+<div class="mm">How to play</div>
+<div class="rule"></div>
+<div class="how-step"><div class="glyph">1</div><div><b>Spin</b><span>Drag the globe. It keeps a little momentum.</span></div></div>
+<div class="how-step"><div class="glyph">2</div><div><b>Zoom</b><span>Pinch, double-tap, or the + and -.</span></div></div>
+<div class="how-step"><div class="glyph">3</div><div><b>Find</b><span>Ten places. Three tries. A wrong country only counts once. Misses tell you how far off you were.</span></div></div>
+<div class="how-step"><div class="glyph">4</div><div><b>Learn</b><span>A right answer, or the third miss, holds until Next. Then your rating goes on the friends board.</span></div></div>
+<div class="row"><button class="btn navy" id="howtoGo">Begin</button></div>
+</div>
+</div>
+<div id="end" class="veil hidden">
+<div class="card">
+<div class="mm" id="endName">Done</div>
+<h1 id="endScore" style="font-size:48px;margin-top:12px">0 / 10</h1>
+<div class="of" id="endLine">Explorer</div>
+<div class="rule"></div>
+<div class="known" id="endKnown"></div>
+<div class="board" id="endBoard"></div>
+<div class="row">
+<button class="btn gold" id="endHome">Home</button>
+<button class="btn navy" id="endAgain">Again</button>
+</div>
+<div class="row tight"><button class="btn gold" id="endInvite">Invite friends</button></div>
+<div class="row tight"><a class="btn gold" href="../" style="display:flex;align-items:center;justify-content:center;text-decoration:none">← Mark's Desk</a></div>
+</div>
+</div>
+</div>
+<script src="https://unpkg.com/maplibre-gl@5.23.0/dist/maplibre-gl.js"></script>
+<script src='https://unpkg.com/d3@7/dist/d3.min.js'></script>
+<script src='https://unpkg.com/topojson-client@3/dist/topojson-client.min.js'></script>
+<script src='facts.js'></script>
+<script src='foods.js'></script>
+<script src='atlas.js?v=30'></script>
+</body>
+</html>
