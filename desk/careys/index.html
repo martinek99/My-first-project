@@ -85,6 +85,15 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
 .addrow{display:flex;gap:8px}
 .addrow .btn{flex:0 0 auto;min-height:44px;padding:10px 14px;font-size:15px}
 .live{margin-top:8px}
+.pricelabel{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#8a7040;margin:14px 0 6px}
+.pricerow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+@media (min-width:720px){.pricerow{grid-template-columns:repeat(9,1fr)}}
+.pricerow button{appearance:none;border:1px solid var(--line);background:#fff;border-radius:12px;min-height:56px;
+  font-family:var(--serif);font-size:18px;font-weight:600;color:var(--ink)}
+.pricerow button.on{background:var(--navy);color:#fff8ee;border-color:var(--navy)}
+.pricetotal{font-family:var(--serif);font-size:44px;text-align:center;margin:10px 0 12px}
+.priceuse{width:100%;appearance:none;border:0;border-radius:12px;min-height:56px;font-size:20px;background:var(--terra);color:#fff8ee;margin:0 0 8px}
+.priceclear{width:100%;appearance:none;border:1px solid var(--line);border-radius:12px;min-height:48px;font-size:16px;background:transparent;color:var(--ink)}
 </style>
 </head>
 <body>
@@ -152,7 +161,8 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
       <h2 style="font-family:var(--serif);margin-top:0">How Brittany uses this</h2>
       <p>1. She looks at the piece.</p>
       <p>2. She taps Maker, then the designer. Then Style. Then Color. Then Size. Then Condition. Then the ask.</p>
-      <p>3. Type to find a name. If it is missing, type it and tap Add. It stays on this iPad. Tap Remove names, then tap a name to take it off the list.</p>
+      <p>3. Every list can search. Type a new name and tap Add it. Tap Remove names to take one off.</p>
+      <p>3b. Ask is three rows: hundreds, tens, ones. Tap 500, then 40, then 7 for $547. Any price from $1 to $999.</p>
       <p>4. She taps Copy the whole listing, opens the selling app, and pastes.</p>
       <p>5. She still finds the piece, steams it, photographs it, packages it, and ships it. This page only writes the words.</p>
       <p>Titles follow her closet: <i>Brand Style in Color Size</i>, with NEW when it is NWT.</p>
@@ -207,8 +217,10 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
   var form = { maker:"", style:"", color:"", size:"", condition:"", price:"" };
   var blocks = { title:"", ask:"", posh:"" };
   var closet = [];
-  var lib = { maker:[], style:[], color:[], size:[], price:[] };
+  var lib = { maker:[], style:[], color:[], size:[], price:[], condition:[] };
   var pickKey = "";
+  var priceBits = { h:0, t:0, o:0 };
+  var priceTouched = { h:0, t:0, o:0 };
 
   function clean(s){ return String(s||"").replace(/\s+/g," ").trim(); }
   function money(raw){ var n = parseFloat(String(raw||"").replace(/[^0-9.]/g,"")); return isFinite(n) ? Math.round(n*100)/100 : 0; }
@@ -238,20 +250,24 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
         if(old && !old.extra) saved={ extra:old, hidden:{} };
       }
     }catch(e){ saved={ extra:{}, hidden:{} }; }
-    ["maker","style","color","size","price"].forEach(function(k){
+    ["maker","style","color","size","price","condition"].forEach(function(k){
       var hide={};
       (saved.hidden && saved.hidden[k] || []).forEach(function(v){ hide[String(v).toLowerCase()]=1; });
-      var base=(STARTER[k]||[]).filter(function(v){ return !hide[String(v).toLowerCase()]; });
+      var base=starterValues(k).filter(function(v){ return !hide[String(v).toLowerCase()]; });
       lib[k]=uniq(base.concat((saved.extra && saved.extra[k]) || []));
     });
   }
+  function starterValues(k){
+    if(k==="condition") return STARTER.condition.map(function(p){ return p[0]; });
+    return STARTER[k]||[];
+  }
   function saveLib(){
     var extra={}, hidden={};
-    ["maker","style","color","size","price"].forEach(function(k){
+    ["maker","style","color","size","price","condition"].forEach(function(k){
       var have={}; (lib[k]||[]).forEach(function(v){ have[String(v).toLowerCase()]=1; });
-      var base={}; (STARTER[k]||[]).forEach(function(v){ base[String(v).toLowerCase()]=1; });
+      var base={}; starterValues(k).forEach(function(v){ base[String(v).toLowerCase()]=1; });
       extra[k]=(lib[k]||[]).filter(function(v){ return !base[String(v).toLowerCase()]; });
-      hidden[k]=(STARTER[k]||[]).filter(function(v){ return !have[String(v).toLowerCase()]; });
+      hidden[k]=starterValues(k).filter(function(v){ return !have[String(v).toLowerCase()]; });
     });
     localStorage.setItem(LIBKEY, JSON.stringify({ extra:extra, hidden:hidden }));
   }
@@ -331,38 +347,117 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
     $("vStyle").textContent=form.style||"Tap"; $("vStyle").classList.toggle("empty",!form.style);
     $("vColor").textContent=form.color||"Tap"; $("vColor").classList.toggle("empty",!form.color);
     $("vSize").textContent=form.size||"Tap"; $("vSize").classList.toggle("empty",!form.size);
-    var condLabel="";
-    STARTER.condition.forEach(function(p){ if(p[0]===form.condition) condLabel=p[1]; });
-    $("vCond").textContent=condLabel||"Tap"; $("vCond").classList.toggle("empty",!form.condition);
+    $("vCond").textContent=condLabel(form.condition)||"Tap"; $("vCond").classList.toggle("empty",!form.condition);
     $("vPrice").textContent=form.price?("$"+form.price):"Tap"; $("vPrice").classList.toggle("empty",!form.price);
     document.querySelectorAll(".sq").forEach(function(b){
       var k=b.getAttribute("data-pick");
       b.classList.toggle("on", !!(form[k==="maker"?"maker":k]));
     });
   }
+  function condLabel(val){
+    var found="";
+    STARTER.condition.forEach(function(p){ if(p[0]===val) found=p[1]; });
+    return found || val || "";
+  }
   function listFor(key){
-    if(key==="condition") return STARTER.condition;
-    if(key==="price") return lib.price.map(function(v){ return [v,"$"+v]; });
+    if(key==="condition"){
+      var pairs=STARTER.condition.filter(function(p){ return (lib.condition||[]).some(function(v){ return String(v).toLowerCase()===String(p[0]).toLowerCase(); }); });
+      var extras=(lib.condition||[]).filter(function(v){
+        return !STARTER.condition.some(function(p){ return String(p[0]).toLowerCase()===String(v).toLowerCase(); });
+      }).map(function(v){ return [v,v]; });
+      return pairs.concat(extras);
+    }
+    if(key==="price") return [];
     return (lib[key]||[]).map(function(v){ return [v,v]; });
   }
   function titles(){ return {maker:"Maker",style:"Style",color:"Color",size:"Size",condition:"Condition",price:"Ask"}; }
+  function placeholders(){
+    return {
+      maker:"Type to find, or add a new one",
+      style:"Type to find, or add a new one",
+      color:"Type to find, or add a new one",
+      size:"Type to find, or add a new one",
+      condition:"Type to find, or add a condition",
+      price:"Or type the number"
+    };
+  }
+  function priceSum(){ return (priceBits.h||0)+(priceBits.t||0)+(priceBits.o||0); }
+  function loadPriceBits(){
+    var n=Math.round(money(form.price));
+    if(n>999) n=999;
+    if(n<0) n=0;
+    priceBits={ h:Math.floor(n/100)*100, t:Math.floor((n%100)/10)*10, o:n%10 };
+    priceTouched={ h:0, t:0, o:0 };
+  }
   function openPicker(key){
     pickKey=key;
     removing=false;
     $("pickTitle").textContent=titles()[key]||key;
     $("addInput").value="";
-    $("addbox").style.display = key==="condition" ? "none" : "block";
-    $("pickRemove").style.display = key==="condition" ? "none" : "block";
+    $("addInput").placeholder=placeholders()[key]||"Type to find, or add a new one";
+    $("addbox").style.display="block";
+    $("pickRemove").style.display = key==="price" ? "none" : "block";
     $("pickRemove").classList.remove("on");
     $("pickRemove").textContent="Remove names";
+    if(key==="price") loadPriceBits();
     renderPicker();
     $("picker").classList.add("on");
     $("pickBody").scrollTop=0;
-    if(key!=="condition") setTimeout(function(){ $("addInput").focus(); }, 80);
   }
   function closePicker(){ $("picker").classList.remove("on"); pickKey=""; removing=false; }
   function needle(){ return clean($("addInput").value).toLowerCase(); }
+  function renderPricePad(){
+    var host=$("pickBody");
+    host.innerHTML="";
+    var total=priceSum();
+    var sum=document.createElement("div");
+    sum.className="pricetotal";
+    sum.textContent=total ? ("$"+total) : "$0";
+    host.appendChild(sum);
+    var use=document.createElement("button");
+    use.type="button";
+    use.className="priceuse";
+    use.textContent=total ? ("Use $"+total) : "Tap the rows";
+    use.onclick=function(){ if(!total) return; form.price=String(total); paint(); closePicker(); toast("Ask is $"+total); };
+    host.appendChild(use);
+    function row(title, values, bit){
+      var lab=document.createElement("div");
+      lab.className="pricelabel";
+      lab.textContent=title;
+      host.appendChild(lab);
+      var wrap=document.createElement("div");
+      wrap.className="pricerow";
+      values.forEach(function(n){
+        var b=document.createElement("button");
+        b.type="button";
+        b.textContent=bit==="h"||bit==="t" ? String(n) : String(n);
+        if(priceBits[bit]===n && (priceTouched[bit] || total)) b.className="on";
+        b.onclick=(function(val){ return function(){ tapPrice(bit, val); }; })(n);
+        wrap.appendChild(b);
+      });
+      host.appendChild(wrap);
+    }
+    row("Hundreds", [100,200,300,400,500,600,700,800,900], "h");
+    row("Tens", [10,20,30,40,50,60,70,80,90], "t");
+    row("Ones", [1,2,3,4,5,6,7,8,9], "o");
+    var clr=document.createElement("button");
+    clr.type="button";
+    clr.className="priceclear";
+    clr.textContent="Clear the ask";
+    clr.onclick=function(){ priceBits={h:0,t:0,o:0}; priceTouched={h:0,t:0,o:0}; form.price=""; paint(); renderPricePad(); };
+    host.appendChild(clr);
+  }
+  function tapPrice(bit, val){
+    if(priceBits[bit]===val && priceTouched[bit]){ priceBits[bit]=0; priceTouched[bit]=0; }
+    else { priceBits[bit]=val; priceTouched[bit]=1; }
+    var total=priceSum();
+    form.price=total?String(total):"";
+    paint();
+    if(bit==="o" && total){ closePicker(); toast("Ask is $"+total); return; }
+    renderPricePad();
+  }
   function renderPicker(){
+    if(pickKey==="price"){ renderPricePad(); return; }
     var items=listFor(pickKey);
     var q=needle();
     var host=$("pickBody");
@@ -400,7 +495,7 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
     toast("Got it");
   }
   function dropName(val){
-    if(!pickKey||pickKey==="condition") return;
+    if(!pickKey||pickKey==="price") return;
     lib[pickKey]=(lib[pickKey]||[]).filter(function(v){ return String(v).toLowerCase()!==String(val).toLowerCase(); });
     if(String(form[pickKey]).toLowerCase()===String(val).toLowerCase()) form[pickKey]="";
     saveLib();
@@ -410,8 +505,17 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
   }
   function addCurrent(){
     var v=clean($("addInput").value);
-    if(!v||!pickKey||pickKey==="condition") return;
-    if(pickKey==="price") v=String(money(v)||v);
+    if(!v||!pickKey) return;
+    if(pickKey==="price"){
+      var n=Math.round(money(v));
+      if(!n) return;
+      if(n>999) n=999;
+      form.price=String(n);
+      paint();
+      closePicker();
+      toast("Ask is $"+n);
+      return;
+    }
     lib[pickKey]=uniq((lib[pickKey]||[]).concat([v]));
     saveLib();
     form[pickKey]=v;
@@ -454,7 +558,7 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
   });
   $("pickBack").onclick=closePicker;
   $("pickRemove").onclick=function(){
-    if(pickKey==="condition") return;
+    if(pickKey==="price") return;
     removing=!removing;
     $("pickRemove").classList.toggle("on", removing);
     $("pickRemove").textContent=removing ? "Done removing" : "Remove names";
