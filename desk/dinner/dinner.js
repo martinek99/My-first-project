@@ -172,11 +172,13 @@
     var box = document.getElementById("detail");
     var shop = (d.shop && d.shop.length) ? d.shop : ((d.rows || []).map(function (r) { return r.ing; }));
     var wine = d.wine || {};
+    var cookHtml = (window.dinnerCook && window.dinnerCook.html) ? window.dinnerCook.html(d) : "";
     box.classList.remove("hidden");
     box.innerHTML = "<div class='sheet' id='detailSheet'>" +
       "<div class='who'>" + escapeHtml(d.course) + " · " + escapeHtml(niceName(feat)) + "</div>" +
       "<h2>" + escapeHtml(d.name) + "</h2>" +
       "<img id='detailPhoto' alt=''>" +
+      cookHtml +
       "<p>" + escapeHtml(d.history || "") + "</p>" +
       "<div class='winebox'><b>Wine · or the right cup</b>" + escapeHtml(wine.name || "") +
       "<p style='margin:6px 0 0'>" + escapeHtml(wine.why || "") + "</p></div>" +
@@ -185,6 +187,7 @@
       "</ul>" +
       (d.wiki ? "<p><a href='https://en.wikipedia.org/wiki/" + encodeURIComponent(d.wiki) + "' target='_blank' rel='noopener'>The longer story on Wikipedia</a></p>" : "") +
       "<div class='row'><button class='btn navy' id='addMeal'>Add to the meal</button></div>" +
+      "<div class='row'><button class='btn gold' id='copyCard'>Copy the cook card</button></div>" +
       "<div class='row'><button class='btn gold' id='closeDetail'>Close</button></div>" +
       "</div>";
     wireScrollLock(document.getElementById("detailSheet"));
@@ -198,6 +201,14 @@
       closeDetail();
       openPlanner();
       showToast("On the " + d.course + " plate.", 1400);
+    };
+    document.getElementById("copyCard").onclick = function () {
+      var t = (window.dinnerCook && window.dinnerCook.text) ? window.dinnerCook.text(d) : d.name;
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(t).then(function () { showToast("Cook card copied.", 1600); });
+      } else {
+        window.prompt("Copy this cook card", t);
+      }
     };
     document.getElementById("closeDetail").onclick = closeDetail;
     box.onclick = function (e) { if (e.target === box) closeDetail(); };

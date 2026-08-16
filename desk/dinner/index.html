@@ -125,6 +125,24 @@ html.from-desk #tools{top:calc(var(--st) + 72px)}
 #detail p{font-family:var(--sans);font-size:16px;line-height:1.45;margin:8px 0}
 #detail ul{margin:6px 0 10px;padding-left:1.2em;font-family:var(--sans);font-size:16px}
 #detail a{color:#3a3020}
+.cookcard{border:1px solid #8a7040;background:#fff8e8;padding:12px 12px 10px;margin:10px 0 12px}
+.cookhead{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:#8a7040;text-align:center;margin:0 0 8px}
+.spec{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 10px}
+.spec div{border:1px solid #c4ae7a;background:#efe4c4;padding:8px 9px;font-family:var(--sans);font-size:14px;line-height:1.3;color:#1c1610}
+.spec div.wide{grid-column:1/-1}
+.spec b{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8a7040;margin:0 0 2px}
+.readcard,.cooknote{font-family:var(--sans);font-size:14px;line-height:1.4;color:#5a4e3a;margin:8px 0}
+.recipe-wrap{overflow:visible;margin-top:8px;max-height:none}
+.recipe{border-collapse:collapse;width:100%;table-layout:fixed;font-family:var(--sans);font-size:15px;color:#1c1610}
+.recipe td{border:1px solid #c4ae7a;padding:7px 8px;vertical-align:middle;background:#fff8e8;white-space:normal;word-break:break-word}
+.recipe td.ing{font-weight:700;background:#efe4c4;text-align:left}
+.recipe td.act{text-align:center}
+.recipe td.merge{background:#f6efe0;font-weight:600}
+.recipe-stack{margin-top:8px;width:100%}
+.recipe-row{border:1px solid #c4ae7a;margin:0 0 7px;background:#fff8e8}
+.recipe-row .ing{font-family:var(--sans);font-weight:700;font-size:16px;background:#efe4c4;padding:8px 10px;color:#1c1610}
+.recipe-row .acts{display:flex;flex-direction:column}
+.recipe-row .act{font-family:var(--sans);font-size:15px;padding:7px 10px;border-top:1px solid #c4ae7a;color:#1c1610;background:#fff8e8}
 .winebox{border:1px solid #c4ae7a;background:#fff8e8;padding:10px 12px;margin:10px 0}
 .winebox b{display:block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#8a7040;margin-bottom:4px}
 
@@ -172,7 +190,7 @@ html.from-desk #tools{top:calc(var(--st) + 72px)}
       <h1>What's for Dinner</h1>
       <div class="of">Food around the world</div>
       <div class="rule"></div>
-      <p class="tag">Spin the globe. Tap a country. Twenty dishes on their own cards. Build a meal, make a shopping list, learn a little wine. DoorDash and cards come later — this page will not take your money.</p>
+      <p class="tag">Spin the globe. Tap a country. Tap a dish and you get a cook card — times, heat, and the order of work. Build a meal, copy a list, learn a little wine. DoorDash and cards come later — this page will not take your money.</p>
       <div class="row">
         <button class="btn navy" id="startBtn">Open the kitchen</button>
       </div>
@@ -203,6 +221,7 @@ html.from-desk #tools{top:calc(var(--st) + 72px)}
 <script src="https://unpkg.com/topojson-client@3/dist/topojson-client.min.js"></script>
 <script src="facts.js"></script>
 <script src="foods.js"></script>
-<script src="dinner.js?v=2"></script>
+<script src="cook.js?v=1"></script>
+<script src="dinner.js?v=3"></script>
 </body>
 </html>
