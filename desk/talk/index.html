@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Talk">
+<meta name="theme-color" content="#142033">
+<title>Talk · Mark's Desk</title>
+<style>
+:root{
+  --navy:#142033;--cream:#f3ead6;--paper:#fffaf0;--gold:#c9a24a;--ink:#2a2218;--muted:#6a5a3a;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--navy);color:var(--cream);font-family:var(--sans)}
+body{min-height:100dvh;padding:calc(var(--st) + 20px) 22px calc(var(--sb) + 36px)}
+.wrap{max-width:720px;margin:0 auto}
+.back{color:#e8c37a;text-decoration:none;font-size:16px}
+.eyebrow{font-family:var(--serif);letter-spacing:.24em;text-transform:uppercase;font-size:13px;color:#e8c37a;margin:18px 0 8px}
+h1{font-family:var(--serif);font-size:clamp(40px,8vw,58px);margin:0 0 10px;line-height:.95}
+.lede{font-family:var(--serif);font-style:italic;font-size:20px;line-height:1.4;color:#d8cbb3;margin:0 0 22px}
+.person{
+  background:var(--paper);color:var(--ink);border-radius:20px;padding:24px 22px;margin:0 0 16px;
+}
+.person h2{font-family:var(--serif);font-size:32px;margin:0 0 8px}
+.person p{margin:0 0 16px;font-size:17px;line-height:1.45;color:var(--muted)}
+.go{
+  display:block;text-align:center;text-decoration:none;
+  background:#e8c37a;color:#142033;border-radius:14px;
+  padding:16px 18px;font-family:var(--serif);font-size:22px;font-weight:600;
+}
+.tips{margin-top:28px}
+.tips h3{font-family:var(--serif);font-size:22px;margin:0 0 10px;color:#e8c37a}
+.tips li{margin:0 0 10px;font-size:17px;line-height:1.4;color:#d8cbb3}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <a class="back" href="../">← Back to Mark's Desk</a>
+    <p class="eyebrow">Simple talk</p>
+    <h1>Who do you want?</h1>
+    <p class="lede">Tap one gold button. Then type like a text message. One thing at a time is plenty.</p>
+
+    <div class="person" id="me">
+      <h2>Talk to me</h2>
+      <p>I am the fill-in Chief of Staff while GrokBot is frozen. Desk, Carey's Corner, games, Cursor ticket, Brittany's helper.</p>
+      <a class="go" href="https://cursor.com/agents/bc-01a00afa-77d2-7708-a534-c4d579439aa4">Start talking to me</a>
+    </div>
+
+    <div class="person" id="chief">
+      <h2>Talk to Chief of Staff</h2>
+      <p>That is GrokBot. The phone app is stuck on Setting up. This opens the same work in Safari.</p>
+      <a class="go" href="https://cursor.com/agents">Start talking to Chief of Staff</a>
+    </div>
+
+    <div class="tips">
+      <h3>How to talk</h3>
+      <ol>
+        <li>Say it the way you would say it out loud.</li>
+        <li>You do not need the plus and minus numbers. Ignore those.</li>
+        <li>If you want a change on the Desk, just say “put this on my Desk.”</li>
+        <li>If you want me to stop so you do not use more of the tank, say “pause.”</li>
+      </ol>
+    </div>
+  </div>
+</body>
+</html>
