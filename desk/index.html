@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Mark's Desk">
+<meta name="theme-color" content="#142033">
+<title>Mark's Desk</title>
+<style>
+:root{
+  --navy:#142033;
+  --cream:#f3ead6;
+  --paper:#fffaf0;
+  --gold:#c9a24a;
+  --terra:#8c4a2f;
+  --ink:#2a2218;
+  --muted:#6a5a3a;
+  --red:#c81e1e;
+  --st:env(safe-area-inset-top,0px);
+  --sb:env(safe-area-inset-bottom,0px);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--navy);color:var(--cream);font-family:var(--sans)}
+body{min-height:100dvh;padding:calc(var(--st) + 36px) 28px calc(var(--sb) + 40px)}
+.wrap{max-width:980px;margin:0 auto}
+.eyebrow{font-family:var(--serif);letter-spacing:.28em;text-transform:uppercase;font-size:13px;color:#e8c37a;margin:0 0 10px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(42px,7vw,72px);line-height:.95;margin:0 0 12px}
+.lede{font-family:var(--serif);font-style:italic;font-size:22px;line-height:1.4;color:#d8cbb3;max-width:22em;margin:0 0 28px}
+.grid{display:grid;grid-template-columns:1fr;gap:18px}
+@media (min-width:780px){.grid{grid-template-columns:1fr 1fr}}
+.card{
+  display:block;text-decoration:none;color:inherit;
+  background:var(--paper);color:var(--ink);
+  border-radius:18px;padding:28px 26px 24px;
+  min-height:210px;
+  box-shadow:0 18px 40px rgba(0,0,0,.22);
+}
+.card:active{transform:scale(.992)}
+.tag{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#8a7040;margin:0 0 10px}
+.card h2{font-family:var(--serif);font-size:34px;margin:0 0 10px;line-height:1.05}
+.card p{margin:0;font-size:17px;line-height:1.45;color:var(--muted)}
+.go{margin-top:18px;display:inline-block;background:var(--navy);color:#fff8ee;padding:12px 18px;border-radius:999px;font-size:15px;letter-spacing:.04em}
+.card.viper{background:#1a0a0a;color:#f4ead4}
+.card.viper .tag{color:#e8c37a}
+.card.viper p{color:#d8cbb3}
+.card.viper .go{background:var(--red)}
+.card.wait{opacity:.92;border:1.5px dashed rgba(201,162,74,.55);background:transparent;color:var(--cream);box-shadow:none}
+.card.wait p{color:#d8cbb3}
+.card.wait .go{background:transparent;border:1px solid #e8c37a;color:#e8c37a}
+.note{margin:28px 0 0;font-size:16px;line-height:1.5;color:#d8cbb3;max-width:38em}
+.note strong{color:#f4ead4}
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <p class="eyebrow">For the iPad · no GitHub needed</p>
+    <h1>Mark's Desk</h1>
+    <p class="lede">Tap a card. That is the whole system. I will keep sending you this kind of link.</p>
+    <div class="grid">
+      <a class="card" href="careys/">
+        <p class="tag">For Brittany</p>
+        <h2>Carey's Corner</h2>
+        <p>Write Poshmark titles and blurbs in her closet style, keep a simple closet list, and see what she might clear after fees.</p>
+        <span class="go">Open the helper</span>
+      </a>
+      <a class="card viper" href="https://indigo-sequin-t7za.here.now/">
+        <p class="tag">Your game</p>
+        <h2>VIPER 99</h2>
+        <p>Wengler Hill Road. He sold the car. Not the attitude. Tap left or right, stay on the road, watch the deer.</p>
+        <span class="go">Fire it up</span>
+      </a>
+      <div class="card wait">
+        <p class="tag">Still looking</p>
+        <h2>World View</h2>
+        <p>I found VIPER 99. I have not found the World View link in your email yet. If you have it, send it and I will put it right here.</p>
+        <span class="go">Waiting on the link</span>
+      </div>
+      <a class="card" href="https://gentle-quiche-6d8s.here.now/">
+        <p class="tag">Earlier version</p>
+        <h2>First Carey's Corner</h2>
+        <p>The listing helper Grokbot already sent Brittany. Still live if you want the original.</p>
+        <span class="go">Open the first one</span>
+      </a>
+    </div>
+    <p class="note">On the iPad: open a page in <strong>Safari</strong>, tap the Share button, then <strong>Add to Home Screen</strong>. After that it opens like an app. You do not need GitHub for any of this.</p>
+  </div>
+</body>
+</html>

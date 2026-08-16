@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Carey's Corner">
+<meta name="theme-color" content="#f3ead6">
+<title>Carey's Corner</title>
+<style>
+:root{
+  --cream:#f3ead6;--paper:#fffaf0;--ink:#2a2218;--muted:#6a5a3a;--line:rgba(201,162,74,.42);
+  --gold:#c9a24a;--terra:#8c4a2f;--sage:#3d5a45;--navy:#142033;--chip:#efe4ce;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans)}
+body{min-height:100dvh;padding:calc(var(--st) + 18px) 20px calc(var(--sb) + 28px)}
+.wrap{max-width:1100px;margin:0 auto}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin:0 0 18px}
+.eyebrow{font-family:var(--serif);letter-spacing:.24em;text-transform:uppercase;font-size:12px;color:#8a7040;margin:0 0 6px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,5vw,48px);margin:0;line-height:1}
+.lede{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:18px;margin:8px 0 0}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:10px 16px;font-size:15px;min-height:44px}
+.tab.on{background:var(--navy);color:#fff8ee;border-color:var(--navy)}
+.panel{display:none}
+.panel.on{display:block}
+.grid{display:grid;grid-template-columns:1fr;gap:20px}
+@media (min-width:900px){.grid.split{grid-template-columns:1.05fr .95fr}}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px}
+label.field{display:block;margin:0 0 14px}
+label.field span,.field-label{display:block;font-weight:600;margin:0 0 6px}
+input,textarea,select{width:100%;font:16px/1.3 var(--sans);padding:12px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
+textarea{min-height:88px;resize:vertical}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0}
+.chip{appearance:none;border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:8px 12px;font-size:14px}
+.chip.on{background:var(--navy);color:#fff8ee;border-color:var(--navy)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hint{font-size:14px;color:var(--muted);line-height:1.4;margin:6px 0 0}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 0}
+button.btn{appearance:none;border:0;border-radius:12px;padding:12px 16px;min-height:46px;font-size:16px;background:var(--terra);color:#fff8ee}
+button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.out h2{font-family:var(--serif);font-size:20px;margin:0 0 8px}
+.block{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin:0 0 14px;white-space:pre-wrap;line-height:1.45}
+.copyrow{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 6px}
+.copy{appearance:none;border:0;background:var(--navy);color:#fff8ee;border-radius:999px;padding:8px 12px}
+.money{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--chip);border-radius:12px;padding:12px}
+.stat b{display:block;font-size:22px;font-family:var(--serif)}
+.item{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.item:last-child{border-bottom:0}
+.muted{color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(var(--sb) + 24px);transform:translateX(-50%);background:var(--navy);color:#fff8ee;padding:10px 16px;border-radius:999px;opacity:0;pointer-events:none}
+.toast.show{opacity:1}
+.back{color:var(--terra);text-decoration:none;font-size:15px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <p class="eyebrow">@thecareycurated · she still posts</p>
+      <h1>Carey's Corner</h1>
+      <p class="lede">Write it like Carey. Copy it. Paste it on Poshmark. Nothing posts for you.</p>
+    </div>
+    <div class="tabs">
+      <a class="back" href="../">Mark's Desk</a>
+      <button class="tab on" data-tab="write">Write a listing</button>
+      <button class="tab" data-tab="closet">Closet</button>
+      <button class="tab" data-tab="help">How this works</button>
+    </div>
+  </div>
+
+  <section id="write" class="panel on">
+    <div class="grid split">
+      <div class="card">
+        <p class="field-label">What you already know</p>
+        <label class="field"><span>Brand</span><input id="brand" placeholder="Free People, Veronica Beard…"></label>
+        <div id="brandChips" class="chips"></div>
+        <label class="field"><span>Style / item name</span><input id="style" placeholder="Lenox Sweater Tunic"></label>
+        <div class="row">
+          <label class="field"><span>Color</span><input id="color" placeholder="Carrot Cake Combo"></label>
+          <label class="field"><span>Size</span><input id="size" placeholder="M or 27"></label>
+        </div>
+        <div id="sizeChips" class="chips"></div>
+        <label class="field"><span>Category</span>
+          <select id="category">
+            <option value="">Choose one</option>
+            <option value="dresses">Dress</option>
+            <option value="tops">Top / blouse</option>
+            <option value="sweaters">Sweater</option>
+            <option value="jackets">Jacket / blazer</option>
+            <option value="jeans">Jeans</option>
+            <option value="pants">Pants</option>
+            <option value="leggings">Leggings</option>
+            <option value="shoes">Shoes</option>
+            <option value="bags">Bag</option>
+            <option value="other">Other</option>
+          </select>
+        </label>
+        <p class="field-label">Condition</p>
+        <div id="condChips" class="chips"></div>
+        <input type="hidden" id="condition">
+        <div class="row">
+          <label class="field"><span>What she paid</span><input id="cost" inputmode="decimal" placeholder="12"></label>
+          <label class="field"><span>Retail price</span><input id="retail" inputmode="decimal" placeholder="168"></label>
+        </div>
+        <label class="field"><span>Asking price</span><input id="price" inputmode="decimal" placeholder="35"></label>
+        <div class="row">
+          <label class="field"><span>Bust</span><input id="bust" placeholder='18"'></label>
+          <label class="field"><span>Waist</span><input id="waist" placeholder='14"'></label>
+        </div>
+        <div class="row">
+          <label class="field"><span>Hip</span><input id="hip"></label>
+          <label class="field"><span>Length</span><input id="length"></label>
+        </div>
+        <label class="field"><span>Extra notes</span><textarea id="notes" placeholder="Tiny mark on the hem. Still so cute."></textarea></label>
+        <div class="actions">
+          <button class="btn" id="make">Make listings</button>
+          <button class="btn ghost" id="sample">Show a sample</button>
+          <button class="btn ghost" id="save">Save to closet</button>
+          <button class="btn ghost" id="clear">New listing</button>
+        </div>
+        <p class="hint">Photos stay in her camera roll. This page does not upload them and does not log into Poshmark.</p>
+      </div>
+      <div>
+        <div class="card out">
+          <div class="copyrow"><h2>Poshmark title</h2><button class="copy" data-copy="title">Copy</button></div>
+          <div class="block" id="outTitle">Fill in the left side, then tap Make listings.</div>
+          <div class="copyrow"><h2>Suggested ask</h2><button class="copy" data-copy="ask">Copy</button></div>
+          <div class="block" id="outAsk"></div>
+          <div class="copyrow"><h2>Poshmark paste block</h2><button class="copy" data-copy="posh">Copy</button></div>
+          <div class="block" id="outPosh"></div>
+          <div class="copyrow"><h2>After Poshmark fees</h2></div>
+          <div class="money">
+            <div class="stat"><span class="muted">Fee</span><b id="fee">—</b></div>
+            <div class="stat"><span class="muted">She keeps</span><b id="keep">—</b></div>
+            <div class="stat"><span class="muted">Profit after cost</span><b id="profit">—</b></div>
+            <div class="stat"><span class="muted">Title length</span><b id="tlen">0 / 80</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="closet" class="panel">
+    <div class="card">
+      <p class="field-label">Her working closet</p>
+      <p class="hint">Saved on this iPad only. Move a piece from bought, to steamed, to listed, to sold.</p>
+      <div id="closetList"></div>
+    </div>
+  </section>
+
+  <section id="help" class="panel">
+    <div class="card">
+      <h2 style="font-family:var(--serif);margin-top:0">How Brittany can use this</h2>
+      <p>1. She buys a piece, steams it, and photographs it the way she already does.</p>
+      <p>2. She types what she already knows: brand, style, color, size, condition, prices.</p>
+      <p>3. She taps <b>Make listings</b>, then Copy, then pastes into Poshmark.</p>
+      <p>4. She still writes the final words and she still posts. This just gets the first draft in her voice.</p>
+      <p>Titles follow her closet: <i>Brand Style Item in Color Size</i>, with NEW when it is NWT.</p>
+      <p>Blurbs keep her California ship line, measurements-in-photos note, and “bundle to save.”</p>
+      <p>Poshmark fees here are the usual ones: $2.95 under $15, 20% at $15 and up. Shipping is still the buyer’s prepaid label.</p>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast">Copied</div>
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const BRANDS = ["Free People","Veronica Beard","lululemon","Rag & Bone","Anthropologie","Rails","Frame","Lilly Pulitzer","Aritzia","SPANX"];
+  const SIZES = ["XS","S","M","L","XL","0","2","4","6","8","10","25","26","27"];
+  const CONDS = [["nwt","NWT"],["like_new","Like new"],["good","Excellent used"],["fair","Preowned"]];
+  const KEY = "careys-corner-closet-v1";
+  const blocks = { title:"", ask:"", posh:"" };
+  let closet = [];
+
+  function clean(s){ return String(s||"").replace(/\s+/g," ").trim(); }
+  function money(raw){ const n = parseFloat(String(raw||"").replace(/[^0-9.]/g,"")); return isFinite(n) ? Math.round(n*100)/100 : 0; }
+  function uncap(s){ s=clean(s); return s ? s.charAt(0).toLowerCase()+s.slice(1) : ""; }
+  function cap(s){ s=clean(s); return s ? s.charAt(0).toUpperCase()+s.slice(1) : ""; }
+  function endSent(s){ s=clean(s); if(!s) return ""; return /[.!?]$/.test(s) ? s : s+"."; }
+  function sizeSpoken(size){ return size ? (isNaN(size) ? "size "+size : "size "+size) : ""; }
+  function poshFee(price){ if(!price) return 0; return price < 15 ? 2.95 : Math.round(price*0.2*100)/100; }
+  function load(){ try{ closet = JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ closet=[]; } }
+  function save(){ localStorage.setItem(KEY, JSON.stringify(closet)); }
+
+  function chips(host, items, selected, onPick){
+    host.innerHTML = "";
+    items.forEach(function(pair){
+      const value = Array.isArray(pair) ? pair[0] : pair;
+      const label = Array.isArray(pair) ? pair[1] : pair;
+      const b = document.createElement("button");
+      b.type="button"; b.className="chip"+(value===selected?" on":""); b.textContent=label;
+      b.onclick=function(){ onPick(value===selected?"":value); };
+      host.appendChild(b);
+    });
+  }
+
+  function readForm(){
+    return {
+      brand: clean($("brand").value),
+      style: clean($("style").value),
+      color: clean($("color").value),
+      size: clean($("size").value),
+      category: $("category").value,
+      condition: $("condition").value,
+      cost: money($("cost").value),
+      retail: money($("retail").value),
+      price: money($("price").value),
+      bust: clean($("bust").value),
+      waist: clean($("waist").value),
+      hip: clean($("hip").value),
+      length: clean($("length").value),
+      notes: clean($("notes").value)
+    };
+  }
+
+  function titleFor(d){
+    const bits=[];
+    if(d.condition==="nwt") bits.push("NEW");
+    if(d.brand) bits.push(d.brand);
+    bits.push(d.style || "Piece");
+    if(d.color) bits.push("in "+d.color);
+    if(d.size) bits.push(isNaN(d.size) ? d.size : "Size "+d.size);
+    let s = bits.join(" ");
+    if(s.length>80) s = s.slice(0,80).replace(/\s+\S*$/,"");
+    return s;
+  }
+
+  function poshBlock(d){
+    const brand = d.brand || "this brand";
+    const parts=[];
+    if(d.condition==="nwt"){
+      parts.push(d.notes ? "NEW SO beautiful and NEW from "+brand+", "+uncap(d.notes) : "NEW SO beautiful and NEW from "+brand+"!");
+      if(d.style) parts.push("The "+d.style+" from "+brand+".");
+    } else if(d.condition==="like_new"){
+      parts.push("SO cute and in like-new condition"+(d.brand?" from "+brand:"")+"!");
+      if(d.notes) parts.push(cap(d.notes));
+    } else if(d.condition==="good"){
+      parts.push("SO cute and in excellent used condition"+(d.brand?" from "+brand:"")+"!");
+      if(d.notes) parts.push(cap(d.notes));
+    } else if(d.condition==="fair"){
+      parts.push("SO cute and in preowned condition"+(d.brand?" from "+brand:"")+".");
+      if(d.notes) parts.push(cap(d.notes));
+    } else {
+      parts.push((d.style||"This piece")+(d.brand?" from "+brand:"")+".");
+      if(d.notes) parts.push(cap(d.notes));
+    }
+    if(d.color) parts.push("Color is "+d.color.toLowerCase()+".");
+    if(d.size) parts.push(cap(sizeSpoken(d.size))+".");
+    const tail=["All measurements are provided in the photos to ensure best fit.","Ships quickly in one day in super cute packaging from sunny California!","Bundle to save, or submit an offer!"];
+    if(d.retail) tail.push("Retails $"+d.retail);
+    return (parts.map(endSent).join(" ")+" "+tail.join(" ")).replace(/\s+/g," ").trim();
+  }
+
+  function paint(d){
+    const title = titleFor(d);
+    const ask = d.price ? "$"+d.price : "set from comps";
+    const posh = poshBlock(d);
+    const fee = poshFee(d.price);
+    const keep = d.price ? Math.round((d.price-fee)*100)/100 : 0;
+    const profit = d.price ? Math.round((keep-d.cost)*100)/100 : 0;
+    blocks.title=title; blocks.ask=ask; blocks.posh=posh;
+    $("outTitle").textContent=title;
+    $("outAsk").textContent=ask;
+    $("outPosh").textContent=posh;
+    $("fee").textContent = d.price ? "$"+fee.toFixed(2) : "—";
+    $("keep").textContent = d.price ? "$"+keep.toFixed(2) : "—";
+    $("profit").textContent = d.price ? "$"+profit.toFixed(2) : "—";
+    $("tlen").textContent = title.length+" / 80";
+  }
+
+  function toast(msg){
+    const t=$("toast"); t.textContent=msg; t.classList.add("show");
+    clearTimeout(toast._id); toast._id=setTimeout(function(){ t.classList.remove("show"); },1400);
+  }
+
+  function renderCloset(){
+    const host=$("closetList");
+    if(!closet.length){ host.innerHTML='<p class="muted">Nothing saved yet. Write a listing and tap Save to closet.</p>'; return; }
+    host.innerHTML="";
+    closet.slice().reverse().forEach(function(item){
+      const row=document.createElement("div");
+      row.className="item";
+      row.innerHTML = "<div><b>"+item.title+"</b><div class='muted'>"+item.stage+" · ask "+(item.price?("$"+item.price):"—")+"</div></div>";
+      const sel=document.createElement("select");
+      ["Bought","Steam & photo","Listed","Sold"].forEach(function(st){
+        const o=document.createElement("option"); o.value=st; o.textContent=st; if(item.stage===st) o.selected=true; sel.appendChild(o);
+      });
+      sel.onchange=function(){ item.stage=sel.value; save(); renderCloset(); };
+      row.appendChild(sel);
+      host.appendChild(row);
+    });
+  }
+
+  function showTab(name){
+    document.querySelectorAll(".panel").forEach(function(p){ p.classList.toggle("on", p.id===name); });
+    document.querySelectorAll(".tab").forEach(function(t){ t.classList.toggle("on", t.getAttribute("data-tab")===name); });
+  }
+
+  CONDS.forEach(function(){});
+  chips($("brandChips"), BRANDS, "", function(v){ $("brand").value=v; chips($("brandChips"), BRANDS, v, arguments.callee); });
+  chips($("sizeChips"), SIZES, "", function(v){ $("size").value=v; chips($("sizeChips"), SIZES, v, arguments.callee); });
+  chips($("condChips"), CONDS, "", function(v){ $("condition").value=v; chips($("condChips"), CONDS, v, arguments.callee); });
+
+  $("make").onclick=function(){ paint(readForm()); toast("Ready to copy"); };
+  $("sample").onclick=function(){
+    $("brand").value="Free People"; $("style").value="Lenox Sweater Tunic"; $("color").value="Carrot Cake Combo";
+    $("size").value="M"; $("category").value="sweaters"; $("condition").value="good"; $("retail").value="168"; $("price").value="35"; $("cost").value="8";
+    $("notes").value="Soft, cozy, and ready for a fall morning.";
+    chips($("condChips"), CONDS, "good", function(v){ $("condition").value=v; chips($("condChips"), CONDS, v, arguments.callee); });
+    paint(readForm());
+  };
+  $("clear").onclick=function(){
+    ["brand","style","color","size","category","condition","cost","retail","price","bust","waist","hip","length","notes"].forEach(function(id){ $(id).value=""; });
+    chips($("brandChips"), BRANDS, "", function(v){ $("brand").value=v; chips($("brandChips"), BRANDS, v, arguments.callee); });
+    chips($("sizeChips"), SIZES, "", function(v){ $("size").value=v; chips($("sizeChips"), SIZES, v, arguments.callee); });
+    chips($("condChips"), CONDS, "", function(v){ $("condition").value=v; chips($("condChips"), CONDS, v, arguments.callee); });
+    $("outTitle").textContent="Fill in the left side, then tap Make listings.";
+    $("outAsk").textContent=""; $("outPosh").textContent="";
+  };
+  $("save").onclick=function(){
+    const d=readForm(); paint(d);
+    closet.push({ id:Date.now(), title:titleFor(d), price:d.price, stage:"Bought", when:new Date().toISOString() });
+    save(); renderCloset(); toast("Saved on this iPad");
+  };
+  document.querySelectorAll(".tab").forEach(function(t){ t.onclick=function(){ showTab(t.getAttribute("data-tab")); }; });
+  document.querySelectorAll(".copy").forEach(function(btn){
+    btn.onclick=function(){
+      const text=blocks[btn.getAttribute("data-copy")]||"";
+      if(!text) return;
+      navigator.clipboard.writeText(text).then(function(){ toast("Copied"); }).catch(function(){
+        const ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); toast("Copied");
+      });
+    };
+  });
+  load(); renderCloset();
+})();
+</script>
+</body>
+</html>
