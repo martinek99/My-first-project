@@ -128,7 +128,9 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
     <div class="actions">
       <button class="btn" id="copyAll">Copy the whole listing</button>
       <button class="btn ghost" id="save">Save to closet</button>
+      <button class="btn ghost" id="toShop">Put on her shop</button>
       <button class="btn ghost" id="clear">New piece</button>
+      <a class="btn ghost" href="../shop/?from=desk" style="text-decoration:none">Open her shop</a>
     </div>
     <p class="hint">Poshmark does not allow a posting bot. One tap copies the words. She pastes once. eBay does allow an official post, if she ever wants that. Details are under How this works.</p>
     <div class="card out live">
@@ -178,7 +180,8 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
       <p><b>Etsy:</b> Official door, but it is for vintage about 20 years old, or handmade. Everyday closet brands usually do not belong there.</p>
       <p><b>Send-it-in places</b> like ThredUp: She boxes the clothes. They list them. Different job. Not her closet voice.</p>
       <p>What still cannot be a bot: finding the piece, steaming it, photographing it, packaging it, and walking it to the post. That stays hers.</p>
-      <p>Right now Poshmark is still tap, copy, paste. If you want the real automated shop, say <b>do eBay</b> or <b>do her own shop</b>. She would still have to allow eBay once, or pick a shop name.</p>
+      <p>Her own shop is a separate page, The Carey Curated. Carey's Corner stays the helper. Tap <b>Put on her shop</b> to send a piece over without changing this page. Say <b>hang the rack</b> when you want those pieces on the public shop for friends.</p>
+      <p>Right now Poshmark is still tap, copy, paste. If you want eBay later, say <b>do eBay</b>.</p>
     </div>
   </section>
   <p style="margin:22px 0 0"><a href="../" class="btn" style="display:block;text-align:center;text-decoration:none;background:#e8c37a;color:#142033;font-family:var(--serif);font-size:22px;font-weight:600;border-radius:14px;padding:16px 18px">← Back to Mark's Desk</a></p>
@@ -207,6 +210,7 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
   var LIBKEY = "careys-library-v2";
   var OLDKEY = "careys-library-v1";
   var CLOSETKEY = "careys-corner-closet-v1";
+  var SHOPKEY = "carey-curated-shop-v1";
   var removing = false;
   var STARTER = {
     maker: ["1901","7 For All Mankind","Abercrombie & Fitch","Adrianna Papell","AGOLDE","Albion","Alice + Olivia","All Saints","Allbirds","Alo Yoga","Amanda Uprichard","American Eagle Outfitters","Ann Taylor","Anthropologie","ASOS","ASTR","Athleta","Baltic Born","Banana Republic","Bardot","Barefoot Dreams","Beachlunchlounge","Betabrand","Betsey Johnson","BHLDN","Birdy Grey","Boden","C/MEO Collective","CAbi","Calvin Klein","Citizens of Humanity","Cole Haan","Columbia","Current/Elliott","Diane von Furstenberg","Disney","Draper James","Dress the Population","Dutch Bros","Eileen Fisher","Eliza J","Ella Moss","Elodie","Everlane","Express","Faherty","FARM Rio","Figs","Flax","Frame","Frank & Eileen","Free People","Girlfriend Collective","Good American","H&M","Harley-Davidson","Hatch","Hello Molly","Hill House","Honeylove","House of Harlow 1960","HUNTER BELL","IBKUL","J. Crew","J. Crew Factory","Jams World","Johnny Was","Joie","Joseph Ribkoff","Julia Amory","Karen Millen","Kate Spade","Kindred Bravely","Knix","Komarov","Kuhl","L*Space","Lafayette 148 New York","Latched Mama","Lauren Ralph Lauren","Lilly Pulitzer","LOFT","Lovers + Friends","Lucky Brand","Lulu's","lululemon","Lunya","Lush","Mac Duggal","Madewell","Marine Layer","Michael Stars","MICHI","Milly","MM Lafleur","Momcozy","Mother","Nike","Nine West","Nordstrom","Outdoor Voices","Pact","PAIGE","Patagonia","Peloton","Philosophy","PINK","Pistola","Prana","Princess Polly","rag & bone","Rails","Rebecca Taylor","Reformation","Revelry","REVICE","Roolee","Rothy's","Sam Edelman","Savage X Fenty","SAYLOR","Self-Portrait","Selkie","Seraphine","Show Me Your MuMu","SKIMS","Smartwool","SPANX","Spiritual Gangster","Spyder","St. John","Steve Madden","Sundance","Superdown","Sweaty Betty","Talbots","Ted Baker","The Limited","Theory","ThirdLove","Thread & Supply","Title Nine","Toad & Co","Toms","Topshop","Torrid","Tory Burch","Trina Turk","Tuckernuck","Ulla Johnson","Universal Thread","Veronica Beard","Vici","Victoria's Secret","Vince","Vuori","We The Free","WeWoreWhat","White House Black Market","Wildfox","Wilfred","Wooden Ships","XiRENA","Young Fabulous & Broke","Z Supply","Zara","Zella","ZYIA"],
@@ -583,6 +587,28 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
     paint();
     closet.push({ id:Date.now(), title:blocks.title, price:money(form.price), stage:"Bought", when:new Date().toISOString() });
     saveCloset(); renderCloset(); toast("Saved on this iPad");
+  };
+  $("toShop").onclick=function(){
+    paint();
+    if(!form.maker && !form.style){ toast("Tap the squares first"); return; }
+    var shop=[];
+    try{ shop=JSON.parse(localStorage.getItem(SHOPKEY)||"[]"); }catch(e){ shop=[]; }
+    shop.push({
+      id:Date.now(),
+      title:blocks.title,
+      maker:form.maker,
+      style:form.style,
+      color:form.color,
+      size:form.size,
+      condition:form.condition,
+      price:money(form.price),
+      blurb:blocks.posh,
+      stage:"For sale",
+      when:new Date().toISOString(),
+      source:"careys-corner"
+    });
+    localStorage.setItem(SHOPKEY, JSON.stringify(shop));
+    toast("On her shop");
   };
   document.querySelectorAll(".tab").forEach(function(t){ t.onclick=function(){ showTab(t.getAttribute("data-tab")); }; });
   document.querySelectorAll(".copy").forEach(function(btn){
