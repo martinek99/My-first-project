@@ -587,11 +587,35 @@
     });
     box.appendChild(picks);
     if (dishes[exploreDish]) {
+      var dish = dishes[exploreDish];
       var wrap = document.createElement("div");
       wrap.id = "recipeBox";
-      wrap.innerHTML = mergeRecipeTable(dishes[exploreDish].rows);
+      wrap.innerHTML = (window.dinnerCook && window.dinnerCook.html)
+        ? window.dinnerCook.html(dish)
+        : mergeRecipeTable(dish.rows);
+      var shopRow = document.createElement("div");
+      shopRow.className = "row tight";
+      shopRow.innerHTML = "<button type='button' class='btn navy' id='shopFood'>Shopping list</button>";
+      wrap.appendChild(shopRow);
       box.appendChild(wrap);
-      var wiki = dishes[exploreDish].wiki;
+      var shopBtn = document.getElementById("shopFood");
+      if (shopBtn) {
+        shopBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          e.stopPropagation();
+          var t = (window.dinnerCook && window.dinnerCook.shopText)
+            ? window.dinnerCook.shopText(dish, niceName(f))
+            : (dish.rows || []).map(function (r) { return "☐ " + r.ing; }).join("\n");
+          if (navigator.clipboard && navigator.clipboard.writeText) {
+            navigator.clipboard.writeText(t).then(function () { showToast("Shopping list copied.", 1800); });
+          } else if (navigator.share) {
+            navigator.share({ title: dish.name, text: t }).catch(function () {});
+          } else {
+            window.prompt("Copy this shopping list", t);
+          }
+        });
+      }
+      var wiki = dish.wiki;
       if (wiki) {
         fetchWikiClean(wiki.replace(/_/g, " "), function (hit) {
           if (exploreTopic !== "food" || exploreFeat !== f) return;
@@ -621,18 +645,22 @@
     var hud = document.getElementById("hud");
     var dock = document.getElementById("homeDock");
     var home = document.getElementById("homeBtn");
+    var globe = document.getElementById("globeBtn");
+    var open = !!on && !sheetDown;
     if (plate) {
-      plate.classList.toggle("explore-card", !!on);
-      plate.classList.toggle("explore-sheet", mode === "explore" && !!on);
-      plate.classList.toggle("explore-slim", mode === "explore" && !on);
+      plate.classList.toggle("explore-card", open);
+      plate.classList.toggle("explore-sheet", mode === "explore" && open);
+      plate.classList.toggle("explore-slim", mode === "explore" && !open);
     }
     if (hud) hud.classList.toggle("explore-hud", mode === "explore");
     if (mode === "explore") {
       if (dock) dock.classList.add("hidden");
       if (home) home.classList.remove("hidden");
+      if (globe) globe.classList.toggle("hidden", !on);
     } else {
       if (dock) dock.classList.remove("hidden");
       if (home) home.classList.add("hidden");
+      if (globe) globe.classList.add("hidden");
     }
   }
   function pulseKnown() {
@@ -799,10 +827,29 @@
     exploreHold = false;
     exploreTopic = "overview";
     exploreDish = 0;
+    sheetDown = false;
     hideSubjects();
     hideLandmarkPhoto();
     var rw = document.getElementById("recipeBox");
     if (rw) rw.innerHTML = "";
+  }
+  function putAwaySheet() {
+    if (!exploreFeat) return;
+    if (sheetDown) {
+      clearExplore();
+      updatePlate();
+      syncHl();
+      showToast("Back to the globe.", 1400);
+      return;
+    }
+    sheetDown = true;
+    exploreHold = false;
+    hideSubjects();
+    hideLandmarkPhoto();
+    var pf = document.getElementById("placeFact");
+    if (pf) { pf.classList.remove("cardish"); pf.innerHTML = ""; pf.classList.add("hidden"); }
+    updatePlate();
+    showToast("Globe is free. Tap another country, or tap the name to open this one again.", 2200);
   }
   function hideLandmarkPhoto() {
     var img = document.getElementById("lmPhoto");
@@ -886,7 +933,7 @@
   var mode = "explore", setId = "all", screen = "title";
   var score = 0, streak = 0, qIndex = 0, qTotal = 0, deck = [], target = null, correctCount = 0, playerName = "";
   var locked = false, teach = null, flash = null, hintOn = false, hintT = 0, guessesLeft = 3, landmark = null, clueKind = null, missedIds = {};
-  var toastT = 0, pulseT = 0, exploreFeat = null, hoverId = null, idleT = 0, exploreHold = false, exploreTopic = "overview", exploreReq = 0, exploreCache = {}, exploreArm = 0, exploreDish = 0, tap0 = null, camArm = 0;
+  var toastT = 0, pulseT = 0, exploreFeat = null, hoverId = null, idleT = 0, exploreHold = false, exploreTopic = "overview", exploreReq = 0, exploreCache = {}, exploreArm = 0, exploreDish = 0, tap0 = null, camArm = 0, sheetDown = false;
   var hlIds = [];
 
   try { reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches; } catch (e) {}
@@ -1129,6 +1176,7 @@
       }
       exploreFeat = f;
       exploreTopic = "overview";
+      sheetDown = false;
       hoverId = fid(f);
       var wasNew = !learned[fid(f)];
       markLearned(f);
@@ -1256,7 +1304,7 @@
       showFlag(exploreFeat, true);
       buildSubjects();
       setExploreCard(!!exploreFeat);
-      if (!exploreFeat) {
+      if (!exploreFeat || sheetDown) {
         hideSubjects();
         hideLandmarkPhoto();
         var pf = document.getElementById("placeFact");
@@ -1731,6 +1779,13 @@
     bind("howtoGo", closeHow);
     bind("helpBtn", function () { openHow(false); });
     bind("homeBtn", goHome);
+    bind("globeBtn", putAwaySheet);
+    bind("placeName", function () {
+      if (mode !== "explore" || !exploreFeat || !sheetDown) return;
+      sheetDown = false;
+      updatePlate();
+      loadExploreTopic();
+    });
     bind("endHome", goHome);
     bind("endAgain", function () {
       document.getElementById("end").classList.add("hidden");

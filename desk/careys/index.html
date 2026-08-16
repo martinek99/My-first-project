@@ -10,6 +10,11 @@
 <meta name="theme-color" content="#f3ead6">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>Carey's Corner</title>
+<meta name="description" content="Tap through a Poshmark listing in Carey's closet style.">
+<meta property="og:title" content="Carey's Corner">
+<meta property="og:description" content="A Poshmark listing helper in Carey's closet style.">
+<meta property="og:url" content="https://whimsy-violet-dhgk.here.now/careys/">
+<meta property="og:type" content="website">
 <style>
 :root{
   --cream:#f3ead6;--paper:#fffaf0;--ink:#2a2218;--muted:#6a5a3a;--line:rgba(201,162,74,.42);
@@ -21,16 +26,9 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans)}
 body{min-height:100dvh;padding:0 0 calc(var(--sb) + 28px)}
-.homebar{
-  position:sticky;top:0;z-index:20;
-  background:var(--navy);padding:calc(var(--st) + 12px) 20px 12px;
-}
-.homebar a{
-  display:block;text-align:center;text-decoration:none;
-  background:var(--gold);color:var(--navy);
-  border-radius:14px;padding:16px 18px;
-  font-family:var(--serif);font-size:22px;font-weight:600;
-}
+.homebar{position:sticky;top:0;z-index:20;background:var(--navy);padding:calc(var(--st) + 12px) 20px 12px}
+.homebar a{display:block;text-align:center;text-decoration:none;background:var(--gold);color:var(--navy);
+  border-radius:14px;padding:16px 18px;font-family:var(--serif);font-size:22px;font-weight:600}
 .wrap{max-width:1100px;margin:0 auto;padding:18px 20px 0}
 .top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin:0 0 18px}
 .eyebrow{font-family:var(--serif);letter-spacing:.24em;text-transform:uppercase;font-size:12px;color:#8a7040;margin:0 0 6px}
@@ -41,45 +39,59 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,5vw,48px);margi
 .tab.on{background:var(--navy);color:#fff8ee;border-color:var(--navy)}
 .panel{display:none}
 .panel.on{display:block}
-.grid{display:grid;grid-template-columns:1fr;gap:20px}
-@media (min-width:900px){.grid.split{grid-template-columns:1.05fr .95fr}}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px}
-label.field{display:block;margin:0 0 14px}
-label.field span,.field-label{display:block;font-weight:600;margin:0 0 6px}
-input,textarea,select{width:100%;font:16px/1.3 var(--sans);padding:12px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;color:var(--ink)}
-textarea{min-height:88px;resize:vertical}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0 0}
-.chip{appearance:none;border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:8px 12px;font-size:14px}
-.chip.on{background:var(--navy);color:#fff8ee;border-color:var(--navy)}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.hint{font-size:14px;color:var(--muted);line-height:1.4;margin:6px 0 0}
+.hint{font-size:15px;color:var(--muted);line-height:1.45;margin:0 0 14px}
 .actions{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 0}
-button.btn{appearance:none;border:0;border-radius:12px;padding:12px 16px;min-height:46px;font-size:16px;background:var(--terra);color:#fff8ee}
+button.btn{appearance:none;border:0;border-radius:12px;padding:14px 18px;min-height:52px;font-size:17px;background:var(--terra);color:#fff8ee}
 button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
 .out h2{font-family:var(--serif);font-size:20px;margin:0 0 8px}
 .block{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin:0 0 14px;white-space:pre-wrap;line-height:1.45}
 .copyrow{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 6px}
-.copy{appearance:none;border:0;background:var(--navy);color:#fff8ee;border-radius:999px;padding:8px 12px}
+.copy{appearance:none;border:0;background:var(--navy);color:#fff8ee;border-radius:999px;padding:10px 14px;min-height:44px}
 .money{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .stat{background:var(--chip);border-radius:12px;padding:12px}
 .stat b{display:block;font-size:22px;font-family:var(--serif)}
 .item{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
-.item:last-child{border-bottom:0}
 .muted{color:var(--muted)}
-.toast{position:fixed;left:50%;bottom:calc(var(--sb) + 24px);transform:translateX(-50%);background:var(--navy);color:#fff8ee;padding:10px 16px;border-radius:999px;opacity:0;pointer-events:none}
+.toast{position:fixed;left:50%;bottom:calc(var(--sb) + 24px);transform:translateX(-50%);background:var(--navy);color:#fff8ee;padding:12px 18px;border-radius:999px;opacity:0;pointer-events:none;z-index:80}
 .toast.show{opacity:1}
+.path{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px}
+@media (min-width:720px){.path{grid-template-columns:1fr 1fr 1fr}}
+.sq{appearance:none;border:2px solid var(--line);background:#fff;border-radius:16px;min-height:110px;padding:14px 12px;
+  text-align:left;font-family:var(--sans);color:var(--ink)}
+.sq.on{border-color:var(--navy);background:#fff8ee}
+.sq .k{display:block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#8a7040;margin:0 0 8px}
+.sq .v{display:block;font-family:var(--serif);font-size:22px;line-height:1.15;font-weight:600}
+.sq .v.empty{color:#b4a078;font-style:italic;font-weight:400;font-size:18px}
+#picker{position:fixed;inset:0;z-index:60;background:var(--cream);display:none;flex-direction:column}
+#picker.on{display:flex}
+.pickhead{position:sticky;top:0;z-index:2;background:var(--navy);color:#fff8ee;padding:calc(var(--st) + 12px) 16px 12px}
+.pickhead h2{font-family:var(--serif);margin:0 0 8px;font-size:28px}
+.pickbar{display:flex;gap:8px}
+.pickbar button{flex:1;min-height:48px;border:0;border-radius:12px;font-size:16px}
+.pickbar .back{background:#e8c37a;color:#142033}
+.pickbar .add{background:#fff8ee;color:#142033}
+.pickbody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 14px calc(var(--sb) + 20px)}
+.az{font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:#8a7040;margin:16px 0 8px}
+.pickgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+@media (min-width:720px){.pickgrid{grid-template-columns:1fr 1fr 1fr 1fr}}
+.pickgrid button{appearance:none;border:1px solid var(--line);background:#fff;border-radius:14px;min-height:72px;
+  padding:12px 10px;font-size:17px;font-family:var(--serif);text-align:center}
+.pickgrid button.on{background:var(--navy);color:#fff8ee;border-color:var(--navy)}
+.addbox{display:none;padding:12px 14px;background:#fff8ee;border-bottom:1px solid var(--line)}
+.addbox.on{display:block}
+.addbox input{width:100%;font-size:18px;padding:14px;border:1px solid var(--line);border-radius:12px;margin:0 0 10px}
+.live{margin-top:8px}
 </style>
 </head>
 <body>
-<div class="homebar">
-  <a href="../">← Back to Mark's Desk</a>
-</div>
+<div class="homebar"><a href="../">← Back to Mark's Desk</a></div>
 <div class="wrap">
   <div class="top">
     <div>
-      <p class="eyebrow">@thecareycurated · she still posts</p>
+      <p class="eyebrow">@thecareycurated · tap, don't type</p>
       <h1>Carey's Corner</h1>
-      <p class="lede">Write it like Carey. Copy it. Paste it on Poshmark. Nothing posts for you.</p>
+      <p class="lede">Look at the piece. Tap Maker, Style, Color, Size. The words write themselves.</p>
       <div class="actions" style="margin-top:12px">
         <button type="button" class="btn" id="shareHelper">Share this helper</button>
       </div>
@@ -92,80 +104,39 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
   </div>
 
   <section id="write" class="panel on">
-    <div class="grid split">
-      <div class="card">
-        <p class="field-label">What you already know</p>
-        <label class="field"><span>Brand</span><input id="brand" placeholder="Free People, Veronica Beard…"></label>
-        <div id="brandChips" class="chips"></div>
-        <label class="field"><span>Style / item name</span><input id="style" placeholder="Lenox Sweater Tunic"></label>
-        <div class="row">
-          <label class="field"><span>Color</span><input id="color" placeholder="Carrot Cake Combo"></label>
-          <label class="field"><span>Size</span><input id="size" placeholder="M or 27"></label>
-        </div>
-        <div id="sizeChips" class="chips"></div>
-        <label class="field"><span>Category</span>
-          <select id="category">
-            <option value="">Choose one</option>
-            <option value="dresses">Dress</option>
-            <option value="tops">Top / blouse</option>
-            <option value="sweaters">Sweater</option>
-            <option value="jackets">Jacket / blazer</option>
-            <option value="jeans">Jeans</option>
-            <option value="pants">Pants</option>
-            <option value="leggings">Leggings</option>
-            <option value="shoes">Shoes</option>
-            <option value="bags">Bag</option>
-            <option value="other">Other</option>
-          </select>
-        </label>
-        <p class="field-label">Condition</p>
-        <div id="condChips" class="chips"></div>
-        <input type="hidden" id="condition">
-        <div class="row">
-          <label class="field"><span>What she paid</span><input id="cost" inputmode="decimal" placeholder="12"></label>
-          <label class="field"><span>Retail price</span><input id="retail" inputmode="decimal" placeholder="168"></label>
-        </div>
-        <label class="field"><span>Asking price</span><input id="price" inputmode="decimal" placeholder="35"></label>
-        <div class="row">
-          <label class="field"><span>Bust</span><input id="bust" placeholder='18"'></label>
-          <label class="field"><span>Waist</span><input id="waist" placeholder='14"'></label>
-        </div>
-        <div class="row">
-          <label class="field"><span>Hip</span><input id="hip"></label>
-          <label class="field"><span>Length</span><input id="length"></label>
-        </div>
-        <label class="field"><span>Extra notes</span><textarea id="notes" placeholder="Tiny mark on the hem. Still so cute."></textarea></label>
-        <div class="actions">
-          <button class="btn" id="make">Make listings</button>
-          <button class="btn ghost" id="sample">Show a sample</button>
-          <button class="btn ghost" id="save">Save to closet</button>
-          <button class="btn ghost" id="clear">New listing</button>
-        </div>
-        <p class="hint">Photos stay in her camera roll. This page does not upload them and does not log into Poshmark.</p>
-      </div>
-      <div>
-        <div class="card out">
-          <div class="copyrow"><h2>Poshmark title</h2><button class="copy" data-copy="title">Copy</button></div>
-          <div class="block" id="outTitle">Fill in the left side, then tap Make listings.</div>
-          <div class="copyrow"><h2>Suggested ask</h2><button class="copy" data-copy="ask">Copy</button></div>
-          <div class="block" id="outAsk"></div>
-          <div class="copyrow"><h2>Poshmark paste block</h2><button class="copy" data-copy="posh">Copy</button></div>
-          <div class="block" id="outPosh"></div>
-          <div class="copyrow"><h2>After Poshmark fees</h2></div>
-          <div class="money">
-            <div class="stat"><span class="muted">Fee</span><b id="fee">—</b></div>
-            <div class="stat"><span class="muted">She keeps</span><b id="keep">—</b></div>
-            <div class="stat"><span class="muted">Profit after cost</span><b id="profit">—</b></div>
-            <div class="stat"><span class="muted">Title length</span><b id="tlen">0 / 80</b></div>
-          </div>
-        </div>
+    <p class="hint">Tap a square. The page fills with every choice. Add one and it stays forever on this iPad. No typing unless she is teaching the library a new name.</p>
+    <div class="path">
+      <button type="button" class="sq" data-pick="maker"><span class="k">1 · Maker</span><span class="v empty" id="vMaker">Tap</span></button>
+      <button type="button" class="sq" data-pick="style"><span class="k">2 · Style</span><span class="v empty" id="vStyle">Tap</span></button>
+      <button type="button" class="sq" data-pick="color"><span class="k">3 · Color</span><span class="v empty" id="vColor">Tap</span></button>
+      <button type="button" class="sq" data-pick="size"><span class="k">4 · Size</span><span class="v empty" id="vSize">Tap</span></button>
+      <button type="button" class="sq" data-pick="condition"><span class="k">5 · Condition</span><span class="v empty" id="vCond">Tap</span></button>
+      <button type="button" class="sq" data-pick="price"><span class="k">6 · Ask</span><span class="v empty" id="vPrice">Tap</span></button>
+    </div>
+    <div class="actions">
+      <button class="btn" id="copyAll">Copy the whole listing</button>
+      <button class="btn ghost" id="save">Save to closet</button>
+      <button class="btn ghost" id="clear">New piece</button>
+    </div>
+    <p class="hint">This page cannot log into Poshmark and post for her. One tap copies the title and the blurb. She pastes once. A posting bot would need her password and would break Poshmark’s rules. I will not do that.</p>
+    <div class="card out live">
+      <div class="copyrow"><h2>Poshmark title</h2><button class="copy" data-copy="title">Copy</button></div>
+      <div class="block" id="outTitle">Tap the squares. The title shows up here.</div>
+      <div class="copyrow"><h2>Suggested ask</h2><button class="copy" data-copy="ask">Copy</button></div>
+      <div class="block" id="outAsk"></div>
+      <div class="copyrow"><h2>Poshmark paste block</h2><button class="copy" data-copy="posh">Copy</button></div>
+      <div class="block" id="outPosh"></div>
+      <div class="money">
+        <div class="stat"><span class="muted">Fee</span><b id="fee">—</b></div>
+        <div class="stat"><span class="muted">She keeps</span><b id="keep">—</b></div>
+        <div class="stat"><span class="muted">Title length</span><b id="tlen">0 / 80</b></div>
+        <div class="stat"><span class="muted">Library</span><b id="libcount">0</b></div>
       </div>
     </div>
   </section>
 
   <section id="closet" class="panel">
     <div class="card">
-      <p class="field-label">Her working closet</p>
       <p class="hint">Saved on this iPad only. Move a piece from bought, to steamed, to listed, to sold.</p>
       <div id="closetList"></div>
     </div>
@@ -173,201 +144,260 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
 
   <section id="help" class="panel">
     <div class="card">
-      <h2 style="font-family:var(--serif);margin-top:0">How Brittany can use this</h2>
-      <p>1. She buys a piece, steams it, and photographs it the way she already does.</p>
-      <p>2. She types what she already knows: brand, style, color, size, condition, prices.</p>
-      <p>3. She taps <b>Make listings</b>, then Copy, then pastes into Poshmark.</p>
-      <p>4. She still writes the final words and she still posts. This just gets the first draft in her voice.</p>
-      <p>Titles follow her closet: <i>Brand Style Item in Color Size</i>, with NEW when it is NWT.</p>
-      <p>Blurbs keep her California ship line, measurements-in-photos note, and “bundle to save.”</p>
-      <p>Poshmark fees here are the usual ones: $2.95 under $15, 20% at $15 and up. Shipping is still the buyer’s prepaid label.</p>
+      <h2 style="font-family:var(--serif);margin-top:0">How Brittany uses this</h2>
+      <p>1. She looks at the piece.</p>
+      <p>2. She taps Maker, then the designer. Then Style. Then Color. Then Size. Then Condition. Then the ask.</p>
+      <p>3. If a name is missing, she taps Add. That name stays in the square forever, on this iPad.</p>
+      <p>4. She taps Copy the whole listing, opens Poshmark, and pastes.</p>
+      <p>5. Photos stay in her camera roll. This page does not upload them and does not log into Poshmark.</p>
+      <p>Titles follow her closet: <i>Brand Style in Color Size</i>, with NEW when it is NWT.</p>
     </div>
   </section>
+</div>
+
+<div id="picker">
+  <div class="pickhead">
+    <h2 id="pickTitle">Maker</h2>
+    <div class="pickbar">
+      <button type="button" class="back" id="pickBack">Back</button>
+      <button type="button" class="add" id="pickAdd">Add a new one</button>
+    </div>
+  </div>
+  <div class="addbox" id="addbox">
+    <input id="addInput" placeholder="Type it once. It stays." enterkeyhint="done">
+    <button type="button" class="btn" id="addSave">Save it in the library</button>
+  </div>
+  <div class="pickbody" id="pickBody"></div>
 </div>
 <div class="toast" id="toast">Copied</div>
 <script>
 (function () {
-  const $ = (id) => document.getElementById(id);
-  const BRANDS = ["Free People","Veronica Beard","lululemon","Rag & Bone","Anthropologie","Rails","Frame","Lilly Pulitzer","Aritzia","SPANX"];
-  const SIZES = ["XS","S","M","L","XL","0","2","4","6","8","10","25","26","27"];
-  const CONDS = [["nwt","NWT"],["like_new","Like new"],["good","Excellent used"],["fair","Preowned"]];
-  const KEY = "careys-corner-closet-v1";
-  const blocks = { title:"", ask:"", posh:"" };
-  let closet = [];
+  var $ = function (id) { return document.getElementById(id); };
+  var LIBKEY = "careys-library-v1";
+  var CLOSETKEY = "careys-corner-closet-v1";
+  var STARTER = {
+    maker: ["Free People","Veronica Beard","lululemon","Rag & Bone","Anthropologie","Rails","Frame","Lilly Pulitzer","Aritzia","SPANX","Reformation","Sezane","Everlane","Madewell","J.Crew","Banana Republic","Ann Taylor","Talbots","Eileen Fisher","Theory","Vince","Equipment","Equipment Signature","Tory Burch","Kate Spade","Coach","Michael Kors","Ralph Lauren","Polo Ralph Lauren","Lauren Ralph Lauren","Tommy Hilfiger","Calvin Klein","Levi's","AG","Citizens of Humanity","Mother","Good American","DL1961","Hudson","Paige","7 For All Mankind","Joe's Jeans","Blank NYC","Universal Thread","Old Navy","Gap","Athleta","Outdoor Voices","Alo Yoga","Vuori","Beyond Yoga","Nike","Adidas","New Balance","UGG","Birkenstock","Sam Edelman","Steve Madden","Dolce Vita","Madewell Shoes","Frye","Sorel","Hunter","The North Face","Patagonia","Columbia","L.L.Bean","Eddie Bauer","Carhartt","Dickies","Pendleton","Faherty","Marine Layer","Faherty Brothers","Faherty Sweater","Marine","Zara","H&M","Uniqlo","Mango","Massimo Dutti","COS","& Other Stories","Aritzia Wilfred","Aritzia Babaton","Wilfred","Babaton","TNA","Sunday Best","Aritzia Super World","Anthropologie Maeve","Maeve","Pilcro","Ettitude","Christy Dawn","Doen","Christy","Spell","Spell & The Gypsy","Johanna Ortiz","Ulla Johnson","Zimmermann","Self-Portrait","Alice + Olivia","Diane von Furstenberg","DVF","Ted Baker","Karen Millen","Reiss","Whistles","Jigsaw","Boden","White Stuff","Seasalt","FatFace","Phase Eight","LK Bennett","Kurt Geiger","Mulberry","Longchamp","Fossil","Fossil Bag","Vera Bradley","Dooney & Bourke","Brahmin","Patricia Nash","Brighton","Chico's","White House Black Market","WHBM","Soma","Jockey","Wacoal","Spanx Shapewear","Commando","Skims","Aerie","Victoria's Secret","Pink","Alo","Lululemon Align","Girlfriend Collective","Sweaty Betty","Varley","Apple","Casetify","OtterBox","Ray-Ban","Warby Parker","Kendra Scott","BaubleBar","Gorjana","Mejuri","Pandora","David Yurman","Tiffany","Kate Spade Jewelry","Alex and Ani","Madewell Jewelry","Anthropologie Jewelry","Free People Jewelry","Urban Outfitters","Anthropologie Hat","Lack of Color","Brixton","Stetson","Helen Kaminski","Eric Javits"],
+    style: ["Blouse","Button-down","Camp shirt","Tunic","Tee","Tank","Cami","Bodysuit","Sweater","Cardigan","Turtleneck","Mock neck","Hoodie","Sweatshirt","Shacket","Blazer","Jacket","Coat","Trench","Puffer","Vest","Dress","Midi dress","Maxi dress","Mini dress","Wrap dress","Shirt dress","Sweater dress","Jumpsuit","Romper","Skirt","Midi skirt","Maxi skirt","Mini skirt","Pants","Trousers","Wide-leg pants","Straight pants","Cropped pants","Jeans","Skinny jeans","Straight jeans","Flare jeans","Bootcut jeans","Wide-leg jeans","Shorts","Biker shorts","Leggings","Active shorts","Active top","Sports bra","Swim top","Swim bottom","One-piece","Kimono","Poncho","Scarf","Blanket scarf","Shaw","Wrap","Belt","Hat","Beanie","Baseball cap","Sun hat","Bag","Tote","Crossbody","Shoulder bag","Clutch","Wallet","Sneakers","Boots","Ankle boots","Heels","Flats","Loafers","Sandals","Mules","Jewelry","Necklace","Earrings","Bracelet","Ring","Sunglasses","Hair clip","Other"],
+    color: ["Black","White","Ivory","Cream","Off white","Ecru","Beige","Tan","Camel","Khaki","Sand","Taupe","Brown","Chocolate","Espresso","Cognac","Rust","Terracotta","Clay","Brick","Red","Cherry","Burgundy","Wine","Maroon","Blush","Pink","Hot pink","Fuchsia","Rose","Coral","Peach","Orange","Tangerine","Apricot","Carrot","Gold","Mustard","Yellow","Butter","Lemon","Olive","Army green","Sage","Mint","Forest","Emerald","Kelly green","Hunter","Teal","Aqua","Turquoise","Sky","Baby blue","Blue","Cobalt","Royal","Navy","Indigo","Denim","Chambray","Purple","Lavender","Lilac","Plum","Eggplant","Gray","Heather gray","Charcoal","Silver","Metallic","Leopard","Zebra","Snake","Plaid","Check","Stripe","Floral","Paisley","Colorblock","Rainbow","Animal print","Camo","Tie dye","Wash","Light wash","Medium wash","Dark wash","Black wash","Carrot Cake Combo","Combo"],
+    size: ["XXS","XS","S","M","L","XL","XXL","0","2","4","6","8","10","12","14","16","18","23","24","25","26","27","28","29","30","31","32","33","34","00","One size","S/M","M/L","5","5.5","6.5","7","7.5","8.5","9","9.5","10.5","11"],
+    condition: [["nwt","NWT · New"],["like_new","Like new"],["good","Excellent used"],["fair","Preowned"]],
+    price: ["12","15","18","22","25","28","32","35","38","42","45","48","52","55","58","65","75","85","95","110","125","150","175","200"]
+  };
+  var form = { maker:"", style:"", color:"", size:"", condition:"", price:"" };
+  var blocks = { title:"", ask:"", posh:"" };
+  var closet = [];
+  var lib = { maker:[], style:[], color:[], size:[], price:[] };
+  var pickKey = "";
 
   function clean(s){ return String(s||"").replace(/\s+/g," ").trim(); }
-  function money(raw){ const n = parseFloat(String(raw||"").replace(/[^0-9.]/g,"")); return isFinite(n) ? Math.round(n*100)/100 : 0; }
+  function money(raw){ var n = parseFloat(String(raw||"").replace(/[^0-9.]/g,"")); return isFinite(n) ? Math.round(n*100)/100 : 0; }
   function uncap(s){ s=clean(s); return s ? s.charAt(0).toLowerCase()+s.slice(1) : ""; }
   function cap(s){ s=clean(s); return s ? s.charAt(0).toUpperCase()+s.slice(1) : ""; }
   function endSent(s){ s=clean(s); if(!s) return ""; return /[.!?]$/.test(s) ? s : s+"."; }
-  function sizeSpoken(size){ return size ? (isNaN(size) ? "size "+size : "size "+size) : ""; }
   function poshFee(price){ if(!price) return 0; return price < 15 ? 2.95 : Math.round(price*0.2*100)/100; }
-  function load(){ try{ closet = JSON.parse(localStorage.getItem(KEY)||"[]"); }catch(e){ closet=[]; } }
-  function save(){ localStorage.setItem(KEY, JSON.stringify(closet)); }
-
-  function chips(host, items, selected, onPick){
-    host.innerHTML = "";
-    items.forEach(function(pair){
-      const value = Array.isArray(pair) ? pair[0] : pair;
-      const label = Array.isArray(pair) ? pair[1] : pair;
-      const b = document.createElement("button");
-      b.type="button"; b.className="chip"+(value===selected?" on":""); b.textContent=label;
-      b.onclick=function(){ onPick(value===selected?"":value); };
-      host.appendChild(b);
+  function toast(msg){
+    var t=$("toast"); t.textContent=msg; t.classList.add("show");
+    clearTimeout(toast._id); toast._id=setTimeout(function(){ t.classList.remove("show"); },1600);
+  }
+  function uniq(arr){
+    var seen={}, out=[], i, v, k;
+    for(i=0;i<arr.length;i++){
+      v=clean(arr[i]); k=v.toLowerCase();
+      if(!v||seen[k]) continue; seen[k]=1; out.push(v);
+    }
+    return out.sort(function(a,b){ return a.localeCompare(b); });
+  }
+  function loadLib(){
+    var saved={};
+    try{ saved=JSON.parse(localStorage.getItem(LIBKEY)||"{}"); }catch(e){ saved={}; }
+    ["maker","style","color","size","price"].forEach(function(k){
+      lib[k]=uniq((STARTER[k]||[]).concat(saved[k]||[]));
     });
   }
-
-  function readForm(){
-    return {
-      brand: clean($("brand").value),
-      style: clean($("style").value),
-      color: clean($("color").value),
-      size: clean($("size").value),
-      category: $("category").value,
-      condition: $("condition").value,
-      cost: money($("cost").value),
-      retail: money($("retail").value),
-      price: money($("price").value),
-      bust: clean($("bust").value),
-      waist: clean($("waist").value),
-      hip: clean($("hip").value),
-      length: clean($("length").value),
-      notes: clean($("notes").value)
-    };
+  function saveLib(){
+    var extra={};
+    ["maker","style","color","size","price"].forEach(function(k){
+      var base={}; (STARTER[k]||[]).forEach(function(v){ base[String(v).toLowerCase()]=1; });
+      extra[k]=(lib[k]||[]).filter(function(v){ return !base[String(v).toLowerCase()]; });
+    });
+    localStorage.setItem(LIBKEY, JSON.stringify(extra));
   }
+  function loadCloset(){ try{ closet=JSON.parse(localStorage.getItem(CLOSETKEY)||"[]"); }catch(e){ closet=[]; } }
+  function saveCloset(){ localStorage.setItem(CLOSETKEY, JSON.stringify(closet)); }
 
   function titleFor(d){
-    const bits=[];
+    var bits=[];
     if(d.condition==="nwt") bits.push("NEW");
-    if(d.brand) bits.push(d.brand);
+    if(d.maker) bits.push(d.maker);
     bits.push(d.style || "Piece");
     if(d.color) bits.push("in "+d.color);
     if(d.size) bits.push(isNaN(d.size) ? d.size : "Size "+d.size);
-    let s = bits.join(" ");
-    if(s.length>80) s = s.slice(0,80).replace(/\s+\S*$/,"");
+    var s=bits.join(" ");
+    if(s.length>80) s=s.slice(0,80).replace(/\s+\S*$/,"");
     return s;
   }
-
   function poshBlock(d){
-    const brand = d.brand || "this brand";
-    const parts=[];
-    if(d.condition==="nwt"){
-      parts.push(d.notes ? "NEW SO beautiful and NEW from "+brand+", "+uncap(d.notes) : "NEW SO beautiful and NEW from "+brand+"!");
-      if(d.style) parts.push("The "+d.style+" from "+brand+".");
-    } else if(d.condition==="like_new"){
-      parts.push("SO cute and in like-new condition"+(d.brand?" from "+brand:"")+"!");
-      if(d.notes) parts.push(cap(d.notes));
-    } else if(d.condition==="good"){
-      parts.push("SO cute and in excellent used condition"+(d.brand?" from "+brand:"")+"!");
-      if(d.notes) parts.push(cap(d.notes));
-    } else if(d.condition==="fair"){
-      parts.push("SO cute and in preowned condition"+(d.brand?" from "+brand:"")+".");
-      if(d.notes) parts.push(cap(d.notes));
-    } else {
-      parts.push((d.style||"This piece")+(d.brand?" from "+brand:"")+".");
-      if(d.notes) parts.push(cap(d.notes));
-    }
+    var brand=d.maker||"this brand";
+    var parts=[];
+    if(d.condition==="nwt") parts.push("NEW SO beautiful and NEW from "+brand+"!");
+    else if(d.condition==="like_new") parts.push("SO cute and in like-new condition from "+brand+"!");
+    else if(d.condition==="good") parts.push("SO cute and in excellent used condition from "+brand+"!");
+    else if(d.condition==="fair") parts.push("SO cute and in preowned condition from "+brand+".");
+    else parts.push((d.style||"This piece")+" from "+brand+".");
+    if(d.style) parts.push("The "+d.style+" from "+brand+".");
     if(d.color) parts.push("Color is "+d.color.toLowerCase()+".");
-    if(d.size) parts.push(cap(sizeSpoken(d.size))+".");
-    const tail=["All measurements are provided in the photos to ensure best fit.","Ships quickly in one day in super cute packaging from sunny California!","Bundle to save, or submit an offer!"];
-    if(d.retail) tail.push("Retails $"+d.retail);
+    if(d.size) parts.push(cap(isNaN(d.size)?"size "+d.size:"size "+d.size)+".");
+    var tail=["All measurements are provided in the photos to ensure best fit.","Ships quickly in one day in super cute packaging from sunny California!","Bundle to save, or submit an offer!"];
     return (parts.map(endSent).join(" ")+" "+tail.join(" ")).replace(/\s+/g," ").trim();
   }
-
-  function paint(d){
-    const title = titleFor(d);
-    const ask = d.price ? "$"+d.price : "set from comps";
-    const posh = poshBlock(d);
-    const fee = poshFee(d.price);
-    const keep = d.price ? Math.round((d.price-fee)*100)/100 : 0;
-    const profit = d.price ? Math.round((keep-d.cost)*100)/100 : 0;
+  function paint(){
+    var d={
+      maker:form.maker, style:form.style, color:form.color, size:form.size,
+      condition:form.condition, price:money(form.price)
+    };
+    var title=titleFor(d);
+    var ask=d.price?"$"+d.price:"";
+    var posh=poshBlock(d);
+    var fee=poshFee(d.price);
+    var keep=d.price?Math.round((d.price-fee)*100)/100:0;
     blocks.title=title; blocks.ask=ask; blocks.posh=posh;
     $("outTitle").textContent=title;
     $("outAsk").textContent=ask;
     $("outPosh").textContent=posh;
-    $("fee").textContent = d.price ? "$"+fee.toFixed(2) : "—";
-    $("keep").textContent = d.price ? "$"+keep.toFixed(2) : "—";
-    $("profit").textContent = d.price ? "$"+profit.toFixed(2) : "—";
-    $("tlen").textContent = title.length+" / 80";
+    $("fee").textContent=d.price?"$"+fee.toFixed(2):"—";
+    $("keep").textContent=d.price?"$"+keep.toFixed(2):"—";
+    $("tlen").textContent=title.length+" / 80";
+    $("libcount").textContent=(lib.maker.length+lib.style.length+lib.color.length);
+    $("vMaker").textContent=form.maker||"Tap"; $("vMaker").classList.toggle("empty",!form.maker);
+    $("vStyle").textContent=form.style||"Tap"; $("vStyle").classList.toggle("empty",!form.style);
+    $("vColor").textContent=form.color||"Tap"; $("vColor").classList.toggle("empty",!form.color);
+    $("vSize").textContent=form.size||"Tap"; $("vSize").classList.toggle("empty",!form.size);
+    var condLabel="";
+    STARTER.condition.forEach(function(p){ if(p[0]===form.condition) condLabel=p[1]; });
+    $("vCond").textContent=condLabel||"Tap"; $("vCond").classList.toggle("empty",!form.condition);
+    $("vPrice").textContent=form.price?("$"+form.price):"Tap"; $("vPrice").classList.toggle("empty",!form.price);
+    document.querySelectorAll(".sq").forEach(function(b){
+      var k=b.getAttribute("data-pick");
+      b.classList.toggle("on", !!(form[k==="maker"?"maker":k]));
+    });
   }
-
-  function toast(msg){
-    const t=$("toast"); t.textContent=msg; t.classList.add("show");
-    clearTimeout(toast._id); toast._id=setTimeout(function(){ t.classList.remove("show"); },1400);
+  function listFor(key){
+    if(key==="condition") return STARTER.condition;
+    if(key==="price") return lib.price.map(function(v){ return [v,"$"+v]; });
+    return (lib[key]||[]).map(function(v){ return [v,v]; });
   }
-
+  function titles(){ return {maker:"Maker",style:"Style",color:"Color",size:"Size",condition:"Condition",price:"Ask"}; }
+  function openPicker(key){
+    pickKey=key;
+    $("pickTitle").textContent=titles()[key]||key;
+    $("addbox").classList.remove("on");
+    $("addInput").value="";
+    $("pickAdd").style.display = key==="condition" ? "none" : "block";
+    renderPicker();
+    $("picker").classList.add("on");
+    $("pickBody").scrollTop=0;
+  }
+  function closePicker(){ $("picker").classList.remove("on"); pickKey=""; }
+  function renderPicker(){
+    var items=listFor(pickKey);
+    var host=$("pickBody");
+    host.innerHTML="";
+    var letter="", i, wrap=null;
+    for(i=0;i<items.length;i++){
+      var value=items[i][0], label=items[i][1];
+      var L=String(label).replace(/^\$/,"").charAt(0).toUpperCase();
+      if(L!==letter){
+        letter=L;
+        var h=document.createElement("div"); h.className="az"; h.textContent=letter; host.appendChild(h);
+        wrap=document.createElement("div"); wrap.className="pickgrid"; host.appendChild(wrap);
+      }
+      var b=document.createElement("button");
+      b.type="button";
+      b.textContent=label;
+      if(String(form[pickKey])===String(value)) b.className="on";
+      b.onclick=(function(val){ return function(){ pick(val); }; })(value);
+      wrap.appendChild(b);
+    }
+  }
+  function pick(val){
+    form[pickKey]=val;
+    paint();
+    closePicker();
+    toast("Got it");
+  }
+  function addCurrent(){
+    var v=clean($("addInput").value);
+    if(!v||!pickKey||pickKey==="condition") return;
+    if(pickKey==="price") v=String(money(v)||v);
+    lib[pickKey]=uniq((lib[pickKey]||[]).concat([v]));
+    saveLib();
+    form[pickKey]=v;
+    paint();
+    closePicker();
+    toast("Saved in the library");
+  }
+  function copyText(text){
+    if(!text) return;
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ toast("Copied"); });
+      return;
+    }
+    var ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); toast("Copied");
+  }
   function renderCloset(){
-    const host=$("closetList");
-    if(!closet.length){ host.innerHTML='<p class="muted">Nothing saved yet. Write a listing and tap Save to closet.</p>'; return; }
+    var host=$("closetList");
+    if(!closet.length){ host.innerHTML='<p class="muted">Nothing saved yet. Tap through a piece and Save to closet.</p>'; return; }
     host.innerHTML="";
     closet.slice().reverse().forEach(function(item){
-      const row=document.createElement("div");
+      var row=document.createElement("div");
       row.className="item";
-      row.innerHTML = "<div><b>"+item.title+"</b><div class='muted'>"+item.stage+" · ask "+(item.price?("$"+item.price):"—")+"</div></div>";
-      const sel=document.createElement("select");
+      row.innerHTML="<div><b>"+item.title+"</b><div class='muted'>"+item.stage+" · ask "+(item.price?("$"+item.price):"—")+"</div></div>";
+      var sel=document.createElement("select");
       ["Bought","Steam & photo","Listed","Sold"].forEach(function(st){
-        const o=document.createElement("option"); o.value=st; o.textContent=st; if(item.stage===st) o.selected=true; sel.appendChild(o);
+        var o=document.createElement("option"); o.value=st; o.textContent=st; if(item.stage===st) o.selected=true; sel.appendChild(o);
       });
-      sel.onchange=function(){ item.stage=sel.value; save(); renderCloset(); };
+      sel.onchange=function(){ item.stage=sel.value; saveCloset(); renderCloset(); };
       row.appendChild(sel);
       host.appendChild(row);
     });
   }
-
   function showTab(name){
     document.querySelectorAll(".panel").forEach(function(p){ p.classList.toggle("on", p.id===name); });
     document.querySelectorAll(".tab").forEach(function(t){ t.classList.toggle("on", t.getAttribute("data-tab")===name); });
   }
 
-  CONDS.forEach(function(){});
-  chips($("brandChips"), BRANDS, "", function(v){ $("brand").value=v; chips($("brandChips"), BRANDS, v, arguments.callee); });
-  chips($("sizeChips"), SIZES, "", function(v){ $("size").value=v; chips($("sizeChips"), SIZES, v, arguments.callee); });
-  chips($("condChips"), CONDS, "", function(v){ $("condition").value=v; chips($("condChips"), CONDS, v, arguments.callee); });
-
-  $("make").onclick=function(){ paint(readForm()); toast("Ready to copy"); };
-  $("sample").onclick=function(){
-    $("brand").value="Free People"; $("style").value="Lenox Sweater Tunic"; $("color").value="Carrot Cake Combo";
-    $("size").value="M"; $("category").value="sweaters"; $("condition").value="good"; $("retail").value="168"; $("price").value="35"; $("cost").value="8";
-    $("notes").value="Soft, cozy, and ready for a fall morning.";
-    chips($("condChips"), CONDS, "good", function(v){ $("condition").value=v; chips($("condChips"), CONDS, v, arguments.callee); });
-    paint(readForm());
+  document.querySelectorAll("[data-pick]").forEach(function(b){
+    b.addEventListener("click", function(){ openPicker(b.getAttribute("data-pick")); });
+  });
+  $("pickBack").onclick=closePicker;
+  $("pickAdd").onclick=function(){ $("addbox").classList.toggle("on"); $("addInput").focus(); };
+  $("addSave").onclick=addCurrent;
+  $("addInput").addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); addCurrent(); } });
+  $("copyAll").onclick=function(){
+    paint();
+    var t=[blocks.title, blocks.ask, "", blocks.posh].filter(Boolean).join("\n");
+    copyText(t);
   };
   $("clear").onclick=function(){
-    ["brand","style","color","size","category","condition","cost","retail","price","bust","waist","hip","length","notes"].forEach(function(id){ $(id).value=""; });
-    chips($("brandChips"), BRANDS, "", function(v){ $("brand").value=v; chips($("brandChips"), BRANDS, v, arguments.callee); });
-    chips($("sizeChips"), SIZES, "", function(v){ $("size").value=v; chips($("sizeChips"), SIZES, v, arguments.callee); });
-    chips($("condChips"), CONDS, "", function(v){ $("condition").value=v; chips($("condChips"), CONDS, v, arguments.callee); });
-    $("outTitle").textContent="Fill in the left side, then tap Make listings.";
-    $("outAsk").textContent=""; $("outPosh").textContent="";
+    form={maker:"",style:"",color:"",size:"",condition:"",price:""};
+    paint();
+    toast("New piece");
   };
   $("save").onclick=function(){
-    const d=readForm(); paint(d);
-    closet.push({ id:Date.now(), title:titleFor(d), price:d.price, stage:"Bought", when:new Date().toISOString() });
-    save(); renderCloset(); toast("Saved on this iPad");
+    paint();
+    closet.push({ id:Date.now(), title:blocks.title, price:money(form.price), stage:"Bought", when:new Date().toISOString() });
+    saveCloset(); renderCloset(); toast("Saved on this iPad");
   };
   document.querySelectorAll(".tab").forEach(function(t){ t.onclick=function(){ showTab(t.getAttribute("data-tab")); }; });
   document.querySelectorAll(".copy").forEach(function(btn){
-    btn.onclick=function(){
-      const text=blocks[btn.getAttribute("data-copy")]||"";
-      if(!text) return;
-      navigator.clipboard.writeText(text).then(function(){ toast("Copied"); }).catch(function(){
-        const ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); toast("Copied");
-      });
-    };
+    btn.onclick=function(){ copyText(blocks[btn.getAttribute("data-copy")]||""); };
   });
   $("shareHelper").onclick=function(){
     var url=location.origin+location.pathname;
-    if(navigator.share){
-      navigator.share({title:"Carey's Corner",text:"A Poshmark listing helper in Carey's closet style.",url:url}).catch(function(){});
-      return;
-    }
-    if(navigator.clipboard&&navigator.clipboard.writeText){
-      navigator.clipboard.writeText(url).then(function(){ toast("Link copied. Paste it in a text."); });
-      return;
-    }
-    window.prompt("Copy this link", url);
+    if(navigator.share){ navigator.share({title:"Carey's Corner",text:"A Poshmark listing helper in Carey's closet style.",url:url}).catch(function(){}); return; }
+    copyText(url);
   };
-  load(); renderCloset();
+  loadLib(); loadCloset(); paint(); renderCloset();
 })();
 </script>
 </body>

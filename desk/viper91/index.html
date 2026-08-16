@@ -10,7 +10,19 @@
 <meta name="theme-color" content="#1a0a0a">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>VIPER 99.1 · Wengler Hill</title>
-<meta name="viper-build" content="slider-tall-2">
+<meta name="description" content="He sold the car. Not the attitude. Drive Wengler Hill.">
+<meta property="og:title" content="VIPER 99.1">
+<meta property="og:description" content="He sold the car. Not the attitude. Drive Wengler Hill.">
+<meta property="og:url" content="https://whimsy-violet-dhgk.here.now/viper91/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://whimsy-violet-dhgk.here.now/viper91/hero.jpg">
+<meta property="og:image:width" content="1280">
+<meta property="og:image:height" content="853">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="VIPER 99.1">
+<meta name="twitter:description" content="He sold the car. Not the attitude. Drive Wengler Hill.">
+<meta name="twitter:image" content="https://whimsy-violet-dhgk.here.now/viper91/hero.jpg">
+<meta name="viper-build" content="slider-phone-2">
 <link rel="apple-touch-icon" href="icon.png">
 <link rel="icon" href="icon.png">
 <style>
@@ -104,6 +116,24 @@ html.from-desk #playui{justify-content:space-between}
 }
 #over .scoreline{font-family:Impact,sans-serif;font-size:48px;margin:6px 0 0}
 #over .quip,#win .quip{font-style:italic;font-size:18px;max-width:18em;margin:16px auto 0;line-height:1.35}
+@media (max-width:700px), (max-height:740px){
+  h1{font-size:clamp(48px,16vw,88px);text-shadow:0 4px 0 #7a1212,0 8px 18px rgba(0,0,0,.55)}
+  .face{width:64px;height:64px;margin-bottom:6px}
+  .by,.how,.story,.quip{font-size:14px;margin-top:8px}
+  .btns{width:min(100%,300px);gap:8px;margin-top:12px}
+  button,.linkbtn{min-height:46px;font-size:17px;padding:10px 14px}
+  .escape{min-height:44px;font-size:17px;padding:10px 12px}
+  html.from-desk .panel{padding-top:calc(var(--st) + 64px)}
+  html.from-desk #hud{padding-top:calc(var(--st) + 60px)}
+  .hudbox{padding:4px 8px;min-width:58px}
+  .hudbox b{font-size:18px}
+  #steer{left:6px;right:6px;bottom:calc(var(--sb) + 46px)}
+  .steerPad{width:auto;flex:1 1 0;max-width:calc(50vw - 10px)}
+  .steerTrack{height:76px;border-radius:38px}
+  .steerTrack:before{left:16px;right:16px;height:5px;margin-top:-2.5px}
+  .steerKnob{top:8px;width:60px;height:60px;margin-left:-30px;border-width:2px}
+  #playui button{min-height:40px;font-size:13px;padding:6px 12px}
+}
 </style>
 </head>
 <body>
@@ -142,7 +172,7 @@ html.from-desk #playui{justify-content:space-between}
       <div class="sub">Wengler Hill · The showcase</div>
       <div class="by">He sold the car. Not the attitude. Six chapters of pine, deer, fog, and leftover horsepower.</div>
       <div class="fine">Martinek Motors · Inwood, California</div>
-      <div class="how">Two sliders, one for each thumb. A longer slide takes you from one side of the road to the other, so steering is smoother. Stay on the road. Collect gold 99s. Watch the deer. They still do not care.</div>
+      <div class="how">Two sliders, one for each thumb. Slide left or right to stay on the road. Collect gold 99s. Watch the deer. They still do not care. On a phone the sliders sit lower and smaller so you can still see the hill.</div>
       <div class="btns">
         <button class="red" id="go">FIRE IT UP</button>
         <button class="gold" id="free">FREE DRIVE</button>
@@ -778,12 +808,13 @@ function draw(dt,C){
     seg.sprites.forEach(sp=>{
       if(sp.got) return;
       drawSprite(sp, seg);
-      if(playing() && seg.sc.y>H*0.68 && seg.sc.y<H*0.88) hitTest(sp);
+      if(playing() && seg.sc.y>(phoneView()?H*0.58:H*0.68) && seg.sc.y<(phoneView()?H*0.82:H*0.88)) hitTest(sp);
     });
   }
   // car
   const carX=W/2 + playerX*W*0.08;
-  drawViper(carX, H*0.78, steer*0.35 + playerX*0.12, C);
+  const carY=phoneView()?H*0.70:H*0.78;
+  drawViper(carX, carY, steer*0.35 + playerX*0.12, C);
   // speed haze
   if(speed>3800){
     ctx.strokeStyle="rgba(244,234,212,.12)";
@@ -816,9 +847,14 @@ function syncKnob(){
   const pct=Math.max(0, Math.min(1, (playerX+1)/2))*100;
   document.querySelectorAll(".steerKnob").forEach(k=>{ k.style.left=pct+"%"; });
 }
+function phoneView(){ return window.innerWidth<700 || window.innerHeight<740; }
+function knobPad(track){
+  const k=track.querySelector(".steerKnob");
+  return k ? Math.max(20, k.offsetWidth/2) : (phoneView()?30:56);
+}
 function setSteerFromClientX(track, clientX, fromMove){
   const r=track.getBoundingClientRect();
-  const pad=56;
+  const pad=knobPad(track);
   const x=Math.max(pad, Math.min(r.width-pad, clientX-r.left));
   const t=(x-pad)/Math.max(1, r.width-pad*2);
   const next=t*2-1;

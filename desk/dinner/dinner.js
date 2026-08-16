@@ -98,8 +98,19 @@
 
   function setPlateMode(open) {
     var plate = document.getElementById("plate");
+    var globe = document.getElementById("globeBtn");
     plate.classList.toggle("slim", !open);
+    if (globe) globe.classList.toggle("hidden", !feat);
     if (open) plate.scrollTop = 0;
+  }
+  function putAwaySheet() {
+    closeDetail();
+    document.getElementById("planner").classList.add("hidden");
+    feat = null;
+    filter = "all";
+    paintCountry();
+    syncHl();
+    showToast("Globe is free. Tap another country.", 1800);
   }
 
   function paintFilters() {
@@ -187,6 +198,7 @@
       "</ul>" +
       (d.wiki ? "<p><a href='https://en.wikipedia.org/wiki/" + encodeURIComponent(d.wiki) + "' target='_blank' rel='noopener'>The longer story on Wikipedia</a></p>" : "") +
       "<div class='row'><button class='btn navy' id='addMeal'>Add to the meal</button></div>" +
+      "<div class='row'><button class='btn gold' id='copyShop'>Copy shopping list</button></div>" +
       "<div class='row'><button class='btn gold' id='copyCard'>Copy the cook card</button></div>" +
       "<div class='row'><button class='btn gold' id='closeDetail'>Close</button></div>" +
       "</div>";
@@ -202,6 +214,14 @@
       openPlanner();
       showToast("On the " + d.course + " plate.", 1400);
     };
+    document.getElementById("copyShop").onclick = function () {
+      var t = (window.dinnerCook && window.dinnerCook.shopText) ? window.dinnerCook.shopText(d, niceName(feat)) : (shop || []).map(function (s) { return "☐ " + s; }).join("\n");
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(t).then(function () { showToast("Shopping list copied.", 1600); });
+      } else {
+        window.prompt("Copy this shopping list", t);
+      }
+    };
     document.getElementById("copyCard").onclick = function () {
       var t = (window.dinnerCook && window.dinnerCook.text) ? window.dinnerCook.text(d) : d.name;
       if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -216,6 +236,13 @@
   function closeDetail() { document.getElementById("detail").classList.add("hidden"); }
 
   function listText() {
+    if (window.dinnerCook && window.dinnerCook.shopTextMany) {
+      var parts = [];
+      SLOTS.forEach(function (s) {
+        if (meal[s.id]) parts.push({ dish: meal[s.id].dish, country: meal[s.id].country, label: s.label + " · " + meal[s.id].dish.name });
+      });
+      return window.dinnerCook.shopTextMany(parts);
+    }
     var lines = ["What's for Dinner — shopping list"], i, s, d, seen = {};
     for (i = 0; i < SLOTS.length; i++) {
       s = SLOTS[i];
@@ -227,12 +254,10 @@
         var k = String(ing).toLowerCase();
         if (seen[k]) return;
         seen[k] = 1;
-        lines.push("• " + ing);
+        lines.push("☐ " + ing);
       });
     }
     if (lines.length === 1) lines.push("Nothing on the plates yet.");
-    lines.push("");
-    lines.push("Wine notes stay on the cards. DoorDash and cards come later.");
     return lines.join("\n");
   }
 
@@ -502,6 +527,7 @@
     document.getElementById("shareBtn").addEventListener("click", shareKitchen);
     document.getElementById("shareTool").addEventListener("click", shareKitchen);
     document.getElementById("homeBtn").addEventListener("click", goHome);
+    document.getElementById("globeBtn").addEventListener("click", putAwaySheet);
     document.getElementById("zoomIn").addEventListener("click", function () { if (map) map.zoomIn({ duration: 280 }); });
     document.getElementById("zoomOut").addEventListener("click", function () { if (map) map.zoomOut({ duration: 280 }); });
     document.getElementById("planBtn").addEventListener("click", openPlanner);

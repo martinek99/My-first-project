@@ -634,11 +634,124 @@
     return fn(list);
   }
 
-  function cookCard(d) {
-    if (!dummyRows(d.rows) && d.rows && d.rows.length) {
-      return pack(specFromRows(d.rows, d.course), d.rows, "Home-kitchen card from the World file. Times are on the grid.");
+  function waysFor(d, card) {
+    var kind = classify(d);
+    var heat = card && card.spec ? card.spec.heat : "";
+    var common = [
+      { name: "This card", how: heat || "Follow the grid." }
+    ];
+    if (kind === "roast" || kind === "pizza" || /chicken|roast|duck|lamb/.test(lower(d.name))) {
+      common.push({ name: "Oven", how: "425°F 20 min, then 375°F until the done temperature. Rest 10–15 min." });
+      common.push({ name: "Grill / rotisserie", how: "Indirect heat 375°F, lid down. Same done temperature. Rest 10 min." });
+    } else if (kind === "grill" || /steak|asado|kebab|picanha|ribs/.test(lower(d.name))) {
+      common.push({ name: "Grill", how: "450–500°F. Flip once. Rest 5 min." });
+      common.push({ name: "Cast-iron", how: "Pan 450°F, 2 min a side, butter baste 1 min. Rest 5 min." });
+      common.push({ name: "Broiler", how: "Top rack, 6 in from the heat. Same times as the grill." });
+    } else if (kind === "stew" || kind === "soup" || kind === "beans") {
+      common.push({ name: "Stovetop", how: "Brown, then lid on, low simmer 190°F." });
+      common.push({ name: "Oven", how: "After the brown, covered pot at 325°F for the same time." });
+      common.push({ name: "Slow cooker", how: "Low 6–8 hr or High 3–4 hr. Brown the meat first if you can." });
+    } else if (kind === "fry") {
+      common.push({ name: "Deep fry", how: "Oil 350°F. Batches. Drain on a rack." });
+      common.push({ name: "Shallow fry", how: "½ in oil, 350°F, flip once." });
+      common.push({ name: "Air fryer", how: "400°F 8–12 min, shake once. Spray a little oil." });
+    } else if (kind === "rice" || kind === "noodles" || kind === "starch") {
+      common.push({ name: "Pot", how: "Boil 212°F, then the time on the card." });
+      common.push({ name: "Rice cooker / steamer", how: "Same water ratio. Steam 212°F until the switch flips or the time is up." });
+    } else if (kind === "bakeSweet" || kind === "custard" || kind === "bread") {
+      common.push({ name: "Oven", how: heat || "350°F, center rack." });
+      common.push({ name: "Toaster oven", how: "Same temperature. Check 5 min early. Darker pans run hot." });
+    } else if (kind === "raw" || kind === "salad" || kind === "ceviche" || kind === "fruit" || kind === "cheese") {
+      common.push({ name: "No heat", how: "Board and a bowl. Chill 38°F if you have time." });
+    } else if (kind === "hotDrink") {
+      common.push({ name: "Kettle", how: "200°F for black tea and coffee. 175°F for green tea." });
+      common.push({ name: "Pot", how: "Milk drinks: just to a boil, then down. Do not scorch." });
+    } else if (kind === "coldDrink") {
+      common.push({ name: "No stove", how: "Fridge 38°F. Ice from the freezer. Stir or shake 15 sec." });
+    } else {
+      common.push({ name: "Stovetop", how: "Medium pan, 350°F surface. The grid is the order." });
+      common.push({ name: "Oven", how: "375°F if the dish can go in a pot or on a sheet." });
     }
-    return buildCard(d);
+    var seen = {}, out = [], i;
+    for (i = 0; i < common.length; i++) {
+      if (seen[common[i].name]) continue;
+      seen[common[i].name] = 1;
+      out.push(common[i]);
+    }
+    return out.slice(0, 4);
+  }
+
+  function cookCard(d) {
+    var card;
+    if (!dummyRows(d.rows) && d.rows && d.rows.length) {
+      card = pack(specFromRows(d.rows, d.course), d.rows, "Home-kitchen card. Times and heat are on the grid and in the spec strip.");
+    } else {
+      card = buildCard(d);
+    }
+    card.ways = waysFor(d, card);
+    return card;
+  }
+
+  function shopItems(d) {
+    var card = cookCard(d);
+    var seen = {}, out = [], i, ing, k;
+    for (i = 0; i < (card.rows || []).length; i++) {
+      ing = String(card.rows[i].ing || "").replace(/\s+/g, " ").trim();
+      k = ing.toLowerCase();
+      if (!ing || seen[k]) continue;
+      seen[k] = 1;
+      out.push(ing);
+    }
+    if (!out.length && d.shop) {
+      for (i = 0; i < d.shop.length; i++) {
+        ing = String(d.shop[i] || "").trim();
+        k = ing.toLowerCase();
+        if (!ing || seen[k]) continue;
+        seen[k] = 1;
+        out.push(ing);
+      }
+    }
+    return out;
+  }
+
+  function shopText(d, country) {
+    var items = shopItems(d);
+    var lines = ["Shopping list · " + (d.name || "Dish")];
+    if (country) lines[0] += " · " + country;
+    lines.push("");
+    if (!items.length) lines.push("Nothing on this card yet.");
+    else items.forEach(function (ing) { lines.push("☐ " + ing); });
+    lines.push("");
+    lines.push("Buy these. The cook card has the heat and the times.");
+    return lines.join("\n");
+  }
+
+  function shopTextMany(parts) {
+    var lines = ["Shopping list · tonight's table"], seen = {}, i, j, items, ing, k, any = false;
+    for (i = 0; i < (parts || []).length; i++) {
+      if (!parts[i] || !parts[i].dish) continue;
+      items = shopItems(parts[i].dish);
+      lines.push("");
+      lines.push((parts[i].label || parts[i].dish.name || "Dish").toUpperCase() + (parts[i].country ? " · " + parts[i].country : ""));
+      for (j = 0; j < items.length; j++) {
+        ing = items[j];
+        k = ing.toLowerCase();
+        if (seen[k]) {
+          lines.push("☐ " + ing + " (already on the list)");
+          continue;
+        }
+        seen[k] = 1;
+        any = true;
+        lines.push("☐ " + ing);
+      }
+    }
+    if (!any) {
+      lines.push("");
+      lines.push("Nothing on the plates yet. Open a dish, or add dishes to the meal.");
+    }
+    lines.push("");
+    lines.push("This is what you buy. Heat and times stay on the cook cards.");
+    return lines.join("\n");
   }
 
   function escapeHtml(s) {
@@ -701,13 +814,33 @@
       "</div>";
   }
 
+  function waysHtml(ways) {
+    if (!ways || !ways.length) return "";
+    var html = "<div class='ways'><b>Ways to cook it</b>";
+    ways.forEach(function (w) {
+      html += "<div class='way'><i>" + escapeHtml(w.name) + "</i>" + escapeHtml(w.how) + "</div>";
+    });
+    html += "</div>";
+    return html;
+  }
+
+  function shopHtml(d) {
+    var items = shopItems(d);
+    if (!items.length) return "";
+    return "<div class='shopbox'><b>Shopping list · what to buy</b><ul>" +
+      items.map(function (ing) { return "<li>" + escapeHtml(ing) + "</li>"; }).join("") +
+      "</ul></div>";
+  }
+
   function cardHtml(d) {
     var card = cookCard(d);
     return "<div class='cookcard'>" +
       "<div class='cookhead'>Cook card</div>" +
       specHtml(card.spec) +
+      waysHtml(card.ways) +
       "<p class='readcard'>Left column is what you buy. Across is the order of work. A shared box means those things cook together.</p>" +
       mergeRecipeTable(card.rows) +
+      shopHtml(d) +
       (card.note ? "<p class='cooknote'>" + escapeHtml(card.note) + "</p>" : "") +
       "</div>";
   }
@@ -722,9 +855,21 @@
     lines.push("Done when: " + (s.done || ""));
     lines.push("Gear: " + (s.gear || ""));
     lines.push("");
+    if (card.ways && card.ways.length) {
+      lines.push("");
+      lines.push("Ways to cook it");
+      card.ways.forEach(function (w) { lines.push("- " + w.name + ": " + w.how); });
+    }
+    lines.push("");
     (card.rows || []).forEach(function (r) {
       lines.push("• " + r.ing + " — " + (r.cells || []).filter(Boolean).join(" → "));
     });
+    var buy = shopItems(d);
+    if (buy.length) {
+      lines.push("");
+      lines.push("Buy");
+      buy.forEach(function (ing) { lines.push("☐ " + ing); });
+    }
     if (card.note) { lines.push(""); lines.push(card.note); }
     return lines.join("\n");
   }
@@ -733,6 +878,9 @@
     card: cookCard,
     html: cardHtml,
     text: cardText,
-    table: mergeRecipeTable
+    table: mergeRecipeTable,
+    shop: shopItems,
+    shopText: shopText,
+    shopTextMany: shopTextMany
   };
 })(typeof window !== "undefined" ? window : global);

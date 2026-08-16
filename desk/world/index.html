@@ -123,7 +123,7 @@ html.from-desk .veil{padding-top:calc(var(--st) + 76px)}
   padding:12px 16px 12px;text-align:center;touch-action:pan-y;
   overflow-x:hidden;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
 #plate.explore-sheet{top:auto;bottom:calc(var(--sb) + 10px);left:10px;right:10px;
-  max-height:min(82dvh,820px);overflow-x:hidden;overflow-y:scroll;-webkit-overflow-scrolling:touch;
+  max-height:min(52dvh,560px);overflow-x:hidden;overflow-y:scroll;-webkit-overflow-scrolling:touch;
   touch-action:pan-y;overscroll-behavior:contain;padding:10px 14px 18px}
 #plate.explore-slim{top:calc(var(--st) + 12px);bottom:auto;max-height:none;overflow:visible}
 html.from-desk #plate{top:calc(var(--st) + 72px)}
@@ -147,7 +147,25 @@ html.from-desk #plate.explore-slim{top:calc(var(--st) + 72px)}
 .subjects{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:8px 0 0}
 .subjects.hidden{display:none}
 .subjects .chip{min-height:40px;padding:8px 12px;font-size:14px;letter-spacing:.06em;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-#plate.explore-sheet{max-height:min(82dvh,820px)}
+#plate.explore-sheet{max-height:min(52dvh,560px)}
+#plate.explore-slim .subjects,
+#plate.explore-slim #placeFact,
+#plate.explore-slim .photo-slot{display:none !important}
+.globe{left:auto;right:6px}
+.globe.hidden{display:none}
+.open-sheet{margin:8px auto 0;min-height:44px}
+.cookcard{border:1px solid #8a7040;background:#fff8e8;padding:12px;margin:10px 0}
+.cookhead{font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:#8a7040;text-align:center;margin:0 0 8px}
+.spec{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:0 0 10px}
+.spec div{border:1px solid #c4ae7a;background:#efe4c4;padding:8px 9px;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;line-height:1.3;color:#1c1610}
+.spec div.wide{grid-column:1/-1}
+.spec b{display:block;font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8a7040;margin:0 0 2px}
+.ways,.shopbox{border:1px solid #c4ae7a;background:#fff8e8;padding:10px 12px;margin:10px 0}
+.ways b,.shopbox b{display:block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#8a7040;margin-bottom:6px}
+.way{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:15px;line-height:1.35;margin:0 0 8px;color:#1c1610}
+.way i{display:block;font-style:normal;font-weight:700;color:#3a3020}
+.shopbox ul{margin:6px 0 0;padding-left:1.2em;font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:16px}
+.readcard,.cooknote{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;font-size:14px;line-height:1.4;color:#5a4e3a;margin:8px 0}
 .photo-slot{display:none}
 #plate.explore-card .photo-slot{display:block;width:100%;height:min(28vh,220px);max-height:220px;margin:8px auto 0;
   border:1px solid rgba(201,162,74,.4);background:#d8c9a4;overflow:hidden}
@@ -209,9 +227,9 @@ html.from-desk #hud.explore-hud #tools{top:calc(var(--st) + 72px)}
 </style>
 <meta property="og:title" content="The World by Mark" />
 <meta property="og:description" content="Spin the globe. Find ten places. Explore landmarks, food, and people." />
-<meta property="og:url" content="https://wistful-jasper-4s2v.here.now/" />
+<meta property="og:url" content="https://whimsy-violet-dhgk.here.now/world/" />
 <meta property="og:type" content="website" />
-<meta property="og:image" content="https://here.now/api/thumbnails/wistful-jasper-4s2v" />
+<meta property="og:image" content="https://whimsy-violet-dhgk.here.now/world/icon.png" />
 <meta name="twitter:card" content="summary_large_image" /></head>
 <body>
 <div id="stage">
@@ -222,6 +240,7 @@ html.from-desk #hud.explore-hud #tools{top:calc(var(--st) + 72px)}
 <div id="hud" class="hidden">
 <div id="plate">
 <button class="home" id="homeBtn" aria-label="Home">Home</button>
+<button class="home globe hidden" id="globeBtn" aria-label="See the globe">Globe</button>
 <div class="kicker" id="kicker">Find</div>
 <div class="namerow">
 <img id="placeFlag" class="flag hidden" alt="">
@@ -243,7 +262,7 @@ html.from-desk #hud.explore-hud #tools{top:calc(var(--st) + 72px)}
 <button id="homeDock">Home</button>
 <button id="hintBtn" class="hidden">Hint · continent</button>
 <button id="nextBtn" class="hidden">Next</button>
-<div id="credit">The World by Mark · v34</div>
+<div id="credit">The World by Mark · v35</div>
 </div>
 </div>
 <div id="title" class="veil">
@@ -313,6 +332,7 @@ html.from-desk #hud.explore-hud #tools{top:calc(var(--st) + 72px)}
 <script src='https://unpkg.com/topojson-client@3/dist/topojson-client.min.js'></script>
 <script src='facts.js'></script>
 <script src='foods.js'></script>
-<script src='atlas.js?v=34'></script>
+<script src='../dinner/cook.js?v=2'></script>
+<script src='atlas.js?v=35'></script>
 </body>
 </html>
