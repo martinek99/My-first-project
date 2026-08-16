@@ -8,6 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Mark's Desk">
 <meta name="theme-color" content="#142033">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>Mark's Desk</title>
 <style>
 :root{
@@ -15,7 +16,6 @@
   --cream:#f3ead6;
   --paper:#fffaf0;
   --gold:#c9a24a;
-  --terra:#8c4a2f;
   --ink:#2a2218;
   --muted:#6a5a3a;
   --red:#c81e1e;
@@ -26,41 +26,60 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--navy);color:var(--cream);font-family:var(--sans)}
-body{min-height:100dvh;padding:calc(var(--st) + 36px) 28px calc(var(--sb) + 40px)}
-.wrap{max-width:980px;margin:0 auto}
+body{min-height:100dvh;padding:0 0 calc(var(--sb) + 36px)}
+.talkbar{
+  position:sticky;top:0;z-index:20;
+  background:#0d1826;
+  padding:calc(var(--st) + 12px) 16px 12px;
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;
+  border-bottom:2px solid #e8c37a;
+}
+.talkbar a{
+  display:flex;align-items:center;justify-content:center;text-align:center;
+  text-decoration:none;min-height:64px;border-radius:14px;padding:12px 10px;
+  font-family:var(--serif);font-size:22px;font-weight:600;line-height:1.15;
+}
+.talkbar .me{background:#fffaf0;color:#142033}
+.talkbar .chief{background:#e8c37a;color:#142033}
+.wrap{max-width:980px;margin:0 auto;padding:28px 22px 0}
 .eyebrow{font-family:var(--serif);letter-spacing:.28em;text-transform:uppercase;font-size:13px;color:#e8c37a;margin:0 0 10px}
 h1{font-family:var(--serif);font-weight:600;font-size:clamp(42px,7vw,72px);line-height:.95;margin:0 0 12px}
-.lede{font-family:var(--serif);font-style:italic;font-size:22px;line-height:1.4;color:#d8cbb3;max-width:22em;margin:0 0 28px}
-.grid{display:grid;grid-template-columns:1fr;gap:18px}
+.lede{font-family:var(--serif);font-style:italic;font-size:20px;line-height:1.4;color:#d8cbb3;max-width:28em;margin:0 0 22px}
+.stamp{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#e8c37a;margin:0 0 22px}
+.grid{display:grid;grid-template-columns:1fr;gap:16px}
 @media (min-width:780px){.grid{grid-template-columns:1fr 1fr}}
 .card{
   display:block;text-decoration:none;color:inherit;
   background:var(--paper);color:var(--ink);
-  border-radius:18px;padding:28px 26px 24px;
-  min-height:210px;
+  border-radius:18px;padding:24px 22px 20px;min-height:180px;
   box-shadow:0 18px 40px rgba(0,0,0,.22);
 }
 .card:active{transform:scale(.992)}
 .tag{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#8a7040;margin:0 0 10px}
-.card h2{font-family:var(--serif);font-size:34px;margin:0 0 10px;line-height:1.05}
-.card p{margin:0;font-size:17px;line-height:1.45;color:var(--muted)}
-.go{margin-top:18px;display:inline-block;background:var(--navy);color:#fff8ee;padding:12px 18px;border-radius:999px;font-size:15px;letter-spacing:.04em}
+.card h2{font-family:var(--serif);font-size:30px;margin:0 0 10px;line-height:1.05}
+.card p{margin:0;font-size:16px;line-height:1.45;color:var(--muted)}
+.go{margin-top:16px;display:inline-block;background:var(--navy);color:#fff8ee;padding:10px 16px;border-radius:999px;font-size:15px}
 .card.viper{background:#1a0a0a;color:#f4ead4}
 .card.viper .tag{color:#e8c37a}
 .card.viper p{color:#d8cbb3}
 .card.viper .go{background:var(--red)}
-.card.wait{opacity:.92;border:1.5px dashed rgba(201,162,74,.55);background:transparent;color:var(--cream);box-shadow:none}
+.card.wait{border:1.5px dashed rgba(201,162,74,.55);background:transparent;color:var(--cream);box-shadow:none}
 .card.wait p{color:#d8cbb3}
 .card.wait .go{background:transparent;border:1px solid #e8c37a;color:#e8c37a}
-.note{margin:28px 0 0;font-size:16px;line-height:1.5;color:#d8cbb3;max-width:38em}
+.note{margin:28px 0 0;font-size:16px;line-height:1.5;color:#d8cbb3;max-width:40em}
 .note strong{color:#f4ead4}
 </style>
 </head>
 <body>
+  <div class="talkbar">
+    <a class="me" href="https://cursor.com/agents/bc-01a00afa-77d2-7708-a534-c4d579439aa4">Talk to me</a>
+    <a class="chief" href="https://cursor.com/agents">Talk to Chief of Staff</a>
+  </div>
   <div class="wrap">
-    <p class="eyebrow">For the iPad · no GitHub needed</p>
+    <p class="eyebrow">One page · iPad home screen</p>
     <h1>Mark's Desk</h1>
-    <p class="lede">Tap a card. That is the whole system. I will keep sending you this kind of link.</p>
+    <p class="lede">The two gold buttons stay at the top. Me is this chat. Chief of Staff is GrokBot, while that app is frozen.</p>
+    <p class="stamp">Updated Sunday Aug 16 · 2:55 PM</p>
     <div class="grid">
       <a class="card" href="careys/">
         <p class="tag">For Brittany</p>
@@ -75,19 +94,31 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(42px,7vw,72px);line-
         <span class="go">Fire it up</span>
       </a>
       <div class="card wait">
-        <p class="tag">Still looking</p>
-        <h2>World View</h2>
-        <p>I found VIPER 99. I have not found the World View link in your email yet. If you have it, send it and I will put it right here.</p>
+        <p class="tag">Need the old link</p>
+        <h2>The World by Mark</h2>
+        <p>World Builder and World Tester. I have not found those live links yet. Send them and they go right here.</p>
         <span class="go">Waiting on the link</span>
+      </div>
+      <div class="card wait">
+        <p class="tag">Tomorrow</p>
+        <h2>A.M. Briggs</h2>
+        <p>Anne Briggs stock-trade overcharge. I am looking through your mail for the file. I will put the working notes here, not a public dump.</p>
+        <span class="go">In progress</span>
+      </div>
+      <div class="card wait">
+        <p class="tag">Private</p>
+        <h2>Monica Medical</h2>
+        <p>I will not put medical files on a public page. When I have the folder, it gets its own locked link.</p>
+        <span class="go">Kept private</span>
       </div>
       <a class="card" href="https://gentle-quiche-6d8s.here.now/">
         <p class="tag">Earlier version</p>
         <h2>First Carey's Corner</h2>
-        <p>The listing helper Grokbot already sent Brittany. Still live if you want the original.</p>
+        <p>The listing helper Grokbot already sent Brittany.</p>
         <span class="go">Open the first one</span>
       </a>
     </div>
-    <p class="note">On the iPad: open a page in <strong>Safari</strong>, tap the Share button, then <strong>Add to Home Screen</strong>. After that it opens like an app. You do not need GitHub for any of this.</p>
+    <p class="note">If the top still shows no gold buttons, the old iPad icon is a frozen copy. Delete that icon, open this page in <strong>Safari</strong>, tap Share, then <strong>Add to Home Screen</strong> again.</p>
   </div>
 </body>
 </html>
