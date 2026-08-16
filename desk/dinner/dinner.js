@@ -37,7 +37,7 @@
   })();
 
   var map, world = [], mapReady = false, dataReady = false, playReady = false;
-  var feat = null, filter = "all", meal = {}, hoverId = null, tap0 = null, toastT = 0;
+  var feat = null, filter = "all", meal = {}, hoverId = null, tap0 = null, toastT = 0, sheetDown = false;
   var photoCache = {};
 
   function padId(id) { return id == null ? "" : String(id).padStart(3, "0"); }
@@ -106,11 +106,25 @@
   function putAwaySheet() {
     closeDetail();
     document.getElementById("planner").classList.add("hidden");
-    feat = null;
-    filter = "all";
+    document.getElementById("school").classList.add("hidden");
+    if (!feat) return;
+    if (sheetDown) {
+      feat = null;
+      filter = "all";
+      sheetDown = false;
+      paintCountry();
+      syncHl();
+      showToast("Back to the globe.", 1400);
+      return;
+    }
+    sheetDown = true;
+    setPlateMode(false);
+    showToast("Globe is free. Tap another country, or tap the name to open this one again.", 2200);
+  }
+  function openSheet() {
+    if (!feat) return;
+    sheetDown = false;
     paintCountry();
-    syncHl();
-    showToast("Globe is free. Tap another country.", 1800);
   }
 
   function paintFilters() {
@@ -140,6 +154,14 @@
     if (!feat) {
       n.textContent = "Tap a country";
       m.textContent = "Twenty dishes. Build a meal.";
+      grid.innerHTML = "";
+      document.getElementById("filters").classList.add("hidden");
+      setPlateMode(false);
+      return;
+    }
+    if (sheetDown) {
+      n.textContent = niceName(feat);
+      m.textContent = "Tap the name to open the dishes again.";
       grid.innerHTML = "";
       document.getElementById("filters").classList.add("hidden");
       setPlateMode(false);
@@ -200,7 +222,7 @@
       "<div class='row'><button class='btn navy' id='addMeal'>Add to the meal</button></div>" +
       "<div class='row'><button class='btn gold' id='copyShop'>Copy shopping list</button></div>" +
       "<div class='row'><button class='btn gold' id='copyCard'>Copy the cook card</button></div>" +
-      "<div class='row'><button class='btn gold' id='closeDetail'>Close</button></div>" +
+      "<div class='row'><button class='btn gold' id='closeDetail'>Back to the dishes</button></div>" +
       "</div>";
     wireScrollLock(document.getElementById("detailSheet"));
     wikiPhoto(d.wiki, function (url) {
@@ -351,6 +373,7 @@
     if (!f) return;
     feat = f;
     filter = "all";
+    sheetDown = false;
     hoverId = fid(f);
     holdOnCountry(f);
     paintCountry();
@@ -494,6 +517,7 @@
   function goHome() {
     feat = null;
     filter = "all";
+    sheetDown = false;
     closeDetail();
     document.getElementById("planner").classList.add("hidden");
     document.getElementById("school").classList.add("hidden");
@@ -528,6 +552,7 @@
     document.getElementById("shareTool").addEventListener("click", shareKitchen);
     document.getElementById("homeBtn").addEventListener("click", goHome);
     document.getElementById("globeBtn").addEventListener("click", putAwaySheet);
+    document.getElementById("placeName").addEventListener("click", openSheet);
     document.getElementById("zoomIn").addEventListener("click", function () { if (map) map.zoomIn({ duration: 280 }); });
     document.getElementById("zoomOut").addEventListener("click", function () { if (map) map.zoomOut({ duration: 280 }); });
     document.getElementById("planBtn").addEventListener("click", openPlanner);
