@@ -8,6 +8,7 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Carey's Corner">
 <meta name="theme-color" content="#f3ead6">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>Carey's Corner</title>
 <style>
 :root{
@@ -19,8 +20,18 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans)}
-body{min-height:100dvh;padding:calc(var(--st) + 18px) 20px calc(var(--sb) + 28px)}
-.wrap{max-width:1100px;margin:0 auto}
+body{min-height:100dvh;padding:0 0 calc(var(--sb) + 28px)}
+.homebar{
+  position:sticky;top:0;z-index:20;
+  background:var(--navy);padding:calc(var(--st) + 12px) 20px 12px;
+}
+.homebar a{
+  display:block;text-align:center;text-decoration:none;
+  background:var(--gold);color:var(--navy);
+  border-radius:14px;padding:16px 18px;
+  font-family:var(--serif);font-size:22px;font-weight:600;
+}
+.wrap{max-width:1100px;margin:0 auto;padding:18px 20px 0}
 .top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin:0 0 18px}
 .eyebrow{font-family:var(--serif);letter-spacing:.24em;text-transform:uppercase;font-size:12px;color:#8a7040;margin:0 0 6px}
 h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,5vw,48px);margin:0;line-height:1}
@@ -57,10 +68,12 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
 .muted{color:var(--muted)}
 .toast{position:fixed;left:50%;bottom:calc(var(--sb) + 24px);transform:translateX(-50%);background:var(--navy);color:#fff8ee;padding:10px 16px;border-radius:999px;opacity:0;pointer-events:none}
 .toast.show{opacity:1}
-.back{color:var(--terra);text-decoration:none;font-size:15px}
 </style>
 </head>
 <body>
+<div class="homebar">
+  <a href="../">← Back to Mark's Desk</a>
+</div>
 <div class="wrap">
   <div class="top">
     <div>
@@ -69,7 +82,6 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
       <p class="lede">Write it like Carey. Copy it. Paste it on Poshmark. Nothing posts for you.</p>
     </div>
     <div class="tabs">
-      <a class="back" href="../">Mark's Desk</a>
       <button class="tab on" data-tab="write">Write a listing</button>
       <button class="tab" data-tab="closet">Closet</button>
       <button class="tab" data-tab="help">How this works</button>

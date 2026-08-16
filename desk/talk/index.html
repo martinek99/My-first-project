@@ -16,9 +16,18 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--navy);color:var(--cream);font-family:var(--sans)}
-body{min-height:100dvh;padding:calc(var(--st) + 20px) 22px calc(var(--sb) + 36px)}
-.wrap{max-width:720px;margin:0 auto}
-.back{color:#e8c37a;text-decoration:none;font-size:16px}
+body{min-height:100dvh;padding:0 0 calc(var(--sb) + 36px)}
+.homebar{
+  position:sticky;top:0;z-index:20;
+  background:var(--navy);padding:calc(var(--st) + 12px) 22px 12px;
+}
+.homebar a{
+  display:block;text-align:center;text-decoration:none;
+  background:#e8c37a;color:#142033;
+  border-radius:14px;padding:16px 18px;
+  font-family:var(--serif);font-size:22px;font-weight:600;
+}
+.wrap{max-width:720px;margin:0 auto;padding:20px 22px 0}
 .eyebrow{font-family:var(--serif);letter-spacing:.24em;text-transform:uppercase;font-size:13px;color:#e8c37a;margin:18px 0 8px}
 h1{font-family:var(--serif);font-size:clamp(40px,8vw,58px);margin:0 0 10px;line-height:.95}
 .lede{font-family:var(--serif);font-style:italic;font-size:20px;line-height:1.4;color:#d8cbb3;margin:0 0 22px}
@@ -38,8 +47,10 @@ h1{font-family:var(--serif);font-size:clamp(40px,8vw,58px);margin:0 0 10px;line-
 </style>
 </head>
 <body>
+<div class="homebar">
+  <a href="../">← Back to Mark's Desk</a>
+</div>
   <div class="wrap">
-    <a class="back" href="../">← Back to Mark's Desk</a>
     <p class="eyebrow">Simple talk</p>
     <h1>Who do you want?</h1>
     <p class="lede">Tap one gold button. Then type like a text message. One thing at a time is plenty.</p>
