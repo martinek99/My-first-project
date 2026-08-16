@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Carey's Poshmark Store">
+<meta name="theme-color" content="#ffd6e7">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Carey's Poshmark Store</title>
+<meta name="description" content="Carey's whole Poshmark closet, dressed up with sunflowers and sparkle.">
+<meta property="og:title" content="Carey's Poshmark Store">
+<meta property="og:description" content="Sunflowers, sparkle, and every piece from her Poshmark closet.">
+<meta property="og:url" content="https://whimsy-violet-dhgk.here.now/poshshop/">
+<meta property="og:type" content="website">
+<style>
+:root{
+  --pink:#ff4f8b;--blush:#ffd6e7;--paper:#fff7fb;--ink:#4a2040;--muted:#8a5478;
+  --gold:#f4c84a;--sun:#ffb703;--navy:#142033;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:
+  radial-gradient(circle at 12% 8%, #fff 0 8px, transparent 9px),
+  radial-gradient(circle at 88% 18%, #fff8 0 6px, transparent 7px),
+  radial-gradient(circle at 70% 90%, #fff 0 5px, transparent 6px),
+  linear-gradient(180deg,#ffe6f2 0%,#ffd6e7 40%,#fff3c4 100%);
+  color:var(--ink);font-family:var(--sans)}
+body{min-height:100dvh;padding:0 0 calc(var(--sb) + 28px);overflow-x:hidden}
+.escape{display:none;position:fixed;left:12px;right:12px;top:calc(var(--st) + 8px);z-index:40;
+  align-items:center;justify-content:center;text-decoration:none;background:#e8c37a;color:#142033;
+  border-radius:14px;padding:14px 16px;font-family:var(--serif);font-size:20px;font-weight:600}
+html.from-desk .escape{display:flex}
+html.from-desk body{padding-top:calc(var(--st) + 72px)}
+.sun{position:fixed;font-size:42px;opacity:.28;pointer-events:none;z-index:0;animation:spin 18s linear infinite}
+.sun.a{top:8%;left:4%}
+.sun.b{top:22%;right:6%;font-size:56px;animation-duration:26s}
+.sun.c{bottom:12%;left:10%;font-size:36px;animation-duration:22s}
+.spark{position:fixed;width:8px;height:8px;background:#fff;border-radius:50%;box-shadow:0 0 10px #fff,0 0 18px #f4c84a;pointer-events:none;z-index:0;animation:twinkle 2.4s ease-in-out infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes twinkle{0%,100%{opacity:.2;transform:scale(.7)}50%{opacity:1;transform:scale(1.2)}}
+.wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:26px 18px 0}
+.hero{text-align:center;padding:10px 8px 18px}
+.eyebrow{letter-spacing:.28em;text-transform:uppercase;font-size:12px;color:#c43b74;margin:0 0 8px}
+h1{font-family:var(--serif);font-size:clamp(34px,8vw,58px);margin:0;line-height:.95;
+  background:linear-gradient(90deg,#ff4f8b,#ff8c42,#f4c84a,#ff4f8b);background-size:200% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
+@keyframes shine{to{background-position:200% 0}}
+.lede{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--muted);margin:10px auto 0;max-width:26em}
+.actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0 0}
+.btn{appearance:none;border:0;border-radius:999px;padding:12px 18px;min-height:48px;font-size:16px;
+  background:var(--pink);color:#fff;text-decoration:none;display:inline-flex;align-items:center;box-shadow:0 6px 0 #c43b74}
+.ghost{background:#fff;color:var(--pink);border:2px solid #ffb6d2;box-shadow:none}
+.search{width:100%;max-width:520px;margin:18px auto 0;display:block;font-size:17px;padding:14px 16px;border:2px solid #ffb6d2;border-radius:999px;background:#fff}
+.chips{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:12px 2px}
+.chip{flex:0 0 auto;border:0;border-radius:999px;padding:10px 14px;min-height:40px;background:#fff;color:#c43b74;font-size:14px}
+.chip.on{background:var(--pink);color:#fff}
+.count{text-align:center;color:#c43b74;font-size:14px;margin:0 0 12px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (min-width:820px){.grid{grid-template-columns:1fr 1fr 1fr}}
+.card{appearance:none;border:0;background:var(--paper);border-radius:18px;padding:0;overflow:hidden;text-align:left;
+  box-shadow:0 10px 0 rgba(255,79,139,.18); color:inherit}
+.card img{width:100%;height:190px;object-fit:cover;display:block;background:#ffd6e7}
+.pad{padding:12px 12px 14px}
+.meta{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#c43b74;margin:0 0 4px}
+.card h2{font-family:var(--serif);font-size:17px;margin:0 0 6px;line-height:1.2}
+.ask{font-family:var(--serif);font-size:22px;color:var(--pink);margin:0}
+#detail{display:none;position:fixed;inset:0;z-index:50;background:rgba(74,32,64,.45);padding:calc(var(--st) + 80px) 14px calc(var(--sb) + 18px);overflow:auto}
+#detail.on{display:block}
+.sheet{background:#fff7fb;border-radius:22px;padding:18px;max-width:560px;margin:0 auto;border:3px solid #ffb6d2}
+.sheet img{width:100%;border-radius:16px;margin:0 0 12px}
+.toast{position:fixed;left:50%;bottom:calc(var(--sb) + 22px);transform:translateX(-50%);background:var(--pink);color:#fff;padding:12px 18px;border-radius:999px;opacity:0;z-index:80}
+.toast.show{opacity:1}
+.note{text-align:center;font-size:14px;color:var(--muted);max-width:34em;margin:18px auto 0}
+</style>
+</head>
+<body>
+<div class="sun a">🌻</div>
+<div class="sun b">🌻</div>
+<div class="sun c">🌻</div>
+<div class="spark" style="top:12%;left:22%"></div>
+<div class="spark" style="top:30%;left:78%;animation-delay:.4s"></div>
+<div class="spark" style="top:58%;left:14%;animation-delay:.9s"></div>
+<div class="spark" style="top:72%;left:86%;animation-delay:1.3s"></div>
+<div class="spark" style="top:44%;left:48%;animation-delay:1.8s"></div>
+<a class="escape" href="../">← Back to Mark's Desk</a>
+<div class="wrap">
+  <div class="hero">
+    <p class="eyebrow">🌻 @thecareycurated · the posh rack</p>
+    <h1>Carey's Poshmark Store</h1>
+    <p class="lede">Every piece from her Poshmark closet, all in one sparkly place. Sunflowers included.</p>
+    <div class="actions">
+      <button type="button" class="btn" id="shareShop">Share the sparkle</button>
+      <a class="btn ghost" href="https://poshmark.com/closet/thecareycurated" target="_blank" rel="noopener">Her Poshmark closet</a>
+    </div>
+    <input class="search" id="q" placeholder="Search a maker, color, or vibe" enterkeyhint="search">
+  </div>
+  <div class="chips" id="chips"></div>
+  <p class="count" id="count"></p>
+  <div class="grid" id="grid"></div>
+  <p class="note">This is her Poshmark closet, dressed up. The Carey Curated is a different shop. Buy on Poshmark, or copy a note for Carey.</p>
+</div>
+<div id="detail"></div>
+<div class="toast" id="toast">Copied</div>
+<script>
+(function(){
+  try{
+    var q=new URLSearchParams(location.search);
+    if(q.get("from")==="desk"){
+      sessionStorage.setItem("marksdesk","1");
+      q.delete("from");
+      history.replaceState({},"",location.pathname+(q.toString()?"?"+q:"")+location.hash);
+    }
+    if(sessionStorage.getItem("marksdesk")==="1") document.documentElement.classList.add("from-desk");
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var SHARE="https://whimsy-violet-dhgk.here.now/poshshop/";
+  var stock=[], filter="", query="";
+  function $(id){ return document.getElementById(id); }
+  function toast(msg){
+    var t=$("toast"); t.textContent=msg; t.classList.add("show");
+    clearTimeout(toast._id); toast._id=setTimeout(function(){ t.classList.remove("show"); },1800);
+  }
+  function esc(s){ return String(s||"").replace(/[&<>\"']/g, function(c){ return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]); }); }
+  function shown(){
+    var q=query.toLowerCase();
+    return stock.filter(function(p){
+      if(filter && String(p.maker||"").toLowerCase()!==filter.toLowerCase()) return false;
+      if(!q) return true;
+      return (p.title+" "+p.maker+" "+p.color+" "+p.style+" "+p.size).toLowerCase().indexOf(q)>=0;
+    });
+  }
+  function paint(){
+    var list=shown();
+    $("count").textContent="🌻 "+list.length+" pretty things";
+    var host=$("grid");
+    host.innerHTML="";
+    list.forEach(function(item){
+      var b=document.createElement("button");
+      b.type="button";
+      b.className="card";
+      b.innerHTML=(item.thumb||item.photo?("<img alt='' src='"+(item.thumb||item.photo)+"'>"):"")+"<div class='pad'><p class='meta'>"+esc(item.maker||"Carey")+" · "+esc(item.size||"")+"</p><h2>"+esc(item.title)+"</h2><p class='ask'>"+(item.price?("$"+item.price):"")+"</p></div>";
+      b.onclick=function(){ openDetail(item); };
+      host.appendChild(b);
+    });
+  }
+  function chips(){
+    var counts={}, i;
+    stock.forEach(function(p){ var m=p.maker||""; if(!m) return; counts[m]=(counts[m]||0)+1; });
+    var top=Object.keys(counts).sort(function(a,b){ return counts[b]-counts[a]; }).slice(0,12);
+    var host=$("chips");
+    host.innerHTML="";
+    [["","All the flowers"]].concat(top.map(function(m){ return [m,m]; })).forEach(function(pair){
+      var b=document.createElement("button");
+      b.type="button";
+      b.className="chip"+(filter===pair[0]?" on":"");
+      b.textContent=pair[0]? (pair[1]+" · "+counts[pair[1]]) : pair[1];
+      b.onclick=function(){ filter=pair[0]; chips(); paint(); };
+      host.appendChild(b);
+    });
+  }
+  function openDetail(item){
+    var box=$("detail");
+    box.innerHTML="<div class='sheet'>"+(item.photo?("<img alt='' src='"+item.photo+"'>"):"")+"<p class='eyebrow'>🌻 "+esc(item.maker||"")+"</p><h2 style='font-family:var(--serif);font-size:28px;margin:0 0 8px'>"+esc(item.title)+"</h2><p class='meta'>"+esc([item.style,item.color,item.size].filter(Boolean).join(" · "))+"</p><p class='ask'>"+(item.price?("$"+item.price):"")+"</p><p style='white-space:pre-wrap;line-height:1.45'>"+esc(item.blurb||"")+"</p><div class='actions' style='margin-top:14px'>"+(item.posh?("<a class='btn' href='"+item.posh+"' target='_blank' rel='noopener'>See it on Poshmark</a>"):"")+"<button type='button' class='btn ghost' id='wantIt'>Copy a note</button><button type='button' class='btn ghost' id='closeIt'>Close</button></div></div>";
+    box.classList.add("on");
+    $("closeIt").onclick=closeDetail;
+    box.onclick=function(e){ if(e.target===box) closeDetail(); };
+    $("wantIt").onclick=function(){
+      var t="Hi Carey, I would like "+item.title+(item.price?(" for $"+item.price):"")+" from Carey's Poshmark Store.";
+      if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function(){ toast("Note copied 🌻"); });
+      else window.prompt("Copy this note", t);
+    };
+  }
+  function closeDetail(){ $("detail").classList.remove("on"); $("detail").innerHTML=""; }
+  $("shareShop").onclick=function(){
+    if(navigator.share){ navigator.share({title:"Carey's Poshmark Store",text:"Sunflowers, sparkle, and her whole Poshmark closet.",url:SHARE}).catch(function(){}); return; }
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(SHARE).then(function(){ toast("Link copied 🌻"); });
+    else window.prompt("Copy this link", SHARE);
+  };
+  $("q").addEventListener("input", function(){ query=$("q").value; paint(); });
+  fetch("stock.json",{cache:"no-store"}).then(function(r){ return r.ok?r.json():[]; }).then(function(rows){
+    stock=rows||[];
+    chips();
+    paint();
+  }).catch(function(){ $("count").textContent="The rack could not open."; });
+})();
+</script>
+</body>
+</html>
