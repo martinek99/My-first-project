@@ -63,9 +63,29 @@ button:active,.linkbtn:active{transform:translateY(2px)}
 #playui{position:absolute;left:0;right:0;bottom:0;padding:0 12px calc(var(--sb) + 10px);display:flex;justify-content:space-between;z-index:5}
 #playui.hidden{display:none}
 #playui button{pointer-events:auto;min-height:44px;font-size:14px;padding:8px 14px}
-#zones{position:absolute;inset:0;display:flex;z-index:3;pointer-events:none}
-#zones.hot{pointer-events:auto}
-.zone{flex:1}
+#steer{
+  position:absolute;left:12px;right:12px;bottom:calc(var(--sb) + 62px);
+  z-index:6;pointer-events:auto;
+}
+#steer.hidden{display:none}
+#steerTrack{
+  position:relative;height:72px;border-radius:36px;
+  background:linear-gradient(180deg,rgba(20,10,10,.72),rgba(10,5,5,.88));
+  border:2px solid rgba(232,195,122,.55);
+  box-shadow:0 8px 24px rgba(0,0,0,.45) inset, 0 4px 16px rgba(0,0,0,.35);
+  touch-action:none;
+}
+#steerTrack:before{
+  content:"";position:absolute;left:28px;right:28px;top:50%;height:4px;margin-top:-2px;
+  background:linear-gradient(90deg,#c81e1e,#e8c37a,#c81e1e);border-radius:2px;opacity:.7;
+}
+#steerKnob{
+  position:absolute;top:8px;left:50%;width:56px;height:56px;margin-left:-28px;
+  border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff6a6a,#c81e1e 55%,#7a1212);
+  border:3px solid #e8c37a;box-shadow:0 4px 12px rgba(0,0,0,.5);
+  pointer-events:none;
+}
+#steerHint{text-align:center;margin-top:6px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);text-shadow:0 2px 8px #000}
 #over .scoreline{font-family:Impact,sans-serif;font-size:48px;margin:6px 0 0}
 #over .quip,#win .quip{font-style:italic;font-size:18px;max-width:18em;margin:16px auto 0;line-height:1.35}
 </style>
@@ -83,7 +103,12 @@ button:active,.linkbtn:active{transform:translateY(2px)}
     <div id="roadname">Wengler Hill Road · Inwood, California</div>
   </div>
   <div id="toast"></div>
-  <div id="zones" class="hidden"><div class="zone" id="zL"></div><div class="zone" id="zR"></div></div>
+  <div id="steer" class="hidden">
+    <div id="steerTrack" aria-label="Steer">
+      <div id="steerKnob"></div>
+    </div>
+    <div id="steerHint">Thumb slider · the car follows your finger</div>
+  </div>
   <div id="playui" class="hidden">
     <button class="gold" id="deskMid">Desk</button>
     <button class="gold" id="muteBtn">Sound</button>
@@ -98,7 +123,7 @@ button:active,.linkbtn:active{transform:translateY(2px)}
       <div class="sub">Wengler Hill · The showcase</div>
       <div class="by">He sold the car. Not the attitude. Six chapters of pine, deer, fog, and leftover horsepower.</div>
       <div class="fine">Martinek Motors · Inwood, California</div>
-      <div class="how">Hold the left or right side of the screen. Stay on the road. Collect gold 99s. Watch the deer. They still do not care.</div>
+      <div class="how">Slide your thumb left and right on the gold bar. The car goes exactly where your thumb is. Stay on the road. Collect gold 99s. Watch the deer. They still do not care.</div>
       <div class="btns">
         <button class="red" id="go">FIRE IT UP</button>
         <button class="gold" id="free">FREE DRIVE</button>
@@ -207,7 +232,7 @@ document.getElementById("best").textContent=best;
 let screen="title", mode="campaign", ch=0, track=[], sprites=[];
 let pos=0, speed=0, playerX=0, steer=0, attitude=100, score=0, shake=0, flash=0;
 let toastT=0, particles=[], stars=[], rain=[], time=0, finished=false, muted=false, hudT=0;
-let holdL=false, holdR=false;
+let sliding=false, lastSlideX=0, thumbV=0;
 
 /* ---------- audio ---------- */
 let actx=null, master=null, eng=null, engG=null, musicT=null;
@@ -312,8 +337,8 @@ function playing(){return screen==="play";}
 function hidePlay(on){
   document.getElementById("hud").classList.toggle("hidden", !on);
   document.getElementById("playui").classList.toggle("hidden", !on);
-  document.getElementById("zones").classList.toggle("hidden", !on);
-  document.getElementById("zones").classList.toggle("hot", on);
+  document.getElementById("steer").classList.toggle("hidden", !on);
+  if(on) syncKnob();
 }
 
 function toast(t,ms){
@@ -343,7 +368,8 @@ function openStory(){
 function startChapter(){
   const C=CHAPTERS[ch];
   track=buildTrack(C, mode==="free");
-  pos=0; speed=800; playerX=0; steer=0; finished=false; shake=0; particles=[];
+  pos=0; speed=800; playerX=0; steer=0; sliding=false; thumbV=0; finished=false; shake=0; particles=[];
+  syncKnob();
   if(mode==="campaign" && ch===0){ attitude=100; score=0; }
   if(mode==="free"){ attitude=100; }
   stars=[];
@@ -620,14 +646,16 @@ function step(dt){
   const C=CHAPTERS[mode==="free"? (ch%CHAPTERS.length) : ch] || CHAPTERS[0];
   if(playing()){
     const max=C.max;
-    const want=(holdL?-1:0)+(holdR?1:0);
-    steer+=(want-steer)*Math.min(1,dt*8);
-    speed+= (max*0.35 - speed*0.08 + Math.abs(steer)*40)*dt;
+    if(holdL||holdR){
+      playerX += ((holdR?1:0)-(holdL?1:0))*dt*1.8;
+      playerX = Math.max(-1, Math.min(1, playerX));
+      syncKnob();
+    }
+    steer += (thumbV - steer)*Math.min(1, dt*14);
+    thumbV *= Math.max(0, 1-dt*8);
+    speed += (max*0.38 - speed*0.08)*dt;
     if(Math.abs(playerX)>0.95){ speed=Math.max(700, speed-1800*dt); attitude-=8*dt; setAtt(); if(attitude<=0) gameOver(); }
     speed=Math.max(400, Math.min(max, speed));
-    playerX+=steer*dt*1.55;
-    playerX-= (curveAt(pos))*speed*dt*0.000012;
-    playerX=Math.max(-1.6, Math.min(1.6, playerX));
     pos+=speed*dt;
     addScore((speed*dt/18)|0);
     hudT+=dt;
@@ -718,7 +746,7 @@ function draw(dt,C){
   }
   // car
   const carX=W/2 + playerX*W*0.08;
-  drawViper(carX, H*0.78, steer+(holdR?0.2:0)+(holdL?-0.2:0), C);
+  drawViper(carX, H*0.78, steer*0.35 + playerX*0.12, C);
   // speed haze
   if(speed>3800){
     ctx.strokeStyle="rgba(244,234,212,.12)";
@@ -746,16 +774,53 @@ function hexA(hex,a){
 }
 
 /* ---------- input ---------- */
-function bindHold(el, side){
-  const on=e=>{ e.preventDefault(); if(side<0) holdL=true; else holdR=true; };
-  const off=e=>{ if(side<0) holdL=false; else holdR=false; };
-  el.addEventListener("pointerdown", on);
-  el.addEventListener("pointerup", off);
-  el.addEventListener("pointerleave", off);
-  el.addEventListener("pointercancel", off);
+let holdL=false, holdR=false;
+function syncKnob(){
+  const knob=document.getElementById("steerKnob");
+  if(!knob) return;
+  const pct=Math.max(0, Math.min(1, (playerX+1)/2));
+  knob.style.left=(pct*100)+"%";
 }
-bindHold(document.getElementById("zL"), -1);
-bindHold(document.getElementById("zR"), 1);
+function setSteerFromClientX(clientX, fromMove){
+  const track=document.getElementById("steerTrack");
+  const r=track.getBoundingClientRect();
+  const pad=28;
+  const x=Math.max(pad, Math.min(r.width-pad, clientX-r.left));
+  const t=(x-pad)/Math.max(1, r.width-pad*2);
+  const next=t*2-1;
+  if(fromMove && lastSlideX){
+    const dx=clientX-lastSlideX;
+    thumbV += dx / Math.max(8, r.width*0.08);
+    thumbV=Math.max(-2.2, Math.min(2.2, thumbV));
+  }
+  lastSlideX=clientX;
+  playerX=Math.max(-1, Math.min(1, next));
+  syncKnob();
+}
+(function bindSlider(){
+  const track=document.getElementById("steerTrack");
+  const down=e=>{
+    if(!playing()) return;
+    e.preventDefault();
+    sliding=true;
+    lastSlideX=e.clientX;
+    try{ track.setPointerCapture(e.pointerId); }catch(err){}
+    setSteerFromClientX(e.clientX, false);
+  };
+  const move=e=>{
+    if(!sliding) return;
+    e.preventDefault();
+    setSteerFromClientX(e.clientX, true);
+  };
+  const up=e=>{
+    sliding=false;
+    lastSlideX=0;
+  };
+  track.addEventListener("pointerdown", down);
+  track.addEventListener("pointermove", move);
+  track.addEventListener("pointerup", up);
+  track.addEventListener("pointercancel", up);
+})();
 window.addEventListener("keydown", e=>{
   if(e.key==="ArrowLeft"||e.key==="a") holdL=true;
   if(e.key==="ArrowRight"||e.key==="d") holdR=true;
