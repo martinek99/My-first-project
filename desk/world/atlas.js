@@ -1744,6 +1744,13 @@
       if (!muted) { ensureAudio(); sfx("tap"); }
       else { try { speechSynthesis.cancel(); } catch (e) {} }
     });
+    var plateEl = document.getElementById("plate");
+    if (plateEl) {
+      function keepPlateScroll(e) { e.stopPropagation(); }
+      ["touchstart", "touchmove", "touchend", "pointerdown", "pointermove", "wheel"].forEach(function (ev) {
+        plateEl.addEventListener(ev, keepPlateScroll, { passive: true });
+      });
+    }
     window.addEventListener("keydown", function (e) {
       if (!map) return;
       if (e.key === "+" || e.key === "=") { map.zoomIn({ duration: 220 }); idleT = 0; }
