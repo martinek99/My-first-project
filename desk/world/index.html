@@ -22,6 +22,13 @@
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;height:100%;height:100dvh;background:var(--navy);color:var(--cream);
   font-family:var(--serif);overflow:hidden;user-select:none;-webkit-user-select:none;touch-action:none}
+.escape{
+  position:absolute;top:calc(var(--st) + 8px);left:10px;right:10px;z-index:80;
+  display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;
+  min-height:52px;padding:12px 16px;border-radius:14px;
+  background:#e8c37a;color:#142033;font-size:20px;font-weight:600;
+  box-shadow:0 8px 20px rgba(0,0,0,.35);
+}
 #stage{position:fixed;inset:0}
 #globe{position:absolute;inset:0}
 #globe .maplibregl-map{position:absolute;inset:0;width:100%;height:100%}
@@ -31,8 +38,8 @@ html,body{margin:0;height:100%;height:100dvh;background:var(--navy);color:var(--
 .star-mark{width:28px;height:28px;pointer-events:none;line-height:0;
   filter:drop-shadow(0 1px 3px rgba(0,0,0,.5))}
 .veil{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow-y:auto;
-  padding:calc(var(--st) + 18px) 20px calc(var(--sb) + 18px);
-  background:linear-gradient(180deg,rgba(8,14,22,.22),rgba(8,14,22,.58))}
+  padding:calc(var(--st) + 76px) 20px calc(var(--sb) + 18px);
+  background:linear-gradient(180deg,rgba(8,14,22,.22),rgba(8,14,22,.58));touch-action:pan-y}
 .veil.hidden{display:none}
 .card{width:min(100%,400px);color:var(--ink);text-align:center;position:relative;
   background:linear-gradient(180deg,rgba(255,248,230,.16),transparent 30%),linear-gradient(180deg,#f6efe0,#e8d8b8);
@@ -105,14 +112,14 @@ html,body{margin:0;height:100%;height:100dvh;background:var(--navy);color:var(--
 .glyph{width:52px;height:52px;border:1px solid rgba(201,162,74,.45);display:flex;align-items:center;justify-content:center;color:#8a7040;font-size:22px;font-style:italic}
 #hud{position:absolute;inset:0;pointer-events:none}
 #hud.hidden{display:none}
-#plate{pointer-events:auto;position:absolute;top:calc(var(--st) + 12px);left:14px;right:14px;
+#plate{pointer-events:auto;position:absolute;top:calc(var(--st) + 72px);left:14px;right:14px;
   background:linear-gradient(180deg,#f6efe0,#eadcbd);color:var(--ink);
   border:1px solid rgba(201,162,74,.4);box-shadow:0 10px 28px rgba(0,0,0,.35);
-  padding:12px 16px 12px;text-align:center}
+  padding:12px 16px 12px;text-align:center;touch-action:pan-y}
 #plate.explore-sheet{top:auto;bottom:calc(var(--sb) + 10px);left:10px;right:10px;
-  max-height:min(52dvh,460px);overflow-y:auto;-webkit-overflow-scrolling:touch;
+  max-height:min(62dvh,560px);overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y;
   padding:10px 14px 12px}
-#plate.explore-slim{top:calc(var(--st) + 12px);bottom:auto;max-height:none;overflow:visible}
+#plate.explore-slim{top:calc(var(--st) + 72px);bottom:auto;max-height:none;overflow:visible}
 #plate .kicker{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#8a7040}
 
 .namerow{display:flex;align-items:center;justify-content:center;gap:10px;margin:4px 0 2px}
@@ -124,14 +131,14 @@ html,body{margin:0;height:100%;height:100dvh;background:var(--navy);color:var(--
 #placeFact.hidden{display:none}
 #placeFact.cardish{font-family:system-ui,-apple-system,"Segoe UI",Roboto,Nunito,sans-serif;font-style:normal;
   font-size:22px;line-height:1.4;color:#2a2216;text-align:left;margin-top:8px;
-  max-height:none;overflow:visible}
+  max-height:none;overflow:visible;touch-action:pan-y}
 #placeFact .fact-title{font-size:24px;font-weight:700;letter-spacing:.01em;margin:0 0 8px;color:#1c1610}
 #placeFact .fact-list{margin:0;padding-left:1.2em}
 #placeFact .fact-list li{margin:7px 0}
 .subjects{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:8px 0 0}
 .subjects.hidden{display:none}
 .subjects .chip{min-height:40px;padding:8px 12px;font-size:14px;letter-spacing:.06em;font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-#plate{max-height:calc(100dvh - 168px);overflow-y:auto;-webkit-overflow-scrolling:touch}
+#plate{max-height:calc(100dvh - 220px);overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y}
 .photo-slot{display:none}
 #plate.explore-card .photo-slot{display:block;width:100%;height:72px;max-height:72px;margin:8px auto 0;
   border:1px solid rgba(201,162,74,.4);background:#d8c9a4;overflow:hidden}
@@ -153,7 +160,7 @@ html,body{margin:0;height:100%;height:100dvh;background:var(--navy);color:var(--
 #resumeBtn.hidden{display:none}
 #tools{pointer-events:auto;position:absolute;right:12px;bottom:calc(var(--sb) + 88px);
   display:flex;flex-direction:column;gap:8px}
-#hud.explore-hud #tools{top:calc(var(--st) + 12px);bottom:auto}
+#hud.explore-hud #tools{top:calc(var(--st) + 72px);bottom:auto}
 .tool{width:48px;height:48px;min-width:48px;min-height:48px;border:1px solid rgba(232,195,122,.45);background:rgba(12,22,36,.72);
   color:var(--gold2);font-family:var(--serif);font-size:24px;padding:0;
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
@@ -198,6 +205,7 @@ html,body{margin:0;height:100%;height:100dvh;background:var(--navy);color:var(--
 <meta name="twitter:card" content="summary_large_image" /></head>
 <body>
 <div id="stage">
+<a class="escape" href="../">← Back to Mark's Desk</a>
 <div id="globe"></div>
 <div id="loadmsg">Unfolding the map<div class="rule"></div></div>
 <div id="toast"></div>
@@ -224,7 +232,7 @@ html,body{margin:0;height:100%;height:100dvh;background:var(--navy);color:var(--
 <button id="homeDock">Home</button>
 <button id="hintBtn" class="hidden">Hint · continent</button>
 <button id="nextBtn" class="hidden">Next</button>
-<div id="credit">The World by Mark · v31</div>
+<div id="credit">The World by Mark · v32</div>
 </div>
 </div>
 <div id="title" class="veil">
@@ -256,6 +264,7 @@ html,body{margin:0;height:100%;height:100dvh;background:var(--navy);color:var(--
 <div class="how-step"><div class="glyph">3</div><div><b>Find</b><span>Ten places. Three tries. A wrong country only counts once. Misses tell you how far off you were.</span></div></div>
 <div class="how-step"><div class="glyph">4</div><div><b>Learn</b><span>A right answer, or the third miss, holds until Next. Then your rating goes on the friends board.</span></div></div>
 <div class="row"><button class="btn navy" id="howtoGo">Begin</button></div>
+<div class="row tight"><a class="btn gold" href="../" style="display:flex;align-items:center;justify-content:center;text-decoration:none">← Mark's Desk</a></div>
 </div>
 </div>
 <div id="end" class="veil hidden">
