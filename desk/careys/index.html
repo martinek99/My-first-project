@@ -25,8 +25,8 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans)}
-body{min-height:100dvh;padding:0 0 calc(var(--sb) + 28px)}
-.homebar{position:sticky;top:0;z-index:20;background:var(--navy);padding:calc(var(--st) + 12px) 20px 12px}
+body{min-height:100dvh;padding:calc(var(--st) + 80px) 0 calc(var(--sb) + 28px)}
+.homebar{position:fixed;left:0;right:0;top:0;z-index:90;background:var(--navy);padding:calc(var(--st) + 12px) 16px 12px}
 .homebar a{display:block;text-align:center;text-decoration:none;background:var(--gold);color:var(--navy);
   border-radius:14px;padding:16px 18px;font-family:var(--serif);font-size:22px;font-weight:600}
 .wrap{max-width:1100px;margin:0 auto;padding:18px 20px 0}
@@ -63,9 +63,9 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
 .sq .k{display:block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#8a7040;margin:0 0 8px}
 .sq .v{display:block;font-family:var(--serif);font-size:22px;line-height:1.15;font-weight:600}
 .sq .v.empty{color:#b4a078;font-style:italic;font-weight:400;font-size:18px}
-#picker{position:fixed;inset:0;z-index:60;background:var(--cream);display:none;flex-direction:column}
+#picker{position:fixed;left:0;right:0;bottom:0;top:calc(var(--st) + 76px);z-index:60;background:var(--cream);display:none;flex-direction:column}
 #picker.on{display:flex}
-.pickhead{position:sticky;top:0;z-index:2;background:var(--navy);color:#fff8ee;padding:calc(var(--st) + 10px) 12px 10px}
+.pickhead{position:sticky;top:0;z-index:2;background:var(--navy);color:#fff8ee;padding:10px 12px}
 .pickhead h2{font-family:var(--serif);margin:0 0 8px;font-size:22px}
 .pickbar{display:flex;gap:8px;margin:0 0 8px}
 .pickbar button{flex:1;min-height:44px;border:0;border-radius:10px;font-size:15px}
@@ -169,13 +169,14 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
       <p>Right now the honest move on Poshmark is: tap, copy, paste. If you want the real one-tap post, say <b>do eBay</b> and I will build that next. She would still have to allow it once in eBay.</p>
     </div>
   </section>
+  <p style="margin:22px 0 0"><a href="../" class="btn" style="display:block;text-align:center;text-decoration:none;background:#e8c37a;color:#142033;font-family:var(--serif);font-size:22px;font-weight:600;border-radius:14px;padding:16px 18px">← Back to Mark's Desk</a></p>
 </div>
 
 <div id="picker">
   <div class="pickhead">
     <h2 id="pickTitle">Maker</h2>
     <div class="pickbar">
-      <button type="button" class="back" id="pickBack">Back</button>
+      <button type="button" class="back" id="pickBack">Close</button>
       <button type="button" class="zap" id="pickRemove">Remove names</button>
     </div>
     <div class="addbox" id="addbox">
