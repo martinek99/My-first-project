@@ -23,15 +23,19 @@ html,body{margin:0;height:100%;height:100dvh;background:#0a0505;color:var(--crea
 #wrap{position:fixed;inset:0}
 canvas{display:block;width:100%;height:100%}
 .escape{
-  position:absolute;top:calc(var(--st) + 8px);left:10px;right:10px;z-index:80;
-  display:flex;align-items:center;justify-content:center;text-align:center;text-decoration:none;
+  display:none;position:absolute;top:calc(var(--st) + 8px);left:10px;right:10px;z-index:80;
+  align-items:center;justify-content:center;text-align:center;text-decoration:none;
   min-height:52px;padding:12px 16px;border-radius:14px;
   background:#e8c37a;color:#142033;
   font-family:Georgia,"Iowan Old Style",serif;font-size:20px;font-weight:600;
   box-shadow:0 8px 20px rgba(0,0,0,.35);
 }
+html.from-desk .escape{display:flex}
+.desk-only{display:none !important}
+html.from-desk a.desk-only,html.from-desk .desk-only{display:flex !important}
 .panel{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  padding:calc(var(--st) + 76px) 22px calc(var(--sb) + 18px);text-align:center;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+  padding:calc(var(--st) + 16px) 22px calc(var(--sb) + 18px);text-align:center;overflow-y:auto;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+html.from-desk .panel{padding-top:calc(var(--st) + 76px)}
 .panel.hidden{display:none}
 #title{background:linear-gradient(180deg,rgba(8,4,4,.28) 0%,rgba(8,4,4,.72) 46%,#0a0505 100%)}
 #title .hero{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:0;filter:saturate(1.05) contrast(1.05)}
@@ -56,7 +60,8 @@ button,.linkbtn{appearance:none;border:0;cursor:pointer;font-family:Impact,"Aria
 button:active,.linkbtn:active{transform:translateY(2px)}
 .chap{font-family:Impact,sans-serif;font-size:clamp(28px,8vw,44px);margin:8px 0 0;letter-spacing:.02em}
 .story{font-style:italic;font-size:18px;line-height:1.4;max-width:20em;margin:14px auto 0}
-#hud{position:absolute;left:0;right:0;top:0;padding:calc(var(--st) + 70px) 12px 0;pointer-events:none;z-index:5}
+#hud{position:absolute;left:0;right:0;top:0;padding:calc(var(--st) + 8px) 12px 0;pointer-events:none;z-index:5}
+html.from-desk #hud{padding-top:calc(var(--st) + 70px)}
 #hud.hidden{display:none}
 .hudrow{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
 .hudbox{background:rgba(10,5,5,.46);border:1px solid rgba(232,195,122,.28);padding:6px 10px;min-width:72px;
@@ -68,32 +73,34 @@ button:active,.linkbtn:active{transform:translateY(2px)}
 #roadname{text-align:center;margin-top:8px;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);text-shadow:0 2px 8px #000}
 #toast{position:absolute;left:16px;right:16px;top:46%;text-align:center;font-style:italic;font-size:20px;
   color:var(--cream);text-shadow:0 2px 12px #000;pointer-events:none;opacity:0;transition:opacity .2s;z-index:6}
-#playui{position:absolute;left:0;right:0;bottom:0;padding:0 12px calc(var(--sb) + 10px);display:flex;justify-content:space-between;z-index:5}
+#playui{position:absolute;left:0;right:0;bottom:0;padding:0 12px calc(var(--sb) + 10px);display:flex;justify-content:center;z-index:5}
+html.from-desk #playui{justify-content:space-between}
 #playui.hidden{display:none}
 #playui button{pointer-events:auto;min-height:44px;font-size:14px;padding:8px 14px}
 #steer{
-  position:absolute;left:12px;right:12px;bottom:calc(var(--sb) + 62px);
-  z-index:6;pointer-events:auto;
+  position:absolute;left:8px;right:8px;bottom:calc(var(--sb) + 56px);
+  z-index:6;display:flex;justify-content:space-between;align-items:flex-end;
+  pointer-events:none;
 }
 #steer.hidden{display:none}
-#steerTrack{
+.steerPad{pointer-events:auto;width:2in;max-width:44vw}
+.steerTrack{
   position:relative;height:72px;border-radius:36px;
   background:linear-gradient(180deg,rgba(20,10,10,.72),rgba(10,5,5,.88));
   border:2px solid rgba(232,195,122,.55);
   box-shadow:0 8px 24px rgba(0,0,0,.45) inset, 0 4px 16px rgba(0,0,0,.35);
   touch-action:none;
 }
-#steerTrack:before{
-  content:"";position:absolute;left:28px;right:28px;top:50%;height:4px;margin-top:-2px;
+.steerTrack:before{
+  content:"";position:absolute;left:22px;right:22px;top:50%;height:4px;margin-top:-2px;
   background:linear-gradient(90deg,#c81e1e,#e8c37a,#c81e1e);border-radius:2px;opacity:.7;
 }
-#steerKnob{
+.steerKnob{
   position:absolute;top:8px;left:50%;width:56px;height:56px;margin-left:-28px;
   border-radius:50%;background:radial-gradient(circle at 35% 30%,#ff6a6a,#c81e1e 55%,#7a1212);
   border:3px solid #e8c37a;box-shadow:0 4px 12px rgba(0,0,0,.5);
   pointer-events:none;
 }
-#steerHint{text-align:center;margin-top:6px;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);text-shadow:0 2px 8px #000}
 #over .scoreline{font-family:Impact,sans-serif;font-size:48px;margin:6px 0 0}
 #over .quip,#win .quip{font-style:italic;font-size:18px;max-width:18em;margin:16px auto 0;line-height:1.35}
 </style>
@@ -113,13 +120,15 @@ button:active,.linkbtn:active{transform:translateY(2px)}
   </div>
   <div id="toast"></div>
   <div id="steer" class="hidden">
-    <div id="steerTrack" aria-label="Steer">
-      <div id="steerKnob"></div>
+    <div class="steerPad" data-steer aria-label="Left steer">
+      <div class="steerTrack"><div class="steerKnob"></div></div>
     </div>
-    <div id="steerHint">Thumb slider · the car follows your finger</div>
+    <div class="steerPad" data-steer aria-label="Right steer">
+      <div class="steerTrack"><div class="steerKnob"></div></div>
+    </div>
   </div>
   <div id="playui" class="hidden">
-    <button class="gold" id="deskMid">Desk</button>
+    <button class="gold desk-only" id="deskMid">Desk</button>
     <button class="gold" id="muteBtn">Sound</button>
   </div>
 
@@ -132,12 +141,13 @@ button:active,.linkbtn:active{transform:translateY(2px)}
       <div class="sub">Wengler Hill · The showcase</div>
       <div class="by">He sold the car. Not the attitude. Six chapters of pine, deer, fog, and leftover horsepower.</div>
       <div class="fine">Martinek Motors · Inwood, California</div>
-      <div class="how">Slide your thumb left and right on the gold bar. The car goes exactly where your thumb is. Stay on the road. Collect gold 99s. Watch the deer. They still do not care.</div>
+      <div class="how">Two short sliders, one for each thumb. About two inches of travel takes you from one side of the road to the other. Stay on the road. Collect gold 99s. Watch the deer. They still do not care.</div>
       <div class="btns">
         <button class="red" id="go">FIRE IT UP</button>
         <button class="gold" id="free">FREE DRIVE</button>
+        <button class="gold" id="shareGame">SHARE THIS GAME</button>
         <a class="linkbtn gold" href="https://indigo-sequin-t7za.here.now/">THE ORIGINAL VIPER 99</a>
-        <a class="linkbtn desk" href="../">← Back to Mark's Desk</a>
+        <a class="linkbtn desk desk-only" href="../">← Back to Mark's Desk</a>
       </div>
     </div>
   </div>
@@ -149,7 +159,7 @@ button:active,.linkbtn:active{transform:translateY(2px)}
     <div class="story" id="storyLine"></div>
     <div class="btns">
       <button class="red" id="storyGo">HIT THE HILL</button>
-      <a class="linkbtn desk" href="../">← Mark's Desk</a>
+      <a class="linkbtn desk desk-only" href="../">← Mark's Desk</a>
     </div>
   </div>
 
@@ -159,7 +169,7 @@ button:active,.linkbtn:active{transform:translateY(2px)}
     <div class="story" id="clearLine"></div>
     <div class="btns">
       <button class="red" id="clearGo">NEXT STRETCH</button>
-      <a class="linkbtn desk" href="../">← Mark's Desk</a>
+      <a class="linkbtn desk desk-only" href="../">← Mark's Desk</a>
     </div>
   </div>
 
@@ -172,7 +182,7 @@ button:active,.linkbtn:active{transform:translateY(2px)}
     <div class="btns">
       <button class="red" id="again">ONE MORE PASS</button>
       <button class="gold" id="overHome">HOME</button>
-      <a class="linkbtn desk" href="../">← Mark's Desk</a>
+      <a class="linkbtn desk desk-only" href="../">← Mark's Desk</a>
     </div>
   </div>
 
@@ -185,12 +195,21 @@ button:active,.linkbtn:active{transform:translateY(2px)}
     <div class="btns">
       <button class="red" id="winAgain">RUN IT AGAIN</button>
       <a class="linkbtn gold" href="https://indigo-sequin-t7za.here.now/">Compare the original</a>
-      <a class="linkbtn desk" href="../">← Mark's Desk</a>
+      <a class="linkbtn desk desk-only" href="../">← Mark's Desk</a>
     </div>
   </div>
 </div>
 <script>
 (function(){
+try{
+  var q=new URLSearchParams(location.search);
+  if(q.get("from")==="desk"){
+    sessionStorage.setItem("marksdesk","1");
+    q.delete("from");
+    history.replaceState({},"",location.pathname+(q.toString()?"?"+q:"")+location.hash);
+  }
+  if(sessionStorage.getItem("marksdesk")==="1") document.documentElement.classList.add("from-desk");
+}catch(e){}
 const SEG=80, ROAD=2200, CAM_D=0.84, CAM_H=1100, DRAW=160;
 const quips=[
   "The deer had the right of way.",
@@ -791,50 +810,45 @@ function hexA(hex,a){
 /* ---------- input ---------- */
 let holdL=false, holdR=false;
 function syncKnob(){
-  const knob=document.getElementById("steerKnob");
-  if(!knob) return;
-  const pct=Math.max(0, Math.min(1, (playerX+1)/2));
-  knob.style.left=(pct*100)+"%";
+  const pct=Math.max(0, Math.min(1, (playerX+1)/2))*100;
+  document.querySelectorAll(".steerKnob").forEach(k=>{ k.style.left=pct+"%"; });
 }
-function setSteerFromClientX(clientX, fromMove){
-  const track=document.getElementById("steerTrack");
+function setSteerFromClientX(track, clientX, fromMove){
   const r=track.getBoundingClientRect();
-  const pad=28;
+  const pad=22;
   const x=Math.max(pad, Math.min(r.width-pad, clientX-r.left));
   const t=(x-pad)/Math.max(1, r.width-pad*2);
   const next=t*2-1;
   if(fromMove && lastSlideX){
     const dx=clientX-lastSlideX;
-    thumbV += dx / Math.max(8, r.width*0.08);
+    thumbV += dx / Math.max(6, r.width*0.12);
     thumbV=Math.max(-2.2, Math.min(2.2, thumbV));
   }
   lastSlideX=clientX;
   playerX=Math.max(-1, Math.min(1, next));
   syncKnob();
 }
-(function bindSlider(){
-  const track=document.getElementById("steerTrack");
-  const down=e=>{
-    if(!playing()) return;
-    e.preventDefault();
-    sliding=true;
-    lastSlideX=e.clientX;
-    try{ track.setPointerCapture(e.pointerId); }catch(err){}
-    setSteerFromClientX(e.clientX, false);
-  };
-  const move=e=>{
-    if(!sliding) return;
-    e.preventDefault();
-    setSteerFromClientX(e.clientX, true);
-  };
-  const up=e=>{
-    sliding=false;
-    lastSlideX=0;
-  };
-  track.addEventListener("pointerdown", down);
-  track.addEventListener("pointermove", move);
-  track.addEventListener("pointerup", up);
-  track.addEventListener("pointercancel", up);
+(function bindSliders(){
+  document.querySelectorAll("[data-steer] .steerTrack").forEach(track=>{
+    const down=e=>{
+      if(!playing()) return;
+      e.preventDefault();
+      sliding=true;
+      lastSlideX=e.clientX;
+      try{ track.setPointerCapture(e.pointerId); }catch(err){}
+      setSteerFromClientX(track, e.clientX, false);
+    };
+    const move=e=>{
+      if(!sliding) return;
+      e.preventDefault();
+      setSteerFromClientX(track, e.clientX, true);
+    };
+    const up=()=>{ sliding=false; lastSlideX=0; };
+    track.addEventListener("pointerdown", down);
+    track.addEventListener("pointermove", move);
+    track.addEventListener("pointerup", up);
+    track.addEventListener("pointercancel", up);
+  });
 })();
 window.addEventListener("keydown", e=>{
   if(e.key==="ArrowLeft"||e.key==="a") holdL=true;
@@ -862,6 +876,19 @@ tap("again", ()=>{ if(mode==="free") startFree(); else { attitude=100; openStory
 tap("overHome", ()=>{ screen="title"; hidePlay(false); show("title"); });
 tap("winAgain", startCampaign);
 tap("deskMid", ()=>{ location.href="../"; });
+tap("shareGame", ()=>{
+  const url=location.origin+location.pathname;
+  const go=()=>toast("Link copied. Send that. No Desk on it.", 2200);
+  if(navigator.share){
+    navigator.share({title:"VIPER 99.1",text:"He sold the car. Not the attitude.",url:url}).catch(function(){});
+    return;
+  }
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(url).then(go);
+    return;
+  }
+  window.prompt("Copy this link", url);
+});
 tap("muteBtn", ()=>{
   muted=!muted;
   document.getElementById("muteBtn").textContent=muted?"Muted":"Sound";
