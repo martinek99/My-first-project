@@ -243,7 +243,9 @@
     "04":"West","08":"West","16":"West","30":"West","32":"West","35":"West","49":"West","56":"West",
     "02":"West","06":"West","15":"West","41":"West","53":"West"
   };
-  var SHARE = "https://tinyurl.com/the-world-by-mark";
+  var SHARE = (function () {
+    try { return location.origin + location.pathname; } catch (e) { return "https://whimsy-violet-dhgk.here.now/world/"; }
+  })();
   function ratingFor(n) {
     if (n >= 10) return "World Master";
     if (n >= 8) return "Navigator";
@@ -1312,7 +1314,7 @@
     try {
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(SHARE).then(function () {
-          showToast("Link copied. Send it to a friend.", 2200);
+          showToast("Link copied. Paste it in a text.", 2200);
         });
         return;
       }
@@ -1725,6 +1727,7 @@
     bind("homeDock", goHome);
     bind("inviteBtn", inviteFriends);
     bind("endInvite", inviteFriends);
+    bind("shareTool", inviteFriends);
     bind("howtoGo", closeHow);
     bind("helpBtn", function () { openHow(false); });
     bind("homeBtn", goHome);

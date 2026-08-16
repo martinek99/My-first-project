@@ -54,20 +54,33 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(42px,7vw,72px);line-
   border-radius:18px;padding:24px 22px 20px;min-height:180px;
   box-shadow:0 18px 40px rgba(0,0,0,.22);
 }
-.card:active{transform:scale(.992)}
 .tag{font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#8a7040;margin:0 0 10px}
 .card h2{font-family:var(--serif);font-size:30px;margin:0 0 10px;line-height:1.05}
 .card p{margin:0;font-size:16px;line-height:1.45;color:var(--muted)}
-.go{margin-top:16px;display:inline-block;background:var(--navy);color:#fff8ee;padding:10px 16px;border-radius:999px;font-size:15px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
+.go,.share{
+  display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
+  min-height:48px;padding:10px 16px;border-radius:999px;font-size:16px;font-family:var(--sans);border:0;cursor:pointer
+}
+.go{background:var(--navy);color:#fff8ee}
+.share{background:#e8c37a;color:#142033;font-weight:600}
 .card.viper{background:#1a0a0a;color:#f4ead4}
 .card.viper .tag{color:#e8c37a}
 .card.viper p{color:#d8cbb3}
 .card.viper .go{background:var(--red)}
+.card.viper .share{background:#e8c37a;color:#142033}
 .card.wait{border:1.5px dashed rgba(201,162,74,.55);background:transparent;color:var(--cream);box-shadow:none}
 .card.wait p{color:#d8cbb3}
 .card.wait .go{background:transparent;border:1px solid #e8c37a;color:#e8c37a}
+.howto{background:#0d1826;border:1px solid rgba(232,195,122,.45);border-radius:18px;padding:20px 20px 16px;margin:0 0 22px}
+.howto h2{font-family:var(--serif);font-size:26px;margin:0 0 10px;color:#e8c37a}
+.howto p{margin:0 0 10px;font-size:17px;line-height:1.45;color:#d8cbb3}
+.howto p:last-child{margin:0}
 .note{margin:28px 0 0;font-size:16px;line-height:1.5;color:#d8cbb3;max-width:40em}
 .note strong{color:#f4ead4}
+.toast{position:fixed;left:16px;right:16px;bottom:calc(var(--sb) + 20px);text-align:center;
+  background:#e8c37a;color:#142033;padding:14px 16px;border-radius:14px;font-size:18px;font-weight:600;
+  opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
 </style>
 </head>
 <body>
@@ -79,70 +92,124 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(42px,7vw,72px);line-
     <p class="eyebrow">One page · iPad home screen</p>
     <h1>Mark's Desk</h1>
     <p class="lede">The gold buttons open a simple Talk page first. Usage is the gas tank. Everything else stays on this Desk.</p>
-    <p class="stamp">Updated Sunday Aug 16 · 4:05 PM</p>
+    <p class="stamp">Updated Sunday Aug 16 · 4:15 PM</p>
+    <div class="howto">
+      <h2>How to share</h2>
+      <p>Tap the gold <strong>Share</strong> button. Your iPad opens the usual sheet — Messages, Mail, or Copy. Send that link. Your friend gets the game itself, not the Desk.</p>
+      <p>Talk, Usage, A.M. Briggs, and Monica stay yours. No Share button on those.</p>
+    </div>
     <div class="grid">
-      <a class="card viper" href="viper91/?from=desk">
+      <div class="card viper">
         <p class="tag">The showcase</p>
         <h2>VIPER 99.1</h2>
-        <p>Six chapters on Wengler Hill. Two short thumb sliders. The original 99 is still here to compare. Share the game with no Desk on it.</p>
-        <span class="go">Fire up 99.1</span>
-      </a>
+        <p>Six chapters on Wengler Hill. Two short thumb sliders. The original 99 is still here to compare.</p>
+        <div class="actions">
+          <a class="go" href="viper91/?from=desk">Fire it up</a>
+          <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/viper91/" data-title="VIPER 99.1" data-text="He sold the car. Not the attitude.">Share</button>
+        </div>
+      </div>
       <a class="card" href="usage/">
-        <p class="tag">The tank</p>
+        <p class="tag">Yours only</p>
         <h2>Usage</h2>
-        <p>See what's left, stop extra charges, and open the Cursor bill. One tap each. No plus-minus numbers.</p>
+        <p>See what's left, stop extra charges, and open the Cursor bill. One tap each. No plus-minus numbers. Do not send this page.</p>
         <span class="go">Check usage</span>
       </a>
       <a class="card" href="talk/">
-        <p class="tag">Simple talk</p>
+        <p class="tag">Yours only</p>
         <h2>Talk</h2>
-        <p>A calmer front door. Pick me or Chief of Staff, then start talking like a text message.</p>
+        <p>A calmer front door. Pick me or Chief of Staff, then start talking like a text message. This one stays on your Desk.</p>
         <span class="go">Open Talk</span>
       </a>
-      <a class="card" href="careys/">
+      <div class="card">
         <p class="tag">For Brittany</p>
         <h2>Carey's Corner</h2>
-        <p>Write Poshmark titles and blurbs in her closet style. A big gold Back to Mark's Desk button sits at the top so you can always get home.</p>
-        <span class="go">Open the helper</span>
-      </a>
-      <a class="card viper" href="https://indigo-sequin-t7za.here.now/">
+        <p>Write Poshmark titles and blurbs in her closet style. Share sends her this helper, not the whole Desk.</p>
+        <div class="actions">
+          <a class="go" href="careys/">Open the helper</a>
+          <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/careys/" data-title="Carey's Corner" data-text="A Poshmark listing helper in Carey's closet style.">Share</button>
+        </div>
+      </div>
+      <div class="card viper">
         <p class="tag">The original</p>
         <h2>VIPER 99</h2>
-        <p>The first one. Wengler Hill Road. Tap left or right, stay on the road, watch the deer. Kept for good times.</p>
-        <span class="go">Play the original</span>
-      </a>
-      <a class="card" href="world/?from=desk">
-        <p class="tag">Your game · v33</p>
+        <p>The first one. Wengler Hill Road. Tap left or right, stay on the road, watch the deer.</p>
+        <div class="actions">
+          <a class="go" href="https://indigo-sequin-t7za.here.now/">Play the original</a>
+          <button type="button" class="share" data-url="https://indigo-sequin-t7za.here.now/" data-title="VIPER 99" data-text="The original VIPER 99. Wengler Hill Road.">Share</button>
+        </div>
+      </div>
+      <div class="card">
+        <p class="tag">Your game · v34</p>
         <h2>The World by Mark</h2>
-        <p>Spin the globe. Find ten places. Three tries. A wrong country only counts once. Landmarks now sit in a taller sheet you can actually scroll. Share it as its own game.</p>
-        <span class="go">Open the world</span>
-      </a>
-      <a class="card" href="dinner/?from=desk">
+        <p>Spin the globe. Find ten places. Three tries. A wrong country only counts once. Landmarks now sit in a taller sheet you can actually scroll.</p>
+        <div class="actions">
+          <a class="go" href="world/?from=desk">Open the world</a>
+          <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/world/" data-title="The World by Mark" data-text="Play The World by Mark with me. Ten countries.">Share</button>
+        </div>
+      </div>
+      <div class="card">
         <p class="tag">The new kitchen</p>
         <h2>What's for Dinner</h2>
-        <p>Food around the world. Tap a country. Twenty dishes on their own cards. Build a meal, copy a shopping list, learn a little wine. DoorDash and cards come later.</p>
-        <span class="go">Open the kitchen</span>
-      </a>
+        <p>Food around the world. Tap a country. Twenty dishes on their own cards. Build a meal, copy a shopping list, learn a little wine.</p>
+        <div class="actions">
+          <a class="go" href="dinner/?from=desk">Open the kitchen</a>
+          <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/dinner/" data-title="What's for Dinner" data-text="Spin the globe. Pick tonight's meal.">Share</button>
+        </div>
+      </div>
       <div class="card wait">
-        <p class="tag">Tomorrow</p>
+        <p class="tag">Tomorrow · yours only</p>
         <h2>A.M. Briggs</h2>
         <p>Anne Briggs stock-trade overcharge. I am looking through your mail for the file. I will put the working notes here, not a public dump.</p>
         <span class="go">In progress</span>
       </div>
       <div class="card wait">
-        <p class="tag">Private</p>
+        <p class="tag">Private · yours only</p>
         <h2>Monica Medical</h2>
         <p>I will not put medical files on a public page. When I have the folder, it gets its own locked link.</p>
         <span class="go">Kept private</span>
       </div>
-      <a class="card" href="https://gentle-quiche-6d8s.here.now/">
+      <div class="card">
         <p class="tag">Earlier version</p>
         <h2>First Carey's Corner</h2>
         <p>The listing helper Grokbot already sent Brittany.</p>
-        <span class="go">Open the first one</span>
-      </a>
+        <div class="actions">
+          <a class="go" href="https://gentle-quiche-6d8s.here.now/">Open the first one</a>
+          <button type="button" class="share" data-url="https://gentle-quiche-6d8s.here.now/" data-title="Carey's Corner" data-text="The first Carey's Corner listing helper.">Share</button>
+        </div>
+      </div>
     </div>
-    <p class="note">Open a game from this Desk and you get a gold <strong>Back to Mark's Desk</strong> button. Send someone the game itself and they will not see the Desk. Talk, Usage, and Carey's Corner always have a way home. If the old iPad icon is a frozen copy, delete it, open this page in <strong>Safari</strong>, tap Share, then <strong>Add to Home Screen</strong> again.</p>
+    <p class="note">Open a game from this Desk and you get a gold <strong>Back to Mark's Desk</strong> button. Share sends the clean game link. Talk and Usage stay yours. If the old iPad icon is a frozen copy, delete it, open this page in <strong>Safari</strong>, tap Share, then <strong>Add to Home Screen</strong> again.</p>
   </div>
+  <div class="toast" id="toast"></div>
+<script>
+(function(){
+  var toastT=null;
+  function toast(msg){
+    var el=document.getElementById("toast");
+    el.textContent=msg;
+    el.style.opacity="1";
+    clearTimeout(toastT);
+    toastT=setTimeout(function(){ el.style.opacity="0"; }, 2200);
+  }
+  function share(title, text, url){
+    if(navigator.share){
+      navigator.share({title:title,text:text,url:url}).catch(function(){});
+      return;
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){ toast("Link copied. Paste it in a text."); });
+      return;
+    }
+    window.prompt("Copy this link", url);
+  }
+  document.querySelectorAll(".share").forEach(function(btn){
+    btn.addEventListener("click", function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      share(btn.getAttribute("data-title"), btn.getAttribute("data-text"), btn.getAttribute("data-url"));
+    });
+  });
+})();
+</script>
 </body>
 </html>

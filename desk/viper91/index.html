@@ -183,6 +183,7 @@ html.from-desk #playui{justify-content:space-between}
     <div class="btns">
       <button class="red" id="again">ONE MORE PASS</button>
       <button class="gold" id="overHome">HOME</button>
+      <button class="gold" id="overShare">SHARE THIS GAME</button>
       <a class="linkbtn desk desk-only" href="../">← Mark's Desk</a>
     </div>
   </div>
@@ -195,6 +196,7 @@ html.from-desk #playui{justify-content:space-between}
     <div class="quip">Wengler Hill Road. Six chapters. The pines watched. The Viper, sold or not, still knew the way home.</div>
     <div class="btns">
       <button class="red" id="winAgain">RUN IT AGAIN</button>
+      <button class="gold" id="winShare">SHARE THIS GAME</button>
       <a class="linkbtn gold" href="https://indigo-sequin-t7za.here.now/">Compare the original</a>
       <a class="linkbtn desk desk-only" href="../">← Mark's Desk</a>
     </div>
@@ -877,9 +879,9 @@ tap("again", ()=>{ if(mode==="free") startFree(); else { attitude=100; openStory
 tap("overHome", ()=>{ screen="title"; hidePlay(false); show("title"); });
 tap("winAgain", startCampaign);
 tap("deskMid", ()=>{ location.href="../"; });
-tap("shareGame", ()=>{
+function shareGame(){
   const url=location.origin+location.pathname;
-  const go=()=>toast("Link copied. Send that. No Desk on it.", 2200);
+  const go=()=>toast("Link copied. Paste it in a text. No Desk on it.", 2200);
   if(navigator.share){
     navigator.share({title:"VIPER 99.1",text:"He sold the car. Not the attitude.",url:url}).catch(function(){});
     return;
@@ -889,7 +891,10 @@ tap("shareGame", ()=>{
     return;
   }
   window.prompt("Copy this link", url);
-});
+}
+tap("shareGame", shareGame);
+tap("overShare", shareGame);
+tap("winShare", shareGame);
 tap("muteBtn", ()=>{
   muted=!muted;
   document.getElementById("muteBtn").textContent=muted?"Muted":"Sound";

@@ -489,6 +489,7 @@
   function wire() {
     document.getElementById("startBtn").addEventListener("click", startKitchen);
     document.getElementById("shareBtn").addEventListener("click", shareKitchen);
+    document.getElementById("shareTool").addEventListener("click", shareKitchen);
     document.getElementById("homeBtn").addEventListener("click", goHome);
     document.getElementById("zoomIn").addEventListener("click", function () { if (map) map.zoomIn({ duration: 280 }); });
     document.getElementById("zoomOut").addEventListener("click", function () { if (map) map.zoomOut({ duration: 280 }); });

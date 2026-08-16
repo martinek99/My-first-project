@@ -80,6 +80,9 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
       <p class="eyebrow">@thecareycurated · she still posts</p>
       <h1>Carey's Corner</h1>
       <p class="lede">Write it like Carey. Copy it. Paste it on Poshmark. Nothing posts for you.</p>
+      <div class="actions" style="margin-top:12px">
+        <button type="button" class="btn" id="shareHelper">Share this helper</button>
+      </div>
     </div>
     <div class="tabs">
       <button class="tab on" data-tab="write">Write a listing</button>
@@ -352,6 +355,18 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
       });
     };
   });
+  $("shareHelper").onclick=function(){
+    var url=location.origin+location.pathname;
+    if(navigator.share){
+      navigator.share({title:"Carey's Corner",text:"A Poshmark listing helper in Carey's closet style.",url:url}).catch(function(){});
+      return;
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(url).then(function(){ toast("Link copied. Paste it in a text."); });
+      return;
+    }
+    window.prompt("Copy this link", url);
+  };
   load(); renderCloset();
 })();
 </script>
