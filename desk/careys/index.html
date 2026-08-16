@@ -94,6 +94,13 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
 .pricetotal{font-family:var(--serif);font-size:44px;text-align:center;margin:10px 0 12px}
 .priceuse{width:100%;appearance:none;border:0;border-radius:12px;min-height:56px;font-size:20px;background:var(--terra);color:#fff8ee;margin:0 0 8px}
 .priceclear{width:100%;appearance:none;border:1px solid var(--line);border-radius:12px;min-height:48px;font-size:16px;background:transparent;color:var(--ink)}
+.photos{margin:0 0 16px}
+.photobar{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:2px 0 8px}
+.photobar img,.phadd{width:92px;height:92px;border-radius:12px;flex:0 0 auto;object-fit:cover;border:1px solid var(--line);background:#fff}
+.phadd{display:flex;align-items:center;justify-content:center;font-size:13px;text-align:center;padding:8px;color:var(--navy)}
+.phwrap{position:relative;flex:0 0 auto}
+.phwrap button.x{position:absolute;top:-6px;right:-6px;width:28px;height:28px;border:0;border-radius:50%;background:var(--navy);color:#fff8ee;font-size:16px;line-height:28px;padding:0}
+.filehide{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 </style>
 </head>
 <body>
@@ -124,6 +131,16 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
       <button type="button" class="sq" data-pick="size"><span class="k">4 · Size</span><span class="v empty" id="vSize">Tap</span></button>
       <button type="button" class="sq" data-pick="condition"><span class="k">5 · Condition</span><span class="v empty" id="vCond">Tap</span></button>
       <button type="button" class="sq" data-pick="price"><span class="k">6 · Ask</span><span class="v empty" id="vPrice">Tap</span></button>
+    </div>
+    <div class="photos">
+      <p class="hint">7 · Photos. Take a picture or pick from the library. Up to eight. They go on her shop with the piece.</p>
+      <div class="actions" style="margin:0 0 10px">
+        <button type="button" class="btn" id="takePic">Take a picture</button>
+        <button type="button" class="btn ghost" id="fromLib">From the library</button>
+      </div>
+      <div class="photobar" id="photoBar"></div>
+      <input class="filehide" id="camInput" type="file" accept="image/*" capture="environment">
+      <input class="filehide" id="libInput" type="file" accept="image/*" multiple>
     </div>
     <div class="actions">
       <button class="btn" id="copyAll">Copy the whole listing</button>
@@ -166,7 +183,7 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
       <p>3. Every list can search. Type a new name and tap Add it. Tap Remove names to take one off.</p>
       <p>3b. Ask is three rows: hundreds, tens, ones. Tap 500, then 40, then 7 for $547. Any price from $1 to $999.</p>
       <p>4. She taps Copy the whole listing, opens the selling app, and pastes.</p>
-      <p>5. She still finds the piece, steams it, photographs it, packages it, and ships it. This page only writes the words.</p>
+      <p>5. She takes pictures here, or picks them from the iPad library. Those photos go on her shop. Poshmark still uses the photos in her camera roll when she pastes.</p>
       <p>Titles follow her closet: <i>Brand Style in Color Size</i>, with NEW when it is NWT.</p>
       <p>Maker names start from her public Poshmark closet, @thecareycurated. I kept every brand she has listed at least three times. One-off brands stay off the list until she types them in.</p>
     </div>
@@ -204,6 +221,7 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
   <div class="pickbody" id="pickBody"></div>
 </div>
 <div class="toast" id="toast">Copied</div>
+<script src="../photos.js"></script>
 <script>
 (function () {
   var $ = function (id) { return document.getElementById(id); };
@@ -221,6 +239,7 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
     price: ["12","15","18","22","25","28","32","35","38","42","45","48","52","55","58","65","75","85","95","110","125","150","175","200"]
   };
   var form = { maker:"", style:"", color:"", size:"", condition:"", price:"" };
+  var photos = [];
   var blocks = { title:"", ask:"", posh:"" };
   var closet = [];
   var lib = { maker:[], style:[], color:[], size:[], price:[], condition:[] };
@@ -276,6 +295,43 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
       hidden[k]=starterValues(k).filter(function(v){ return !have[String(v).toLowerCase()]; });
     });
     localStorage.setItem(LIBKEY, JSON.stringify({ extra:extra, hidden:hidden }));
+  }
+  function renderPhotos(){
+    var host=$("photoBar");
+    if(!host) return;
+    host.innerHTML="";
+    photos.forEach(function(src, i){
+      var wrap=document.createElement("div");
+      wrap.className="phwrap";
+      var img=document.createElement("img");
+      img.src=src;
+      img.alt="Photo "+(i+1);
+      var x=document.createElement("button");
+      x.type="button";
+      x.className="x";
+      x.textContent="×";
+      x.onclick=function(){ photos.splice(i,1); renderPhotos(); };
+      wrap.appendChild(img);
+      wrap.appendChild(x);
+      host.appendChild(wrap);
+    });
+    if(photos.length < ((window.careyPhotos&&window.careyPhotos.MAX)||8)){
+      var add=document.createElement("div");
+      add.className="phadd";
+      add.textContent=photos.length?"Add another":"No photos yet";
+      host.appendChild(add);
+    }
+  }
+  function takeFiles(input){
+    if(!input.files||!input.files.length) return;
+    var add=window.careyPhotos&&window.careyPhotos.addFiles;
+    if(!add){ toast("Photos could not open"); return; }
+    add(input.files, photos, function(next){
+      photos=next;
+      input.value="";
+      renderPhotos();
+      toast(photos.length+" photo"+(photos.length===1?"":"s"));
+    });
   }
   function loadCloset(){ try{ closet=JSON.parse(localStorage.getItem(CLOSETKEY)||"[]"); }catch(e){ closet=[]; } }
   function saveCloset(){ localStorage.setItem(CLOSETKEY, JSON.stringify(closet)); }
@@ -580,12 +636,18 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
   };
   $("clear").onclick=function(){
     form={maker:"",style:"",color:"",size:"",condition:"",price:""};
+    photos=[];
+    renderPhotos();
     paint();
     toast("New piece");
   };
+  $("takePic").onclick=function(){ $("camInput").click(); };
+  $("fromLib").onclick=function(){ $("libInput").click(); };
+  $("camInput").addEventListener("change", function(){ takeFiles($("camInput")); });
+  $("libInput").addEventListener("change", function(){ takeFiles($("libInput")); });
   $("save").onclick=function(){
     paint();
-    closet.push({ id:Date.now(), title:blocks.title, price:money(form.price), stage:"Bought", when:new Date().toISOString() });
+    closet.push({ id:Date.now(), title:blocks.title, price:money(form.price), photos:photos.slice(), stage:"Bought", when:new Date().toISOString() });
     saveCloset(); renderCloset(); toast("Saved on this iPad");
   };
   $("toShop").onclick=function(){
@@ -603,12 +665,13 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
       condition:form.condition,
       price:money(form.price),
       blurb:blocks.posh,
+      photos:photos.slice(),
       stage:"For sale",
       when:new Date().toISOString(),
       source:"careys-corner"
     });
-    localStorage.setItem(SHOPKEY, JSON.stringify(shop));
-    toast("On her shop");
+    try{ localStorage.setItem(SHOPKEY, JSON.stringify(shop)); toast("On her shop"); }
+    catch(e){ toast("Photos are too big for this iPad. Take one off."); }
   };
   document.querySelectorAll(".tab").forEach(function(t){ t.onclick=function(){ showTab(t.getAttribute("data-tab")); }; });
   document.querySelectorAll(".copy").forEach(function(btn){
@@ -619,7 +682,7 @@ button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink
     if(navigator.share){ navigator.share({title:"Carey's Corner",text:"A Poshmark listing helper in Carey's closet style.",url:url}).catch(function(){}); return; }
     copyText(url);
   };
-  loadLib(); loadCloset(); paint(); renderCloset();
+  loadLib(); loadCloset(); paint(); renderCloset(); renderPhotos();
 })();
 </script>
 </body>

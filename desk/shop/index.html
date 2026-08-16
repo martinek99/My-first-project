@@ -41,8 +41,12 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(36px,7vw,56px);margi
 .hint{font-size:15px;color:var(--muted);line-height:1.45;margin:18px 0}
 .grid{display:grid;grid-template-columns:1fr;gap:14px}
 @media (min-width:720px){.grid{grid-template-columns:1fr 1fr}}
-.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px;text-align:left}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:0;text-align:left;overflow:hidden}
+.card img.hero{width:100%;height:220px;object-fit:cover;display:block;background:#efe4ce}
+.card .pad{padding:16px 20px 20px}
 .card h2{font-family:var(--serif);font-size:26px;margin:0 0 8px;line-height:1.15}
+.gallery{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 14px}
+.gallery img{width:160px;height:160px;object-fit:cover;border-radius:12px;flex:0 0 auto}
 .meta{color:var(--muted);font-size:15px;margin:0 0 10px}
 .ask{font-family:var(--serif);font-size:28px;margin:0}
 .empty{background:var(--paper);border:1px dashed var(--line);border-radius:16px;padding:28px 22px}
@@ -54,6 +58,7 @@ html.from-desk .desk-only{display:block}
 #detail.on{display:block}
 #detail .sheet{background:var(--paper);border-radius:18px;padding:22px;max-width:560px;margin:0 auto}
 .sold .ask{text-decoration:line-through;color:#8a7040}
+.filehide{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
 </style>
 </head>
 <body>
@@ -70,7 +75,10 @@ html.from-desk .desk-only{display:block}
   <div class="grid" id="rack"></div>
 </div>
 <div id="detail"></div>
+<input class="filehide" id="shopCam" type="file" accept="image/*" capture="environment">
+<input class="filehide" id="shopLib" type="file" accept="image/*" multiple>
 <div class="toast" id="toast">Copied</div>
+<script src="../photos.js"></script>
 <script>
 (function(){
   try{
@@ -101,7 +109,8 @@ html.from-desk .desk-only{display:block}
   }
   function saveLocal(items){
     var mine=items.filter(function(p){ return p.source!=="public"; });
-    localStorage.setItem(SHOPKEY, JSON.stringify(mine));
+    try{ localStorage.setItem(SHOPKEY, JSON.stringify(mine)); }
+    catch(e){ toast("Photos are too big for this iPad. Take one off."); }
   }
   function condName(c){
     return {nwt:"New with tags",like_new:"Like new",good:"Excellent used",fair:"Preowned"}[c]||c||"";
@@ -136,7 +145,8 @@ html.from-desk .desk-only{display:block}
       var b=document.createElement("button");
       b.type="button";
       b.className="card"+(item.stage==="Sold"?" sold":"");
-      b.innerHTML="<p class='meta'>"+esc(item.maker||"Carey curated")+" · "+esc(item.size||"")+"</p><h2>"+esc(item.title)+"</h2><p class='ask'>"+(item.price?("$"+item.price):"Ask on request")+"</p>";
+      var pic=(item.photos&&item.photos[0])?"<img class='hero' alt='' src='"+item.photos[0]+"'>":"";
+      b.innerHTML=pic+"<div class='pad'><p class='meta'>"+esc(item.maker||"Carey curated")+" · "+esc(item.size||"")+"</p><h2>"+esc(item.title)+"</h2><p class='ask'>"+(item.price?("$"+item.price):"Ask on request")+"</p></div>";
       b.onclick=function(){ openDetail(item); };
       host.appendChild(b);
     });
@@ -145,9 +155,13 @@ html.from-desk .desk-only{display:block}
   function openDetail(item){
     var box=$("detail");
     var bits=[item.style, item.color, item.size, condName(item.condition)].filter(Boolean).join(" · ");
-    var html="<div class='sheet'><p class='eyebrow'>The Carey Curated</p><h2 style='font-family:var(--serif);font-size:32px;margin:0 0 8px'>"+esc(item.title)+"</h2><p class='meta'>"+esc(bits)+"</p><p class='ask'>"+(item.price?("$"+item.price):"")+"</p><p style='white-space:pre-wrap;line-height:1.45'>"+esc(item.blurb||"")+"</p>";
+    var pics=(item.photos||[]).map(function(src){ return "<img alt='' src='"+src+"'>"; }).join("");
+    var html="<div class='sheet'><p class='eyebrow'>The Carey Curated</p>";
+    if(pics) html+="<div class='gallery'>"+pics+"</div>";
+    html+="<h2 style='font-family:var(--serif);font-size:32px;margin:0 0 8px'>"+esc(item.title)+"</h2><p class='meta'>"+esc(bits)+"</p><p class='ask'>"+(item.price?("$"+item.price):"")+"</p><p style='white-space:pre-wrap;line-height:1.45'>"+esc(item.blurb||"")+"</p>";
     html+="<div class='actions'><button type='button' class='btn' id='wantIt'>Copy a note for Carey</button><button type='button' class='btn ghost' id='closeIt'>Close</button></div>";
     if(fromDesk){
+      html+="<div class='actions'><button type='button' class='btn ghost' id='addCam'>Take a picture</button><button type='button' class='btn ghost' id='addLib'>From the library</button></div>";
       html+="<div class='actions'><button type='button' class='btn ghost' id='markSold'>Mark sold</button><button type='button' class='btn ghost' id='takeDown'>Take down</button></div>";
     }
     html+="</div>";
@@ -163,10 +177,28 @@ html.from-desk .desk-only{display:block}
     if(fromDesk){
       $("markSold").onclick=function(){ item.stage="Sold"; saveLocal(rack); closeDetail(); paint(); toast("Marked sold"); };
       $("takeDown").onclick=function(){ item.stage="Down"; saveLocal(rack); closeDetail(); paint(); toast("Taken down"); };
+      $("addCam").onclick=function(){ pendingItem=item; $("shopCam").click(); };
+      $("addLib").onclick=function(){ pendingItem=item; $("shopLib").click(); };
     }
+  }
+  var pendingItem=null;
+  function addShopPhotos(input){
+    if(!pendingItem||!input.files||!input.files.length) return;
+    var add=window.careyPhotos&&window.careyPhotos.addFiles;
+    if(!add) return;
+    add(input.files, pendingItem.photos||[], function(next){
+      pendingItem.photos=next;
+      input.value="";
+      saveLocal(rack);
+      openDetail(pendingItem);
+      paint();
+      toast(next.length+" photo"+(next.length===1?"":"s"));
+    });
   }
   function closeDetail(){ $("detail").classList.remove("on"); $("detail").innerHTML=""; }
 
+  $("shopCam").addEventListener("change", function(){ addShopPhotos($("shopCam")); });
+  $("shopLib").addEventListener("change", function(){ addShopPhotos($("shopLib")); });
   $("shareShop").onclick=function(){
     if(navigator.share){ navigator.share({title:"The Carey Curated",text:"A cute curated clothing collection.",url:SHARE}).catch(function(){}); return; }
     if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(SHARE).then(function(){ toast("Link copied"); });
