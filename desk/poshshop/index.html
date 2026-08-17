@@ -9,6 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Carey's Poshmark Store">
 <meta name="theme-color" content="#ffd6e7">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta name="poshshop-version" content="filter-stack-3">
 <title>Carey's Poshmark Store</title>
 <meta name="description" content="Browse Carey's whole Poshmark closet. Search, then tap Type, Color, Size, Price, or Maker.">
 <meta property="og:title" content="Carey's Poshmark Store">
@@ -71,7 +72,8 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
 #picker{display:none;position:fixed;inset:0;z-index:45;background:rgba(74,32,64,.45);padding:calc(var(--st) + 16px) 14px calc(var(--sb) + 16px);overflow:auto}
 #picker.on{display:block}
 .pick-sheet{background:#fff7fb;border-radius:22px;padding:18px 16px 16px;max-width:720px;margin:0 auto;border:3px solid #ffb6d2}
-.pick-sheet h2{font-family:var(--serif);font-size:32px;margin:0 0 12px}
+.pick-sheet h2{font-family:var(--serif);font-size:32px;margin:0 0 8px}
+.pick-note{margin:0 0 12px;color:#c43b74;font-size:15px;line-height:1.35}
 .pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 @media (min-width:700px){.pick-grid{grid-template-columns:1fr 1fr 1fr}}
 .tile{appearance:none;border:2px solid #ffb6d2;border-radius:16px;min-height:64px;padding:12px 10px;
@@ -300,7 +302,11 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
         return {id:k, label:kind==="type"?styleLabel(k):k, sub:(counts[k]||0)+" pieces", on:inSet(selected,k)};
       }));
     }
-    box.innerHTML="<div class='pick-sheet'><h2>"+esc(title)+"</h2><div class='pick-grid' id='pickGrid'></div></div>";
+    var note="";
+    if(kind!=="price" && poolFor(kind).length!==stock.length){
+      note="<p class='pick-note'>Numbers are only from the "+poolFor(kind).length+" pieces you already picked.</p>";
+    }
+    box.innerHTML="<div class='pick-sheet'><h2>"+esc(title)+"</h2>"+note+"<div class='pick-grid' id='pickGrid'></div></div>";
     var grid=$("pickGrid");
     tiles.forEach(function(tile){
       var b=document.createElement("button");
