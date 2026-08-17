@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="The Carey Curated">
+<meta name="theme-color" content="#f3ead6">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>The Carey Curated</title>
+<meta name="description" content="A cute curated clothing collection, packaged with care and shipped quickly to your door.">
+<meta property="og:title" content="The Carey Curated">
+<meta property="og:description" content="A cute curated clothing collection, packaged with care and shipped quickly to your door.">
+<meta property="og:url" content="https://whimsy-violet-dhgk.here.now/shop/">
+<meta property="og:type" content="website">
+<style>
+:root{
+  --cream:#f3ead6;--paper:#fffaf0;--ink:#2a2218;--muted:#6a5a3a;--line:rgba(201,162,74,.42);
+  --gold:#c9a24a;--terra:#8c4a2f;--navy:#142033;--chip:#efe4ce;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans)}
+body{min-height:100dvh;padding:0 0 calc(var(--sb) + 28px)}
+.escape{display:none;position:fixed;left:12px;right:12px;top:calc(var(--st) + 8px);z-index:40;
+  align-items:center;justify-content:center;text-decoration:none;background:#e8c37a;color:#142033;
+  border-radius:14px;padding:14px 16px;font-family:var(--serif);font-size:20px;font-weight:600}
+html.from-desk .escape{display:flex}
+html.from-desk body{padding-top:calc(var(--st) + 72px)}
+.wrap{max-width:980px;margin:0 auto;padding:28px 20px 0}
+.eyebrow{font-family:var(--serif);letter-spacing:.24em;text-transform:uppercase;font-size:12px;color:#8a7040;margin:0 0 8px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(36px,7vw,56px);margin:0;line-height:.95}
+.lede{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:18px;line-height:1.4;margin:10px 0 0;max-width:28em}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 0}
+.btn{appearance:none;border:0;border-radius:12px;padding:14px 18px;min-height:52px;font-size:17px;background:var(--terra);color:#fff8ee;text-decoration:none;display:inline-flex;align-items:center}
+.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.hint{font-size:15px;color:var(--muted);line-height:1.45;margin:18px 0}
+.grid{display:grid;grid-template-columns:1fr;gap:14px}
+@media (min-width:720px){.grid{grid-template-columns:1fr 1fr}}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:0;text-align:left;overflow:hidden}
+.card img.hero{width:100%;height:220px;object-fit:cover;display:block;background:#efe4ce}
+.card .pad{padding:16px 20px 20px}
+.card h2{font-family:var(--serif);font-size:26px;margin:0 0 8px;line-height:1.15}
+.gallery{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 0 14px}
+.gallery img{width:160px;height:160px;object-fit:cover;border-radius:12px;flex:0 0 auto}
+.meta{color:var(--muted);font-size:15px;margin:0 0 10px}
+.ask{font-family:var(--serif);font-size:28px;margin:0}
+.empty{background:var(--paper);border:1px dashed var(--line);border-radius:16px;padding:28px 22px}
+.toast{position:fixed;left:50%;bottom:calc(var(--sb) + 24px);transform:translateX(-50%);background:var(--navy);color:#fff8ee;padding:12px 18px;border-radius:999px;opacity:0;pointer-events:none;z-index:80}
+.toast.show{opacity:1}
+.desk-only{display:none}
+html.from-desk .desk-only{display:block}
+#detail{display:none;position:fixed;inset:0;z-index:50;background:rgba(20,32,51,.45);padding:calc(var(--st) + 80px) 16px calc(var(--sb) + 20px);overflow:auto}
+#detail.on{display:block}
+#detail .sheet{background:var(--paper);border-radius:18px;padding:22px;max-width:560px;margin:0 auto}
+.sold .ask{text-decoration:line-through;color:#8a7040}
+.filehide{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<a class="escape" href="../">← Back to Mark's Desk</a>
+<div class="wrap">
+  <p class="eyebrow">@thecareycurated</p>
+  <h1>The Carey Curated</h1>
+  <p class="lede">A cute curated clothing collection, packaged with care and shipped quickly to your door.</p>
+  <div class="actions">
+    <button type="button" class="btn" id="shareShop">Share the shop</button>
+    <a class="btn ghost desk-only" href="../careys/">Open Carey's Corner</a>
+  </div>
+  <p class="hint" id="rackNote">Pieces she hangs from Carey's Corner land here. The helper stays the helper. This is the shop.</p>
+  <div class="grid" id="rack"></div>
+</div>
+<div id="detail"></div>
+<input class="filehide" id="shopCam" type="file" accept="image/*" capture="environment">
+<input class="filehide" id="shopLib" type="file" accept="image/*" multiple>
+<div class="toast" id="toast">Copied</div>
+<script src="../photos.js"></script>
+<script>
+(function(){
+  try{
+    var q=new URLSearchParams(location.search);
+    if(q.get("from")==="desk"){
+      sessionStorage.setItem("marksdesk","1");
+      q.delete("from");
+      history.replaceState({},"",location.pathname+(q.toString()?"?"+q:"")+location.hash);
+    }
+    if(sessionStorage.getItem("marksdesk")==="1") document.documentElement.classList.add("from-desk");
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var SHOPKEY="carey-curated-shop-v1";
+  var SHARE="https://whimsy-violet-dhgk.here.now/shop/";
+  var fromDesk=document.documentElement.classList.contains("from-desk");
+  var rack=[];
+
+  function $(id){ return document.getElementById(id); }
+  function toast(msg){
+    var t=$("toast"); t.textContent=msg; t.classList.add("show");
+    clearTimeout(toast._id); toast._id=setTimeout(function(){ t.classList.remove("show"); },1800);
+  }
+  function loadLocal(){
+    try{ return JSON.parse(localStorage.getItem(SHOPKEY)||"[]"); }catch(e){ return []; }
+  }
+  function saveLocal(items){
+    var mine=items.filter(function(p){ return p.source!=="public"; });
+    try{ localStorage.setItem(SHOPKEY, JSON.stringify(mine)); }
+    catch(e){ toast("Photos are too big for this iPad. Take one off."); }
+  }
+  function condName(c){
+    return {nwt:"New with tags",like_new:"Like new",good:"Excellent used",fair:"Preowned"}[c]||c||"";
+  }
+  function merge(pub, local){
+    var seen={}, out=[], i, p;
+    function add(item, source){
+      if(!item||!item.title) return;
+      var k=String(item.id||item.title).toLowerCase();
+      if(seen[k]) return;
+      seen[k]=1;
+      item.source=item.source||source;
+      out.push(item);
+    }
+    for(i=0;i<(local||[]).length;i++) add(local[i], "ipad");
+    for(i=0;i<(pub||[]).length;i++) add(pub[i], "public");
+    return out;
+  }
+  function paint(){
+    var host=$("rack");
+    var sale=rack.filter(function(p){ return p.stage!=="Sold" && p.stage!=="Down"; });
+    var note=$("rackNote");
+    if(!sale.length){
+      host.innerHTML='<div class="empty"><h2 style="font-family:var(--serif);margin:0 0 8px">The rack is being dressed</h2><p class="meta">Tap through a piece in Carey\'s Corner, then Put on her shop. That helper does not change. This page is the shop.</p></div>';
+      if(fromDesk) note.textContent="Nothing on this iPad yet. Open Carey's Corner, tap a piece, then Put on her shop.";
+      return;
+    }
+    if(fromDesk) note.textContent="These pieces are on this iPad. Friends see the public rack after we hang it. Carey's Corner is still the helper.";
+    else note.textContent="Packaged with care. Ships quickly from sunny California.";
+    host.innerHTML="";
+    sale.slice().reverse().forEach(function(item){
+      var b=document.createElement("button");
+      b.type="button";
+      b.className="card"+(item.stage==="Sold"?" sold":"");
+      var pic=(item.photos&&item.photos[0])?"<img class='hero' alt='' src='"+item.photos[0]+"'>":"";
+      b.innerHTML=pic+"<div class='pad'><p class='meta'>"+esc(item.maker||"Carey curated")+" · "+esc(item.size||"")+"</p><h2>"+esc(item.title)+"</h2><p class='ask'>"+(item.price?("$"+item.price):"Ask on request")+"</p></div>";
+      b.onclick=function(){ openDetail(item); };
+      host.appendChild(b);
+    });
+  }
+  function esc(s){ return String(s||"").replace(/[&<>\"']/g, function(c){ return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]); }); }
+  function openDetail(item){
+    var box=$("detail");
+    var bits=[item.style, item.color, item.size, condName(item.condition)].filter(Boolean).join(" · ");
+    var pics=(item.photos||[]).map(function(src){ return "<img alt='' src='"+src+"'>"; }).join("");
+    var html="<div class='sheet'><p class='eyebrow'>The Carey Curated</p>";
+    if(pics) html+="<div class='gallery'>"+pics+"</div>";
+    html+="<h2 style='font-family:var(--serif);font-size:32px;margin:0 0 8px'>"+esc(item.title)+"</h2><p class='meta'>"+esc(bits)+"</p><p class='ask'>"+(item.price?("$"+item.price):"")+"</p><p style='white-space:pre-wrap;line-height:1.45'>"+esc(item.blurb||"")+"</p>";
+    html+="<div class='actions'><button type='button' class='btn' id='wantIt'>Copy a note for Carey</button><button type='button' class='btn ghost' id='closeIt'>Close</button></div>";
+    if(fromDesk){
+      html+="<div class='actions'><button type='button' class='btn ghost' id='addCam'>Take a picture</button><button type='button' class='btn ghost' id='addLib'>From the library</button></div>";
+      html+="<div class='actions'><button type='button' class='btn ghost' id='markSold'>Mark sold</button><button type='button' class='btn ghost' id='takeDown'>Take down</button></div>";
+    }
+    html+="</div>";
+    box.innerHTML=html;
+    box.classList.add("on");
+    $("closeIt").onclick=closeDetail;
+    box.onclick=function(e){ if(e.target===box) closeDetail(); };
+    $("wantIt").onclick=function(){
+      var t="Hi Carey, I would like "+item.title+(item.price?(" for $"+item.price):"")+". From The Carey Curated.";
+      if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function(){ toast("Note copied"); });
+      else { window.prompt("Copy this note", t); }
+    };
+    if(fromDesk){
+      $("markSold").onclick=function(){ item.stage="Sold"; saveLocal(rack); closeDetail(); paint(); toast("Marked sold"); };
+      $("takeDown").onclick=function(){ item.stage="Down"; saveLocal(rack); closeDetail(); paint(); toast("Taken down"); };
+      $("addCam").onclick=function(){ pendingItem=item; $("shopCam").click(); };
+      $("addLib").onclick=function(){ pendingItem=item; $("shopLib").click(); };
+    }
+  }
+  var pendingItem=null;
+  function addShopPhotos(input){
+    if(!pendingItem||!input.files||!input.files.length) return;
+    var add=window.careyPhotos&&window.careyPhotos.addFiles;
+    if(!add) return;
+    add(input.files, pendingItem.photos||[], function(next){
+      pendingItem.photos=next;
+      input.value="";
+      saveLocal(rack);
+      openDetail(pendingItem);
+      paint();
+      toast(next.length+" photo"+(next.length===1?"":"s"));
+    });
+  }
+  function closeDetail(){ $("detail").classList.remove("on"); $("detail").innerHTML=""; }
+
+  $("shopCam").addEventListener("change", function(){ addShopPhotos($("shopCam")); });
+  $("shopLib").addEventListener("change", function(){ addShopPhotos($("shopLib")); });
+  $("shareShop").onclick=function(){
+    if(navigator.share){ navigator.share({title:"The Carey Curated",text:"A cute curated clothing collection.",url:SHARE}).catch(function(){}); return; }
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(SHARE).then(function(){ toast("Link copied"); });
+    else window.prompt("Copy this link", SHARE);
+  };
+
+  Promise.resolve()
+    .then(function(){ return fetch("stock.json",{cache:"no-store"}).then(function(r){ return r.ok?r.json():[]; }).catch(function(){ return []; }); })
+    .then(function(pub){
+      rack=merge(pub, loadLocal());
+      paint();
+    });
+})();
+</script>
+</body>
+</html>

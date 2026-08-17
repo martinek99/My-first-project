@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Carey's Corner">
+<meta name="theme-color" content="#f3ead6">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Carey's Corner</title>
+<meta name="description" content="Tap through a Poshmark listing in Carey's closet style.">
+<meta property="og:title" content="Carey's Corner">
+<meta property="og:description" content="A Poshmark listing helper in Carey's closet style.">
+<meta property="og:url" content="https://whimsy-violet-dhgk.here.now/careys/">
+<meta property="og:type" content="website">
+<style>
+:root{
+  --cream:#f3ead6;--paper:#fffaf0;--ink:#2a2218;--muted:#6a5a3a;--line:rgba(201,162,74,.42);
+  --gold:#c9a24a;--terra:#8c4a2f;--sage:#3d5a45;--navy:#142033;--chip:#efe4ce;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans)}
+body{min-height:100dvh;padding:calc(var(--st) + 80px) 0 calc(var(--sb) + 28px)}
+.homebar{position:fixed;left:0;right:0;top:0;z-index:90;background:var(--navy);padding:calc(var(--st) + 12px) 16px 12px}
+.homebar a{display:block;text-align:center;text-decoration:none;background:var(--gold);color:var(--navy);
+  border-radius:14px;padding:16px 18px;font-family:var(--serif);font-size:22px;font-weight:600}
+.wrap{max-width:1100px;margin:0 auto;padding:18px 20px 0}
+.top{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap;margin:0 0 18px}
+.eyebrow{font-family:var(--serif);letter-spacing:.24em;text-transform:uppercase;font-size:12px;color:#8a7040;margin:0 0 6px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,5vw,48px);margin:0;line-height:1}
+.lede{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:18px;margin:8px 0 0}
+.tabs{display:flex;gap:8px;flex-wrap:wrap}
+.tab{appearance:none;border:1px solid var(--line);background:var(--paper);color:var(--ink);border-radius:999px;padding:10px 16px;font-size:15px;min-height:44px}
+.tab.on{background:var(--navy);color:#fff8ee;border-color:var(--navy)}
+.panel{display:none}
+.panel.on{display:block}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:20px}
+.hint{font-size:15px;color:var(--muted);line-height:1.45;margin:0 0 14px}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:8px 0 0}
+button.btn{appearance:none;border:0;border-radius:12px;padding:14px 18px;min-height:52px;font-size:17px;background:var(--terra);color:#fff8ee}
+button.ghost{background:transparent;border:1px solid var(--line);color:var(--ink)}
+.out h2{font-family:var(--serif);font-size:20px;margin:0 0 8px}
+.block{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;margin:0 0 14px;white-space:pre-wrap;line-height:1.45}
+.copyrow{display:flex;justify-content:space-between;align-items:center;gap:8px;margin:0 0 6px}
+.copy{appearance:none;border:0;background:var(--navy);color:#fff8ee;border-radius:999px;padding:10px 14px;min-height:44px}
+.money{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.stat{background:var(--chip);border-radius:12px;padding:12px}
+.stat b{display:block;font-size:22px;font-family:var(--serif)}
+.item{display:flex;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.muted{color:var(--muted)}
+.toast{position:fixed;left:50%;bottom:calc(var(--sb) + 24px);transform:translateX(-50%);background:var(--navy);color:#fff8ee;padding:12px 18px;border-radius:999px;opacity:0;pointer-events:none;z-index:80}
+.toast.show{opacity:1}
+.path{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:0 0 16px}
+@media (min-width:720px){.path{grid-template-columns:1fr 1fr 1fr}}
+.sq{appearance:none;border:2px solid var(--line);background:#fff;border-radius:16px;min-height:110px;padding:14px 12px;
+  text-align:left;font-family:var(--sans);color:var(--ink)}
+.sq.on{border-color:var(--navy);background:#fff8ee}
+.sq .k{display:block;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#8a7040;margin:0 0 8px}
+.sq .v{display:block;font-family:var(--serif);font-size:22px;line-height:1.15;font-weight:600}
+.sq .v.empty{color:#b4a078;font-style:italic;font-weight:400;font-size:18px}
+#picker{position:fixed;left:0;right:0;bottom:0;top:calc(var(--st) + 76px);z-index:60;background:var(--cream);display:none;flex-direction:column}
+#picker.on{display:flex}
+.pickhead{position:sticky;top:0;z-index:2;background:var(--navy);color:#fff8ee;padding:10px 12px}
+.pickhead h2{font-family:var(--serif);margin:0 0 8px;font-size:22px}
+.pickbar{display:flex;gap:8px;margin:0 0 8px}
+.pickbar button{flex:1;min-height:44px;border:0;border-radius:10px;font-size:15px}
+.pickbar .back{background:#e8c37a;color:#142033}
+.pickbar .zap{background:#fff8ee;color:#142033}
+.pickbar .zap.on{background:#8c4a2f;color:#fff8ee}
+.pickbody{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:8px 10px calc(var(--sb) + 16px)}
+.az{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#8a7040;margin:10px 0 4px}
+.pickgrid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+@media (min-width:720px){.pickgrid{grid-template-columns:1fr 1fr 1fr 1fr 1fr}}
+.pickgrid button{appearance:none;border:1px solid var(--line);background:#fff;border-radius:8px;min-height:36px;
+  padding:6px 6px;font-size:13px;line-height:1.15;font-family:var(--sans);text-align:center}
+.pickgrid button.on{background:var(--navy);color:#fff8ee;border-color:var(--navy)}
+.pickgrid button.kill{background:#f6e4d8;color:#8c4a2f;border-color:#d8b8a0}
+.addbox{display:block;padding:0 0 2px}
+.addbox input{width:100%;font-size:16px;padding:10px 12px;border:1px solid rgba(255,248,238,.35);border-radius:10px;margin:0 0 8px;background:#fff8ee;color:#142033}
+.addrow{display:flex;gap:8px}
+.addrow .btn{flex:0 0 auto;min-height:44px;padding:10px 14px;font-size:15px}
+.live{margin-top:8px}
+.pricelabel{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:#8a7040;margin:14px 0 6px}
+.pricerow{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+@media (min-width:720px){.pricerow{grid-template-columns:repeat(9,1fr)}}
+.pricerow button{appearance:none;border:1px solid var(--line);background:#fff;border-radius:12px;min-height:56px;
+  font-family:var(--serif);font-size:18px;font-weight:600;color:var(--ink)}
+.pricerow button.on{background:var(--navy);color:#fff8ee;border-color:var(--navy)}
+.pricetotal{font-family:var(--serif);font-size:44px;text-align:center;margin:10px 0 12px}
+.priceuse{width:100%;appearance:none;border:0;border-radius:12px;min-height:56px;font-size:20px;background:var(--terra);color:#fff8ee;margin:0 0 8px}
+.priceclear{width:100%;appearance:none;border:1px solid var(--line);border-radius:12px;min-height:48px;font-size:16px;background:transparent;color:var(--ink)}
+.photos{margin:0 0 16px}
+.photobar{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:2px 0 8px}
+.photobar img,.phadd{width:92px;height:92px;border-radius:12px;flex:0 0 auto;object-fit:cover;border:1px solid var(--line);background:#fff}
+.phadd{display:flex;align-items:center;justify-content:center;font-size:13px;text-align:center;padding:8px;color:var(--navy)}
+.phwrap{position:relative;flex:0 0 auto}
+.phwrap button.x{position:absolute;top:-6px;right:-6px;width:28px;height:28px;border:0;border-radius:50%;background:var(--navy);color:#fff8ee;font-size:16px;line-height:28px;padding:0}
+.filehide{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+</style>
+</head>
+<body>
+<div class="homebar"><a href="../">← Back to Mark's Desk</a></div>
+<div class="wrap">
+  <div class="top">
+    <div>
+      <p class="eyebrow">@thecareycurated · tap, don't type</p>
+      <h1>Carey's Corner</h1>
+      <p class="lede">Look at the piece. Tap Maker, Style, Color, Size. The words write themselves.</p>
+      <div class="actions" style="margin-top:12px">
+        <button type="button" class="btn" id="shareHelper">Share this helper</button>
+      </div>
+    </div>
+    <div class="tabs">
+      <button class="tab on" data-tab="write">Write a listing</button>
+      <button class="tab" data-tab="closet">Closet</button>
+      <button class="tab" data-tab="help">How this works</button>
+    </div>
+  </div>
+
+  <section id="write" class="panel on">
+    <p class="hint">Tap a square. Makers start as the brands she already lists on Poshmark, three times or more. Type to find one. Type a new name to add it. Remove names she never uses. The list becomes hers.</p>
+    <div class="path">
+      <button type="button" class="sq" data-pick="maker"><span class="k">1 · Maker</span><span class="v empty" id="vMaker">Tap</span></button>
+      <button type="button" class="sq" data-pick="style"><span class="k">2 · Style</span><span class="v empty" id="vStyle">Tap</span></button>
+      <button type="button" class="sq" data-pick="color"><span class="k">3 · Color</span><span class="v empty" id="vColor">Tap</span></button>
+      <button type="button" class="sq" data-pick="size"><span class="k">4 · Size</span><span class="v empty" id="vSize">Tap</span></button>
+      <button type="button" class="sq" data-pick="condition"><span class="k">5 · Condition</span><span class="v empty" id="vCond">Tap</span></button>
+      <button type="button" class="sq" data-pick="price"><span class="k">6 · Ask</span><span class="v empty" id="vPrice">Tap</span></button>
+    </div>
+    <div class="photos">
+      <p class="hint">7 · Photos. Take a picture or pick from the library. Up to eight. They go on her shop with the piece.</p>
+      <div class="actions" style="margin:0 0 10px">
+        <button type="button" class="btn" id="takePic">Take a picture</button>
+        <button type="button" class="btn ghost" id="fromLib">From the library</button>
+      </div>
+      <div class="photobar" id="photoBar"></div>
+      <input class="filehide" id="camInput" type="file" accept="image/*" capture="environment">
+      <input class="filehide" id="libInput" type="file" accept="image/*" multiple>
+    </div>
+    <div class="actions">
+      <button class="btn" id="copyAll">Copy the whole listing</button>
+      <button class="btn ghost" id="save">Save to closet</button>
+      <button class="btn ghost" id="toShop">Put on her shop</button>
+      <button class="btn ghost" id="clear">New piece</button>
+      <a class="btn ghost" href="../shop/?from=desk" style="text-decoration:none">Open her shop</a>
+    </div>
+    <p class="hint">Poshmark does not allow a posting bot. One tap copies the words. She pastes once. eBay does allow an official post, if she ever wants that. Details are under How this works.</p>
+    <div class="card out live">
+      <div class="copyrow"><h2>Listing title</h2><button class="copy" data-copy="title">Copy</button></div>
+      <div class="block" id="outTitle">Tap the squares. The title shows up here.</div>
+      <div class="copyrow"><h2>Suggested ask</h2><button class="copy" data-copy="ask">Copy</button></div>
+      <div class="block" id="outAsk"></div>
+      <div class="copyrow"><h2>Poshmark paste</h2><button class="copy" data-copy="posh">Copy</button></div>
+      <div class="block" id="outPosh"></div>
+      <div class="copyrow"><h2>eBay paste</h2><button class="copy" data-copy="ebay">Copy</button></div>
+      <div class="block" id="outEbay"></div>
+      <div class="money">
+        <div class="stat"><span class="muted">Fee</span><b id="fee">—</b></div>
+        <div class="stat"><span class="muted">She keeps</span><b id="keep">—</b></div>
+        <div class="stat"><span class="muted">Title length</span><b id="tlen">0 / 80</b></div>
+        <div class="stat"><span class="muted">Library</span><b id="libcount">0</b></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="closet" class="panel">
+    <div class="card">
+      <p class="hint">Saved on this iPad only. Move a piece from bought, to steamed, to listed, to sold.</p>
+      <div id="closetList"></div>
+    </div>
+  </section>
+
+  <section id="help" class="panel">
+    <div class="card">
+      <h2 style="font-family:var(--serif);margin-top:0">How Brittany uses this</h2>
+      <p>1. She looks at the piece.</p>
+      <p>2. She taps Maker, then the designer. Then Style. Then Color. Then Size. Then Condition. Then the ask.</p>
+      <p>3. Every list can search. Type a new name and tap Add it. Tap Remove names to take one off.</p>
+      <p>3b. Ask is three rows: hundreds, tens, ones. Tap 500, then 40, then 7 for $547. Any price from $1 to $999.</p>
+      <p>4. She taps Copy the whole listing, opens the selling app, and pastes.</p>
+      <p>5. She takes pictures here, or picks them from the iPad library. Those photos go on her shop. Poshmark still uses the photos in her camera roll when she pastes.</p>
+      <p>Titles follow her closet: <i>Brand Style in Color Size</i>, with NEW when it is NWT.</p>
+      <p>Maker names start from her public Poshmark closet, @thecareycurated. I kept every brand she has listed at least three times. One-off brands stay off the list until she types them in.</p>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h2 style="font-family:var(--serif);margin-top:0">Can a bot post it for her?</h2>
+      <p><b>Poshmark, Depop, Mercari, Facebook Marketplace:</b> No honest bot. Those sites do not give regular sellers a “please post this for me” door. Their rules say no robots. A sneak-around bot would need her password. I will not do that.</p>
+      <p><b>Poshmark’s own Smart List:</b> Allowed. She takes a photo in their app. Poshmark writes a draft. She still taps Post. That is their official helper, not a third-party bot.</p>
+      <p><b>eBay:</b> Yes, honestly, for listing and for running the shop. Official seller door. After she taps Allow once, this page can post a piece, change the price, mark it sold, and pull the order. eBay has the crowd. They take a cut. Sizes have to be their standard ones, like S, M, L.</p>
+      <p><b>Her own shop:</b> The most automated honest path. A shop she owns — Shopify, Square, or a page we put up. Then posting, sold, inventory, and price changes are just us doing her work on her site. No password sneak. Buyers have to find her. No Poshmark crowd unless we also send the same piece to eBay.</p>
+      <p><b>Her shop plus eBay:</b> Allowed on both sides. The shop is home. eBay is the crowd. One tap here can update both, so she does not sell the same blouse twice.</p>
+      <p><b>Etsy:</b> Official door, but it is for vintage about 20 years old, or handmade. Everyday closet brands usually do not belong there.</p>
+      <p><b>Send-it-in places</b> like ThredUp: She boxes the clothes. They list them. Different job. Not her closet voice.</p>
+      <p>What still cannot be a bot: finding the piece, steaming it, photographing it, packaging it, and walking it to the post. That stays hers.</p>
+      <p>Her own shop is a separate page, The Carey Curated. Carey's Corner stays the helper. Tap <b>Put on her shop</b> to send a piece over without changing this page. Say <b>hang the rack</b> when you want those pieces on the public shop for friends.</p>
+      <p>Right now Poshmark is still tap, copy, paste. If you want eBay later, say <b>do eBay</b>.</p>
+    </div>
+  </section>
+  <p style="margin:22px 0 0"><a href="../" class="btn" style="display:block;text-align:center;text-decoration:none;background:#e8c37a;color:#142033;font-family:var(--serif);font-size:22px;font-weight:600;border-radius:14px;padding:16px 18px">← Back to Mark's Desk</a></p>
+</div>
+
+<div id="picker">
+  <div class="pickhead">
+    <h2 id="pickTitle">Maker</h2>
+    <div class="pickbar">
+      <button type="button" class="back" id="pickBack">Close</button>
+      <button type="button" class="zap" id="pickRemove">Remove names</button>
+    </div>
+    <div class="addbox" id="addbox">
+      <input id="addInput" placeholder="Type to find, or add a new one" enterkeyhint="done" autocomplete="off" autocorrect="off">
+      <div class="addrow">
+        <button type="button" class="btn" id="addSave">Add it</button>
+      </div>
+    </div>
+  </div>
+  <div class="pickbody" id="pickBody"></div>
+</div>
+<div class="toast" id="toast">Copied</div>
+<script src="../photos.js"></script>
+<script>
+(function () {
+  var $ = function (id) { return document.getElementById(id); };
+  var LIBKEY = "careys-library-v2";
+  var OLDKEY = "careys-library-v1";
+  var CLOSETKEY = "careys-corner-closet-v1";
+  var SHOPKEY = "carey-curated-shop-v1";
+  var removing = false;
+  var STARTER = {
+    maker: ["1901","7 For All Mankind","Abercrombie & Fitch","Adrianna Papell","AGOLDE","Albion","Alice + Olivia","All Saints","Allbirds","Alo Yoga","Amanda Uprichard","American Eagle Outfitters","Ann Taylor","Anthropologie","ASOS","ASTR","Athleta","Baltic Born","Banana Republic","Bardot","Barefoot Dreams","Beachlunchlounge","Betabrand","Betsey Johnson","BHLDN","Birdy Grey","Boden","C/MEO Collective","CAbi","Calvin Klein","Citizens of Humanity","Cole Haan","Columbia","Current/Elliott","Diane von Furstenberg","Disney","Draper James","Dress the Population","Dutch Bros","Eileen Fisher","Eliza J","Ella Moss","Elodie","Everlane","Express","Faherty","FARM Rio","Figs","Flax","Frame","Frank & Eileen","Free People","Girlfriend Collective","Good American","H&M","Harley-Davidson","Hatch","Hello Molly","Hill House","Honeylove","House of Harlow 1960","HUNTER BELL","IBKUL","J. Crew","J. Crew Factory","Jams World","Johnny Was","Joie","Joseph Ribkoff","Julia Amory","Karen Millen","Kate Spade","Kindred Bravely","Knix","Komarov","Kuhl","L*Space","Lafayette 148 New York","Latched Mama","Lauren Ralph Lauren","Lilly Pulitzer","LOFT","Lovers + Friends","Lucky Brand","Lulu's","lululemon","Lunya","Lush","Mac Duggal","Madewell","Marine Layer","Michael Stars","MICHI","Milly","MM Lafleur","Momcozy","Mother","Nike","Nine West","Nordstrom","Outdoor Voices","Pact","PAIGE","Patagonia","Peloton","Philosophy","PINK","Pistola","Prana","Princess Polly","rag & bone","Rails","Rebecca Taylor","Reformation","Revelry","REVICE","Roolee","Rothy's","Sam Edelman","Savage X Fenty","SAYLOR","Self-Portrait","Selkie","Seraphine","Show Me Your MuMu","SKIMS","Smartwool","SPANX","Spiritual Gangster","Spyder","St. John","Steve Madden","Sundance","Superdown","Sweaty Betty","Talbots","Ted Baker","The Limited","Theory","ThirdLove","Thread & Supply","Title Nine","Toad & Co","Toms","Topshop","Torrid","Tory Burch","Trina Turk","Tuckernuck","Ulla Johnson","Universal Thread","Veronica Beard","Vici","Victoria's Secret","Vince","Vuori","We The Free","WeWoreWhat","White House Black Market","Wildfox","Wilfred","Wooden Ships","XiRENA","Young Fabulous & Broke","Z Supply","Zara","Zella","ZYIA"],
+    style: ["Blouse","Button-down","Camp shirt","Tunic","Tee","Tank","Cami","Bodysuit","Sweater","Cardigan","Turtleneck","Mock neck","Hoodie","Sweatshirt","Shacket","Blazer","Jacket","Coat","Trench","Puffer","Vest","Dress","Midi dress","Maxi dress","Mini dress","Wrap dress","Shirt dress","Sweater dress","Jumpsuit","Romper","Skirt","Midi skirt","Maxi skirt","Mini skirt","Pants","Trousers","Wide-leg pants","Straight pants","Cropped pants","Jeans","Skinny jeans","Straight jeans","Flare jeans","Bootcut jeans","Wide-leg jeans","Shorts","Biker shorts","Leggings","Active shorts","Active top","Sports bra","Swim top","Swim bottom","One-piece","Kimono","Poncho","Scarf","Blanket scarf","Shaw","Wrap","Belt","Hat","Beanie","Baseball cap","Sun hat","Bag","Tote","Crossbody","Shoulder bag","Clutch","Wallet","Sneakers","Boots","Ankle boots","Heels","Flats","Loafers","Sandals","Mules","Jewelry","Necklace","Earrings","Bracelet","Ring","Sunglasses","Hair clip","Other"],
+    color: ["Black","White","Ivory","Cream","Off white","Ecru","Beige","Tan","Camel","Khaki","Sand","Taupe","Brown","Chocolate","Espresso","Cognac","Rust","Terracotta","Clay","Brick","Red","Cherry","Burgundy","Wine","Maroon","Blush","Pink","Hot pink","Fuchsia","Rose","Coral","Peach","Orange","Tangerine","Apricot","Carrot","Gold","Mustard","Yellow","Butter","Lemon","Olive","Army green","Sage","Mint","Forest","Emerald","Kelly green","Hunter","Teal","Aqua","Turquoise","Sky","Baby blue","Blue","Cobalt","Royal","Navy","Indigo","Denim","Chambray","Purple","Lavender","Lilac","Plum","Eggplant","Gray","Heather gray","Charcoal","Silver","Metallic","Leopard","Zebra","Snake","Plaid","Check","Stripe","Floral","Paisley","Colorblock","Rainbow","Animal print","Camo","Tie dye","Wash","Light wash","Medium wash","Dark wash","Black wash","Carrot Cake Combo","Combo"],
+    size: ["XXS","XS","S","M","L","XL","XXL","0","2","4","6","8","10","12","14","16","18","23","24","25","26","27","28","29","30","31","32","33","34","00","One size","S/M","M/L","5","5.5","6.5","7","7.5","8.5","9","9.5","10.5","11"],
+    condition: [["nwt","NWT · New"],["like_new","Like new"],["good","Excellent used"],["fair","Preowned"]],
+    price: ["12","15","18","22","25","28","32","35","38","42","45","48","52","55","58","65","75","85","95","110","125","150","175","200"]
+  };
+  var form = { maker:"", style:"", color:"", size:"", condition:"", price:"" };
+  var photos = [];
+  var blocks = { title:"", ask:"", posh:"" };
+  var closet = [];
+  var lib = { maker:[], style:[], color:[], size:[], price:[], condition:[] };
+  var pickKey = "";
+  var priceBits = { h:0, t:0, o:0 };
+  var priceTouched = { h:0, t:0, o:0 };
+
+  function clean(s){ return String(s||"").replace(/\s+/g," ").trim(); }
+  function money(raw){ var n = parseFloat(String(raw||"").replace(/[^0-9.]/g,"")); return isFinite(n) ? Math.round(n*100)/100 : 0; }
+  function uncap(s){ s=clean(s); return s ? s.charAt(0).toLowerCase()+s.slice(1) : ""; }
+  function cap(s){ s=clean(s); return s ? s.charAt(0).toUpperCase()+s.slice(1) : ""; }
+  function endSent(s){ s=clean(s); if(!s) return ""; return /[.!?]$/.test(s) ? s : s+"."; }
+  function poshFee(price){ if(!price) return 0; return price < 15 ? 2.95 : Math.round(price*0.2*100)/100; }
+  function toast(msg){
+    var t=$("toast"); t.textContent=msg; t.classList.add("show");
+    clearTimeout(toast._id); toast._id=setTimeout(function(){ t.classList.remove("show"); },1600);
+  }
+  function uniq(arr){
+    var seen={}, out=[], i, v, k;
+    for(i=0;i<arr.length;i++){
+      v=clean(arr[i]); k=v.toLowerCase();
+      if(!v||seen[k]) continue; seen[k]=1; out.push(v);
+    }
+    return out.sort(function(a,b){ return a.localeCompare(b); });
+  }
+  function loadLib(){
+    var saved={ extra:{}, hidden:{} };
+    try{
+      var raw=JSON.parse(localStorage.getItem(LIBKEY)||"null");
+      if(raw && (raw.extra || raw.hidden)) saved=raw;
+      else {
+        var old=JSON.parse(localStorage.getItem(OLDKEY)||"{}");
+        if(old && !old.extra) saved={ extra:old, hidden:{} };
+      }
+    }catch(e){ saved={ extra:{}, hidden:{} }; }
+    ["maker","style","color","size","price","condition"].forEach(function(k){
+      var hide={};
+      (saved.hidden && saved.hidden[k] || []).forEach(function(v){ hide[String(v).toLowerCase()]=1; });
+      var base=starterValues(k).filter(function(v){ return !hide[String(v).toLowerCase()]; });
+      lib[k]=uniq(base.concat((saved.extra && saved.extra[k]) || []));
+    });
+  }
+  function starterValues(k){
+    if(k==="condition") return STARTER.condition.map(function(p){ return p[0]; });
+    return STARTER[k]||[];
+  }
+  function saveLib(){
+    var extra={}, hidden={};
+    ["maker","style","color","size","price","condition"].forEach(function(k){
+      var have={}; (lib[k]||[]).forEach(function(v){ have[String(v).toLowerCase()]=1; });
+      var base={}; starterValues(k).forEach(function(v){ base[String(v).toLowerCase()]=1; });
+      extra[k]=(lib[k]||[]).filter(function(v){ return !base[String(v).toLowerCase()]; });
+      hidden[k]=starterValues(k).filter(function(v){ return !have[String(v).toLowerCase()]; });
+    });
+    localStorage.setItem(LIBKEY, JSON.stringify({ extra:extra, hidden:hidden }));
+  }
+  function renderPhotos(){
+    var host=$("photoBar");
+    if(!host) return;
+    host.innerHTML="";
+    photos.forEach(function(src, i){
+      var wrap=document.createElement("div");
+      wrap.className="phwrap";
+      var img=document.createElement("img");
+      img.src=src;
+      img.alt="Photo "+(i+1);
+      var x=document.createElement("button");
+      x.type="button";
+      x.className="x";
+      x.textContent="×";
+      x.onclick=function(){ photos.splice(i,1); renderPhotos(); };
+      wrap.appendChild(img);
+      wrap.appendChild(x);
+      host.appendChild(wrap);
+    });
+    if(photos.length < ((window.careyPhotos&&window.careyPhotos.MAX)||8)){
+      var add=document.createElement("div");
+      add.className="phadd";
+      add.textContent=photos.length?"Add another":"No photos yet";
+      host.appendChild(add);
+    }
+  }
+  function takeFiles(input){
+    if(!input.files||!input.files.length) return;
+    var add=window.careyPhotos&&window.careyPhotos.addFiles;
+    if(!add){ toast("Photos could not open"); return; }
+    add(input.files, photos, function(next){
+      photos=next;
+      input.value="";
+      renderPhotos();
+      toast(photos.length+" photo"+(photos.length===1?"":"s"));
+    });
+  }
+  function loadCloset(){ try{ closet=JSON.parse(localStorage.getItem(CLOSETKEY)||"[]"); }catch(e){ closet=[]; } }
+  function saveCloset(){ localStorage.setItem(CLOSETKEY, JSON.stringify(closet)); }
+
+  function titleFor(d){
+    var bits=[];
+    if(d.condition==="nwt") bits.push("NEW");
+    if(d.maker) bits.push(d.maker);
+    bits.push(d.style || "Piece");
+    if(d.color) bits.push("in "+d.color);
+    if(d.size) bits.push(isNaN(d.size) ? d.size : "Size "+d.size);
+    var s=bits.join(" ");
+    if(s.length>80) s=s.slice(0,80).replace(/\s+\S*$/,"");
+    return s;
+  }
+  function poshBlock(d){
+    var brand=d.maker||"this brand";
+    var parts=[];
+    if(d.condition==="nwt") parts.push("NEW SO beautiful and NEW from "+brand+"!");
+    else if(d.condition==="like_new") parts.push("SO cute and in like-new condition from "+brand+"!");
+    else if(d.condition==="good") parts.push("SO cute and in excellent used condition from "+brand+"!");
+    else if(d.condition==="fair") parts.push("SO cute and in preowned condition from "+brand+".");
+    else parts.push((d.style||"This piece")+" from "+brand+".");
+    if(d.style) parts.push("The "+d.style+" from "+brand+".");
+    if(d.color) parts.push("Color is "+d.color.toLowerCase()+".");
+    if(d.size) parts.push(cap(isNaN(d.size)?"size "+d.size:"size "+d.size)+".");
+    var tail=["All measurements are provided in the photos to ensure best fit.","Ships quickly in one day in super cute packaging from sunny California!","Bundle to save, or submit an offer!"];
+    return (parts.map(endSent).join(" ")+" "+tail.join(" ")).replace(/\s+/g," ").trim();
+  }
+  function ebaySize(size){
+    var s=String(size||"").trim();
+    var map={
+      "XXS":"2XS","2XS":"2XS","XS":"XS","S":"S","Small":"S","M":"M","Medium":"M",
+      "L":"L","Large":"L","XL":"XL","XXL":"XXL","2XL":"XXL","1X":"1X","2X":"2X","3X":"3X"
+    };
+    if(map[s]) return map[s];
+    if(/^\d+(\.\d+)?$/.test(s)) return s;
+    return s;
+  }
+  function ebayBlock(d){
+    var lines=[];
+    lines.push(titleFor(d));
+    if(d.price) lines.push("Ask: $"+d.price);
+    if(d.maker) lines.push("Brand: "+d.maker);
+    if(d.style) lines.push("Style: "+d.style);
+    if(d.color) lines.push("Color: "+d.color);
+    if(d.size) lines.push("Size: "+ebaySize(d.size));
+    var cond={nwt:"New with tags",like_new:"Pre-owned — like new",good:"Pre-owned — good",fair:"Pre-owned — fair"}[d.condition];
+    if(cond) lines.push("Condition: "+cond);
+    lines.push("");
+    lines.push(poshBlock(d).replace(/Bundle to save, or submit an offer!/,"Offers welcome. Ships in one business day from California."));
+    return lines.join("\n");
+  }
+  function paint(){
+    var d={
+      maker:form.maker, style:form.style, color:form.color, size:form.size,
+      condition:form.condition, price:money(form.price)
+    };
+    var title=titleFor(d);
+    var ask=d.price?"$"+d.price:"";
+    var posh=poshBlock(d);
+    var ebay=ebayBlock(d);
+    var fee=poshFee(d.price);
+    var keep=d.price?Math.round((d.price-fee)*100)/100:0;
+    blocks.title=title; blocks.ask=ask; blocks.posh=posh; blocks.ebay=ebay;
+    $("outTitle").textContent=title;
+    $("outAsk").textContent=ask;
+    $("outPosh").textContent=posh;
+    $("outEbay").textContent=ebay;
+    $("fee").textContent=d.price?"$"+fee.toFixed(2):"—";
+    $("keep").textContent=d.price?"$"+keep.toFixed(2):"—";
+    $("tlen").textContent=title.length+" / 80";
+    $("libcount").textContent=(lib.maker.length+lib.style.length+lib.color.length);
+    $("vMaker").textContent=form.maker||"Tap"; $("vMaker").classList.toggle("empty",!form.maker);
+    $("vStyle").textContent=form.style||"Tap"; $("vStyle").classList.toggle("empty",!form.style);
+    $("vColor").textContent=form.color||"Tap"; $("vColor").classList.toggle("empty",!form.color);
+    $("vSize").textContent=form.size||"Tap"; $("vSize").classList.toggle("empty",!form.size);
+    $("vCond").textContent=condLabel(form.condition)||"Tap"; $("vCond").classList.toggle("empty",!form.condition);
+    $("vPrice").textContent=form.price?("$"+form.price):"Tap"; $("vPrice").classList.toggle("empty",!form.price);
+    document.querySelectorAll(".sq").forEach(function(b){
+      var k=b.getAttribute("data-pick");
+      b.classList.toggle("on", !!(form[k==="maker"?"maker":k]));
+    });
+  }
+  function condLabel(val){
+    var found="";
+    STARTER.condition.forEach(function(p){ if(p[0]===val) found=p[1]; });
+    return found || val || "";
+  }
+  function listFor(key){
+    if(key==="condition"){
+      var pairs=STARTER.condition.filter(function(p){ return (lib.condition||[]).some(function(v){ return String(v).toLowerCase()===String(p[0]).toLowerCase(); }); });
+      var extras=(lib.condition||[]).filter(function(v){
+        return !STARTER.condition.some(function(p){ return String(p[0]).toLowerCase()===String(v).toLowerCase(); });
+      }).map(function(v){ return [v,v]; });
+      return pairs.concat(extras);
+    }
+    if(key==="price") return [];
+    return (lib[key]||[]).map(function(v){ return [v,v]; });
+  }
+  function titles(){ return {maker:"Maker",style:"Style",color:"Color",size:"Size",condition:"Condition",price:"Ask"}; }
+  function placeholders(){
+    return {
+      maker:"Type to find, or add a new one",
+      style:"Type to find, or add a new one",
+      color:"Type to find, or add a new one",
+      size:"Type to find, or add a new one",
+      condition:"Type to find, or add a condition",
+      price:"Or type the number"
+    };
+  }
+  function priceSum(){ return (priceBits.h||0)+(priceBits.t||0)+(priceBits.o||0); }
+  function loadPriceBits(){
+    var n=Math.round(money(form.price));
+    if(n>999) n=999;
+    if(n<0) n=0;
+    priceBits={ h:Math.floor(n/100)*100, t:Math.floor((n%100)/10)*10, o:n%10 };
+    priceTouched={ h:0, t:0, o:0 };
+  }
+  function openPicker(key){
+    pickKey=key;
+    removing=false;
+    $("pickTitle").textContent=titles()[key]||key;
+    $("addInput").value="";
+    $("addInput").placeholder=placeholders()[key]||"Type to find, or add a new one";
+    $("addbox").style.display="block";
+    $("pickRemove").style.display = key==="price" ? "none" : "block";
+    $("pickRemove").classList.remove("on");
+    $("pickRemove").textContent="Remove names";
+    if(key==="price") loadPriceBits();
+    renderPicker();
+    $("picker").classList.add("on");
+    $("pickBody").scrollTop=0;
+  }
+  function closePicker(){ $("picker").classList.remove("on"); pickKey=""; removing=false; }
+  function needle(){ return clean($("addInput").value).toLowerCase(); }
+  function renderPricePad(){
+    var host=$("pickBody");
+    host.innerHTML="";
+    var total=priceSum();
+    var sum=document.createElement("div");
+    sum.className="pricetotal";
+    sum.textContent=total ? ("$"+total) : "$0";
+    host.appendChild(sum);
+    var use=document.createElement("button");
+    use.type="button";
+    use.className="priceuse";
+    use.textContent=total ? ("Use $"+total) : "Tap the rows";
+    use.onclick=function(){ if(!total) return; form.price=String(total); paint(); closePicker(); toast("Ask is $"+total); };
+    host.appendChild(use);
+    function row(title, values, bit){
+      var lab=document.createElement("div");
+      lab.className="pricelabel";
+      lab.textContent=title;
+      host.appendChild(lab);
+      var wrap=document.createElement("div");
+      wrap.className="pricerow";
+      values.forEach(function(n){
+        var b=document.createElement("button");
+        b.type="button";
+        b.textContent=bit==="h"||bit==="t" ? String(n) : String(n);
+        if(priceBits[bit]===n && (priceTouched[bit] || total)) b.className="on";
+        b.onclick=(function(val){ return function(){ tapPrice(bit, val); }; })(n);
+        wrap.appendChild(b);
+      });
+      host.appendChild(wrap);
+    }
+    row("Hundreds", [100,200,300,400,500,600,700,800,900], "h");
+    row("Tens", [10,20,30,40,50,60,70,80,90], "t");
+    row("Ones", [1,2,3,4,5,6,7,8,9], "o");
+    var clr=document.createElement("button");
+    clr.type="button";
+    clr.className="priceclear";
+    clr.textContent="Clear the ask";
+    clr.onclick=function(){ priceBits={h:0,t:0,o:0}; priceTouched={h:0,t:0,o:0}; form.price=""; paint(); renderPricePad(); };
+    host.appendChild(clr);
+  }
+  function tapPrice(bit, val){
+    if(priceBits[bit]===val && priceTouched[bit]){ priceBits[bit]=0; priceTouched[bit]=0; }
+    else { priceBits[bit]=val; priceTouched[bit]=1; }
+    var total=priceSum();
+    form.price=total?String(total):"";
+    paint();
+    if(bit==="o" && total){ closePicker(); toast("Ask is $"+total); return; }
+    renderPricePad();
+  }
+  function renderPicker(){
+    if(pickKey==="price"){ renderPricePad(); return; }
+    var items=listFor(pickKey);
+    var q=needle();
+    var host=$("pickBody");
+    host.innerHTML="";
+    var letter="", i, wrap=null, shown=0;
+    for(i=0;i<items.length;i++){
+      var value=items[i][0], label=items[i][1];
+      if(q && String(label).toLowerCase().indexOf(q)<0 && String(value).toLowerCase().indexOf(q)<0) continue;
+      var L=String(label).replace(/^\$/,"").charAt(0).toUpperCase();
+      if(L!==letter){
+        letter=L;
+        var h=document.createElement("div"); h.className="az"; h.textContent=letter; host.appendChild(h);
+        wrap=document.createElement("div"); wrap.className="pickgrid"; host.appendChild(wrap);
+      }
+      var b=document.createElement("button");
+      b.type="button";
+      b.textContent=removing ? ("× "+label) : label;
+      if(removing) b.className="kill";
+      else if(String(form[pickKey])===String(value)) b.className="on";
+      b.onclick=(function(val){ return function(){ if(removing) dropName(val); else pick(val); }; })(value);
+      wrap.appendChild(b);
+      shown++;
+    }
+    if(!shown){
+      var empty=document.createElement("p");
+      empty.className="hint";
+      empty.textContent = q ? "Not in the list yet. Tap Add it." : "Nothing in this list. Type a name and tap Add it.";
+      host.appendChild(empty);
+    }
+  }
+  function pick(val){
+    form[pickKey]=val;
+    paint();
+    closePicker();
+    toast("Got it");
+  }
+  function dropName(val){
+    if(!pickKey||pickKey==="price") return;
+    lib[pickKey]=(lib[pickKey]||[]).filter(function(v){ return String(v).toLowerCase()!==String(val).toLowerCase(); });
+    if(String(form[pickKey]).toLowerCase()===String(val).toLowerCase()) form[pickKey]="";
+    saveLib();
+    paint();
+    renderPicker();
+    toast("Removed");
+  }
+  function addCurrent(){
+    var v=clean($("addInput").value);
+    if(!v||!pickKey) return;
+    if(pickKey==="price"){
+      var n=Math.round(money(v));
+      if(!n) return;
+      if(n>999) n=999;
+      form.price=String(n);
+      paint();
+      closePicker();
+      toast("Ask is $"+n);
+      return;
+    }
+    lib[pickKey]=uniq((lib[pickKey]||[]).concat([v]));
+    saveLib();
+    form[pickKey]=v;
+    paint();
+    closePicker();
+    toast("Saved in the library");
+  }
+  function copyText(text){
+    if(!text) return;
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(text).then(function(){ toast("Copied"); });
+      return;
+    }
+    var ta=document.createElement("textarea"); ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand("copy"); ta.remove(); toast("Copied");
+  }
+  function renderCloset(){
+    var host=$("closetList");
+    if(!closet.length){ host.innerHTML='<p class="muted">Nothing saved yet. Tap through a piece and Save to closet.</p>'; return; }
+    host.innerHTML="";
+    closet.slice().reverse().forEach(function(item){
+      var row=document.createElement("div");
+      row.className="item";
+      row.innerHTML="<div><b>"+item.title+"</b><div class='muted'>"+item.stage+" · ask "+(item.price?("$"+item.price):"—")+"</div></div>";
+      var sel=document.createElement("select");
+      ["Bought","Steam & photo","Listed","Sold"].forEach(function(st){
+        var o=document.createElement("option"); o.value=st; o.textContent=st; if(item.stage===st) o.selected=true; sel.appendChild(o);
+      });
+      sel.onchange=function(){ item.stage=sel.value; saveCloset(); renderCloset(); };
+      row.appendChild(sel);
+      host.appendChild(row);
+    });
+  }
+  function showTab(name){
+    document.querySelectorAll(".panel").forEach(function(p){ p.classList.toggle("on", p.id===name); });
+    document.querySelectorAll(".tab").forEach(function(t){ t.classList.toggle("on", t.getAttribute("data-tab")===name); });
+  }
+
+  document.querySelectorAll("[data-pick]").forEach(function(b){
+    b.addEventListener("click", function(){ openPicker(b.getAttribute("data-pick")); });
+  });
+  $("pickBack").onclick=closePicker;
+  $("pickRemove").onclick=function(){
+    if(pickKey==="price") return;
+    removing=!removing;
+    $("pickRemove").classList.toggle("on", removing);
+    $("pickRemove").textContent=removing ? "Done removing" : "Remove names";
+    renderPicker();
+  };
+  $("addSave").onclick=addCurrent;
+  $("addInput").addEventListener("keydown", function(e){ if(e.key==="Enter"){ e.preventDefault(); addCurrent(); } });
+  $("addInput").addEventListener("input", function(){ if(!removing) renderPicker(); });
+  $("copyAll").onclick=function(){
+    paint();
+    var t=[blocks.title, blocks.ask, "", "POSHMARK", blocks.posh, "", "EBAY", blocks.ebay].filter(Boolean).join("\n");
+    copyText(t);
+  };
+  $("clear").onclick=function(){
+    form={maker:"",style:"",color:"",size:"",condition:"",price:""};
+    photos=[];
+    renderPhotos();
+    paint();
+    toast("New piece");
+  };
+  $("takePic").onclick=function(){ $("camInput").click(); };
+  $("fromLib").onclick=function(){ $("libInput").click(); };
+  $("camInput").addEventListener("change", function(){ takeFiles($("camInput")); });
+  $("libInput").addEventListener("change", function(){ takeFiles($("libInput")); });
+  $("save").onclick=function(){
+    paint();
+    closet.push({ id:Date.now(), title:blocks.title, price:money(form.price), photos:photos.slice(), stage:"Bought", when:new Date().toISOString() });
+    saveCloset(); renderCloset(); toast("Saved on this iPad");
+  };
+  $("toShop").onclick=function(){
+    paint();
+    if(!form.maker && !form.style){ toast("Tap the squares first"); return; }
+    var shop=[];
+    try{ shop=JSON.parse(localStorage.getItem(SHOPKEY)||"[]"); }catch(e){ shop=[]; }
+    shop.push({
+      id:Date.now(),
+      title:blocks.title,
+      maker:form.maker,
+      style:form.style,
+      color:form.color,
+      size:form.size,
+      condition:form.condition,
+      price:money(form.price),
+      blurb:blocks.posh,
+      photos:photos.slice(),
+      stage:"For sale",
+      when:new Date().toISOString(),
+      source:"careys-corner"
+    });
+    try{ localStorage.setItem(SHOPKEY, JSON.stringify(shop)); toast("On her shop"); }
+    catch(e){ toast("Photos are too big for this iPad. Take one off."); }
+  };
+  document.querySelectorAll(".tab").forEach(function(t){ t.onclick=function(){ showTab(t.getAttribute("data-tab")); }; });
+  document.querySelectorAll(".copy").forEach(function(btn){
+    btn.onclick=function(){ copyText(blocks[btn.getAttribute("data-copy")]||""); };
+  });
+  $("shareHelper").onclick=function(){
+    var url=location.origin+location.pathname;
+    if(navigator.share){ navigator.share({title:"Carey's Corner",text:"A Poshmark listing helper in Carey's closet style.",url:url}).catch(function(){}); return; }
+    copyText(url);
+  };
+  loadLib(); loadCloset(); paint(); renderCloset(); renderPhotos();
+})();
+</script>
+</body>
+</html>

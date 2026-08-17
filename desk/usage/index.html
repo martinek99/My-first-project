@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Usage">
+<meta name="theme-color" content="#142033">
+<title>Usage · Mark's Desk</title>
+<style>
+:root{
+  --navy:#142033;--cream:#f3ead6;--paper:#fffaf0;--gold:#c9a24a;--ink:#2a2218;--muted:#6a5a3a;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--navy);color:var(--cream);font-family:var(--sans)}
+body{min-height:100dvh;padding:0 0 calc(var(--sb) + 36px)}
+.homebar{
+  position:sticky;top:0;z-index:20;
+  background:var(--navy);padding:calc(var(--st) + 12px) 22px 12px;
+}
+.homebar a{
+  display:block;text-align:center;text-decoration:none;
+  background:#e8c37a;color:#142033;
+  border-radius:14px;padding:16px 18px;
+  font-family:var(--serif);font-size:22px;font-weight:600;
+}
+.wrap{max-width:720px;margin:0 auto;padding:20px 22px 0}
+.eyebrow{font-family:var(--serif);letter-spacing:.24em;text-transform:uppercase;font-size:13px;color:#e8c37a;margin:18px 0 8px}
+h1{font-family:var(--serif);font-size:clamp(40px,8vw,58px);margin:0 0 10px;line-height:.95}
+.lede{font-family:var(--serif);font-style:italic;font-size:20px;line-height:1.4;color:#d8cbb3;margin:0 0 22px}
+.card{
+  display:block;text-decoration:none;color:var(--ink);background:var(--paper);
+  border-radius:20px;padding:22px 20px;margin:0 0 14px;
+}
+.card h2{font-family:var(--serif);font-size:28px;margin:0 0 8px}
+.card p{margin:0;font-size:16px;line-height:1.45;color:var(--muted)}
+.go{margin-top:14px;display:inline-block;background:#e8c37a;color:#142033;border-radius:999px;padding:10px 16px;font-size:16px}
+.note{margin:22px 0 0;font-size:16px;line-height:1.5;color:#d8cbb3}
+</style>
+</head>
+<body>
+<div class="homebar">
+  <a href="../">← Back to Mark's Desk</a>
+</div>
+  <div class="wrap">
+    <p class="eyebrow">The gas tank</p>
+    <h1>Usage</h1>
+    <p class="lede">I cannot see the leftover number from here. These buttons open the real Cursor pages that can. This page is yours. Do not send it.</p>
+
+    <a class="card" href="https://cursor.com/dashboard/spending">
+      <h2>1. See what's left</h2>
+      <p>Opens Spending. That is the tank: used, remaining, and the reset date.</p>
+      <span class="go">Open Spending</span>
+    </a>
+
+    <a class="card" href="https://cursor.com/dashboard/spending">
+      <h2>2. Stop extra charges</h2>
+      <p>On that same page, find on-demand usage and set it to Disabled. Then Cursor will not bill past your monthly plan.</p>
+      <span class="go">Open Spending again</span>
+    </a>
+
+    <a class="card" href="https://cursor.com/dashboard">
+      <h2>3. See the bill</h2>
+      <p>Your Cursor dashboard. Plan, invoices, and account. Ultra is about $200 a month before tax.</p>
+      <span class="go">Open Dashboard</span>
+    </a>
+
+    <a class="card" href="https://cursor.com/dashboard">
+      <h2>4. GrokBot freeze</h2>
+      <p>Ticket T-E86465. Sam passed it to a teammate. I already nudged them. Both iPhone and iPad are stuck on Setting up.</p>
+      <span class="go">Account home</span>
+    </a>
+
+    <p class="note">Talking to me uses the included Ultra pool. It does not add a new bill by itself. If you want to save the tank, say pause.</p>
+  </div>
+</body>
+</html>

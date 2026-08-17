@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wendy's Helper">
+<meta name="theme-color" content="#1e3d2f">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Wendy's Helper</title>
+<meta name="description" content="Official helper for Wendy Martinek. JaxParks dog desk, memorial plots, pickleball, and tennis.">
+<meta property="og:title" content="Wendy's Helper">
+<meta property="og:description" content="Dog desk, memorial plots, pickleball, and tennis. Built for Wendy Martinek.">
+<meta property="og:url" content="https://whimsy-violet-dhgk.here.now/wendy/">
+<meta property="og:type" content="website">
+<style>
+:root{
+  --green:#1e3d2f;--leaf:#2f6b4f;--sand:#f4efe4;--paper:#fffdf8;--ink:#1c241c;
+  --muted:#5a6858;--gold:#e8c37a;--line:rgba(47,107,79,.28);
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--sand);color:var(--ink);font-family:var(--sans)}
+body{min-height:100dvh;padding:0 0 calc(var(--sb) + 28px)}
+.escape{display:none;position:fixed;left:12px;right:12px;top:calc(var(--st) + 8px);z-index:40;
+  align-items:center;justify-content:center;text-decoration:none;background:#e8c37a;color:#142033;
+  border-radius:14px;padding:14px 16px;font-family:var(--serif);font-size:20px;font-weight:600}
+html.from-desk .escape{display:flex}
+html.from-desk body{padding-top:calc(var(--st) + 72px)}
+.wrap{max-width:980px;margin:0 auto;padding:22px 18px 0}
+.eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:#2f6b4f;margin:0 0 8px}
+h1{font-family:var(--serif);font-size:clamp(34px,7vw,52px);margin:0;line-height:.95}
+.lede{font-family:var(--serif);font-style:italic;color:var(--muted);font-size:18px;margin:10px 0 0;max-width:30em}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 0}
+.btn{appearance:none;border:0;border-radius:12px;padding:14px 16px;min-height:50px;font-size:16px;background:var(--leaf);color:#fff;text-decoration:none;display:inline-flex;align-items:center}
+.ghost{background:#fff;color:var(--green);border:1px solid var(--line)}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:20px 0 14px}
+.tab{appearance:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 14px;min-height:44px;font-size:15px}
+.tab.on{background:var(--green);color:#fff;border-color:var(--green)}
+.panel{display:none}
+.panel.on{display:block}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:18px;margin:0 0 12px}
+.card h2{font-family:var(--serif);font-size:24px;margin:0 0 8px}
+.hint{color:var(--muted);font-size:15px;line-height:1.45;margin:0 0 12px}
+.place{padding:12px 0;border-bottom:1px solid var(--line)}
+.place:last-child{border-bottom:0}
+.place b{display:block;font-size:17px}
+.place span{color:var(--muted);font-size:14px}
+label{display:block;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#2f6b4f;margin:10px 0 4px}
+input,textarea,select{width:100%;font-size:17px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#fff;font-family:var(--sans)}
+textarea{min-height:90px}
+.log{font-size:15px;padding:10px 0;border-bottom:1px solid var(--line)}
+.toast{position:fixed;left:50%;bottom:calc(var(--sb) + 22px);transform:translateX(-50%);background:var(--green);color:#fff;padding:12px 16px;border-radius:999px;opacity:0;z-index:80}
+.toast.show{opacity:1}
+.script{background:#eef6ef;border-radius:12px;padding:12px;white-space:pre-wrap;line-height:1.45}
+</style>
+</head>
+<body>
+<a class="escape" href="../">← Back to Mark's Desk</a>
+<div class="wrap">
+  <p class="eyebrow">JaxParks · official helper</p>
+  <h1>Wendy Martinek</h1>
+  <p class="lede">Dog desk, memorial plots, pickleball, tennis. Built for your day, not a generic parks app.</p>
+  <div class="actions">
+    <button type="button" class="btn" id="shareBtn">Share this helper</button>
+    <button type="button" class="btn ghost" id="askChange">Ask for a change</button>
+  </div>
+  <div class="tabs">
+    <button class="tab on" data-tab="home">Home</button>
+    <button class="tab" data-tab="dogs">Dog parks</button>
+    <button class="tab" data-tab="desk">Dog desk</button>
+    <button class="tab" data-tab="memorial">Memorial</button>
+    <button class="tab" data-tab="pickle">Pickleball</button>
+    <button class="tab" data-tab="tennis">Tennis</button>
+    <button class="tab" data-tab="numbers">Numbers</button>
+  </div>
+
+  <section id="home" class="panel on">
+    <div class="card">
+      <h2>Today on the desk</h2>
+      <p class="hint">Tap a square of the job. Log money at the dog desk. Take a memorial request. Read the court script to a caller. Notes stay on this iPad.</p>
+      <p class="hint">This is a first version. When you want something different, tap Ask for a change. Do not use Mark’s account. This page is yours.</p>
+    </div>
+    <div class="card">
+      <h2>A note for the next visit</h2>
+      <textarea id="dayNote" placeholder="What you want to remember tomorrow."></textarea>
+      <div class="actions"><button type="button" class="btn" id="saveNote">Save the note</button></div>
+    </div>
+  </section>
+
+  <section id="dogs" class="panel">
+    <div class="card">
+      <h2>JaxParks dog parks</h2>
+      <p class="hint">Open sunrise to sunset. Dogs may be off leash only inside a designated dog park. Everywhere else, leash.</p>
+      <div id="dogList"></div>
+    </div>
+  </section>
+
+  <section id="desk" class="panel">
+    <div class="card">
+      <h2>Dog desk · take in money</h2>
+      <p class="hint">Log what you took in. Copy it for your own record. Confirm the current fee with the city list before you quote a price.</p>
+      <label>What it was for</label>
+      <input id="payWhat" placeholder="Tag, day pass, replacement, other">
+      <label>Name</label>
+      <input id="payName" placeholder="Who paid">
+      <label>Amount</label>
+      <input id="payAmt" inputmode="decimal" placeholder="0.00">
+      <label>How they paid</label>
+      <select id="payHow"><option>Cash</option><option>Card</option><option>Check</option><option>Other</option></select>
+      <div class="actions">
+        <button type="button" class="btn" id="paySave">Log it</button>
+        <button type="button" class="btn ghost" id="payCopy">Copy today’s log</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Today’s take</h2>
+      <div id="payList"></div>
+    </div>
+  </section>
+
+  <section id="memorial" class="panel">
+    <div class="card">
+      <h2>Memorial plots</h2>
+      <p class="hint">The little plots for ashes and memorials. Take the request here. Confirm current fees and available spaces with the official book before you promise a spot.</p>
+      <label>In memory of</label>
+      <input id="memWho" placeholder="Name on the plot">
+      <label>Family contact</label>
+      <input id="memFamily" placeholder="Who you spoke with">
+      <label>Phone or email</label>
+      <input id="memReach" placeholder="">
+      <label>What they need</label>
+      <textarea id="memNeed" placeholder="New plot, visit, plaque, date, notes."></textarea>
+      <div class="actions">
+        <button type="button" class="btn" id="memSave">Save the request</button>
+        <button type="button" class="btn ghost" id="memCopy">Copy this request</button>
+      </div>
+    </div>
+    <div class="card">
+      <h2>Open requests</h2>
+      <div id="memList"></div>
+    </div>
+  </section>
+
+  <section id="pickle" class="panel">
+    <div class="card">
+      <h2>Pickleball</h2>
+      <p class="hint">Most courts are first come, first served, sunrise to sunset. Limit to one hour when others are waiting. Tennis-complex courts can be reserved.</p>
+      <div class="script" id="pickleScript"></div>
+      <div class="actions"><button type="button" class="btn ghost" id="copyPickle">Copy the caller script</button></div>
+      <div id="pickleList"></div>
+    </div>
+  </section>
+
+  <section id="tennis" class="panel">
+    <div class="card">
+      <h2>Staffed tennis complexes</h2>
+      <p class="hint">Reservations: one court, up to 48 hours ahead, 1½ hours of play. A voicemail is not a reservation. Someone has to call back. Hold 15 minutes. Two players must be there.</p>
+      <div id="tennisList"></div>
+    </div>
+  </section>
+
+  <section id="numbers" class="panel">
+    <div class="card">
+      <h2>Numbers she can read off</h2>
+      <div class="place"><b>JaxParks admin</b><span>214 N. Hogan St., 2nd floor · jaxparks@coj.net</span></div>
+      <div class="place"><b>Permitting</b><span>(904) 255-7930 · jaxparkspermitting@coj.net</span></div>
+      <div class="place"><b>Southside Tennis</b><span>(904) 255-6870 · 1539 Hendricks Ave</span></div>
+      <div class="place"><b>Fort Family Tennis</b><span>(904) 255-4214 · 8000 Baymeadows Rd E</span></div>
+      <div class="place"><b>Boone Park Tennis</b><span>(904) 255-6919 · 3700 Park St</span></div>
+      <div class="place"><b>Clanzel T. Brown Tennis</b><span>(904) 255-6837 · 4575 Moncrief Rd</span></div>
+      <div class="place"><b>City rules</b><span>Ordinance Chapter 28, Part 7 · parks sunrise to sunset unless posted</span></div>
+    </div>
+    <div class="card">
+      <h2>How changes work</h2>
+      <p class="hint">Wendy should not log into Mark’s software account. That account has his other work. The easy way: tap Ask for a change, send that note to Mark, and he brings it here. Later she can have her own login that only sees her helper.</p>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast">Saved</div>
+<script>
+(function(){
+  try{
+    var q=new URLSearchParams(location.search);
+    if(q.get("from")==="desk"){
+      sessionStorage.setItem("marksdesk","1");
+      q.delete("from");
+      history.replaceState({},"",location.pathname+(q.toString()?"?"+q:"")+location.hash);
+    }
+    if(sessionStorage.getItem("marksdesk")==="1") document.documentElement.classList.add("from-desk");
+  }catch(e){}
+})();
+</script>
+<script>
+(function(){
+  var SHARE="https://whimsy-violet-dhgk.here.now/wendy/";
+  var PAYKEY="wendy-dogdesk-v1";
+  var MEMKEY="wendy-memorial-v1";
+  var NOTEKEY="wendy-daynote-v1";
+  var DOGS=[
+    ["Springfield Playground","949 Hubbard Street, 32206"],
+    ["Ed Austin Regional Park","11751 McCormick Road, 32225"],
+    ["Forest Street Dog Park","2020 Forest Street, Unit 1, 32204"],
+    ["John Gorrie / Riverside Park","631–745 College Street, 32204"],
+    ["Leonard Abess Park","12743 Leonard Abess Boulevard, 32225"],
+    ["Oceanway Dog Park","12201 Sago Avenue W., 32218"],
+    ["Tillie K. Fowler Regional Park","7000 Roosevelt Boulevard, 32244"],
+    ["Alberts Field","12073 Brady Road, 32223"]
+  ];
+  var PICKLE=[
+    ["Alberts Field Park","12073 Brady Road"],
+    ["Argyle Forest Park","8533 Acanthus Drive"],
+    ["Boone Park","3730 Park Street"],
+    ["Blue Cypress Park","4012 University Blvd North"],
+    ["Carvill Park","1302 Carvil Avenue"],
+    ["Crystal Springs Park","10151 Crystal Springs Road"],
+    ["Fort Family Regional Tennis Complex","8000 Baymeadows Road E · (904) 255-4214 · reserve"],
+    ["Glynlea Park","6801 Altama Road"],
+    ["Henry J. Klutho Park","204 W. 3rd Street"],
+    ["Isle of Palms","3780 Eunice Road"],
+    ["Tommy Hazouri Sr. Park","14780 Mandarin Road"],
+    ["Ringhaver Park","5198 118th Street"],
+    ["Southside Tennis Complex","1541 Hendricks Avenue · (904) 255-6870 · reserve"],
+    ["John Stockton Elementary Park","4827 Carlisle Road"],
+    ["Tallulah Park","382 Tallulah Avenue"],
+    ["Thomas Jefferson Park","320 Jackson Avenue"],
+    ["Victoria Park","2948 Knights Lane W"],
+    ["Walter Anderson Memorial Park","2738 Orange Pickers Road"],
+    ["Warrington Park","325 N. Bowlan Street"],
+    ["Wiley Road Playground","2150 Lane Avenue"]
+  ];
+  var TENNIS=[
+    ["Boone Park Tennis Complex","3700 Park St, 32205","(904) 255-6919"],
+    ["Southside Tennis Complex","1539 Hendricks Ave, 32207","(904) 255-6870"],
+    ["Fort Family Regional Park","8000 Baymeadows Rd E, 32256","(904) 255-4214"],
+    ["Clanzel T. Brown Tennis Center","4575 Moncrief Road, 32208","(904) 255-6837"]
+  ];
+  var SCRIPT="JaxParks pickleball is sunrise to sunset. Most courts are first come, first served. Please keep it to one hour if people are waiting.\n\nIf you want a reserved court at a tennis complex, we can book one court up to 48 hours ahead for an hour and a half. A voicemail is not a hold. Someone has to speak with you or call you back.\n\nSouthside Tennis is 904-255-6870. Fort Family is 904-255-4214. Boone Park is 904-255-6919.";
+
+  function $(id){ return document.getElementById(id); }
+  function toast(msg){
+    var t=$("toast"); t.textContent=msg; t.classList.add("show");
+    clearTimeout(toast._id); toast._id=setTimeout(function(){ t.classList.remove("show"); },1800);
+  }
+  function load(key){ try{ return JSON.parse(localStorage.getItem(key)||"[]"); }catch(e){ return []; } }
+  function save(key, rows){ localStorage.setItem(key, JSON.stringify(rows)); }
+  function today(){ return new Date().toISOString().slice(0,10); }
+  function list(host, rows, line){
+    host.innerHTML="";
+    rows.forEach(function(r){
+      var d=document.createElement("div");
+      d.className="place";
+      d.innerHTML=line(r);
+      host.appendChild(d);
+    });
+  }
+  function copy(text){
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(function(){ toast("Copied"); });
+    else window.prompt("Copy this", text);
+  }
+  function showTab(name){
+    document.querySelectorAll(".panel").forEach(function(p){ p.classList.toggle("on", p.id===name); });
+    document.querySelectorAll(".tab").forEach(function(t){ t.classList.toggle("on", t.getAttribute("data-tab")===name); });
+  }
+  function renderPay(){
+    var rows=load(PAYKEY).filter(function(r){ return r.day===today(); });
+    var host=$("payList");
+    if(!rows.length){ host.innerHTML="<p class='hint'>Nothing logged today.</p>"; return; }
+    var total=0;
+    host.innerHTML=rows.map(function(r){
+      total+=Number(r.amt)||0;
+      return "<div class='log'><b>$"+Number(r.amt).toFixed(2)+"</b> · "+r.what+" · "+r.name+" · "+r.how+"</div>";
+    }).join("")+"<p class='hint'>Today so far: $"+total.toFixed(2)+"</p>";
+  }
+  function renderMem(){
+    var rows=load(MEMKEY);
+    var host=$("memList");
+    if(!rows.length){ host.innerHTML="<p class='hint'>No open requests yet.</p>"; return; }
+    host.innerHTML=rows.slice().reverse().map(function(r){
+      return "<div class='log'><b>"+r.who+"</b><div class='hint'>"+r.family+" · "+r.reach+"<br>"+r.need+"</div></div>";
+    }).join("");
+  }
+
+  list($("dogList"), DOGS, function(r){ return "<b>"+r[0]+"</b><span>"+r[1]+"</span>"; });
+  list($("pickleList"), PICKLE, function(r){ return "<b>"+r[0]+"</b><span>"+r[1]+"</span>"; });
+  list($("tennisList"), TENNIS, function(r){ return "<b>"+r[0]+"</b><span>"+r[2]+" · "+r[1]+"</span>"; });
+  $("pickleScript").textContent=SCRIPT;
+  $("dayNote").value=localStorage.getItem(NOTEKEY)||"";
+  renderPay(); renderMem();
+
+  document.querySelectorAll(".tab").forEach(function(t){ t.onclick=function(){ showTab(t.getAttribute("data-tab")); }; });
+  $("saveNote").onclick=function(){ localStorage.setItem(NOTEKEY, $("dayNote").value); toast("Note saved"); };
+  $("paySave").onclick=function(){
+    var amt=parseFloat(String($("payAmt").value).replace(/[^0-9.]/g,""));
+    if(!amt){ toast("Add an amount"); return; }
+    var rows=load(PAYKEY);
+    rows.push({ day:today(), what:$("payWhat").value||"Dog desk", name:$("payName").value||"", amt:amt, how:$("payHow").value });
+    save(PAYKEY, rows);
+    $("payAmt").value=""; $("payName").value="";
+    renderPay(); toast("Logged");
+  };
+  $("payCopy").onclick=function(){
+    var rows=load(PAYKEY).filter(function(r){ return r.day===today(); });
+    var total=rows.reduce(function(s,r){ return s+(Number(r.amt)||0); },0);
+    var t="Wendy dog desk "+today()+"\n"+rows.map(function(r){ return "$"+Number(r.amt).toFixed(2)+" · "+r.what+" · "+r.name+" · "+r.how; }).join("\n")+"\nTotal $"+total.toFixed(2);
+    copy(t);
+  };
+  $("memSave").onclick=function(){
+    if(!$("memWho").value){ toast("Add the name"); return; }
+    var rows=load(MEMKEY);
+    rows.push({ who:$("memWho").value, family:$("memFamily").value, reach:$("memReach").value, need:$("memNeed").value, when:new Date().toISOString() });
+    save(MEMKEY, rows);
+    $("memWho").value=""; $("memFamily").value=""; $("memReach").value=""; $("memNeed").value="";
+    renderMem(); toast("Request saved");
+  };
+  $("memCopy").onclick=function(){
+    copy("Memorial request\nIn memory of: "+$("memWho").value+"\nFamily: "+$("memFamily").value+"\nReach: "+$("memReach").value+"\nNeed: "+$("memNeed").value);
+  };
+  $("copyPickle").onclick=function(){ copy(SCRIPT); };
+  $("shareBtn").onclick=function(){
+    if(navigator.share){ navigator.share({title:"Wendy's Helper",text:"Official helper for Wendy Martinek.",url:SHARE}).catch(function(){}); return; }
+    copy(SHARE);
+  };
+  $("askChange").onclick=function(){
+    var t="Hi Mark — a change for Wendy's Helper:\n\n(What Wendy wants)\n\nPlease give this to your assistant. Do not give Wendy your account.";
+    copy(t);
+    toast("Change note copied. Send it to Mark.");
+  };
+})();
+</script>
+</body>
+</html>

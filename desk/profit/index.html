@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Profit Watch">
+<meta name="theme-color" content="#142033">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Profit Watch · Mark's Desk</title>
+<style>
+:root{
+  --navy:#142033;--cream:#f3ead6;--paper:#fffaf0;--gold:#c9a24a;--ink:#2a2218;--muted:#6a5a3a;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--navy);color:var(--cream);font-family:var(--sans)}
+body{min-height:100dvh;padding:0 0 calc(var(--sb) + 36px)}
+.homebar{position:sticky;top:0;z-index:20;background:var(--navy);padding:calc(var(--st) + 12px) 22px 12px}
+.homebar a{display:block;text-align:center;text-decoration:none;background:#e8c37a;color:#142033;border-radius:14px;padding:16px 18px;font-family:var(--serif);font-size:22px;font-weight:600}
+.wrap{max-width:720px;margin:0 auto;padding:20px 22px 0}
+.eyebrow{font-family:var(--serif);letter-spacing:.24em;text-transform:uppercase;font-size:13px;color:#e8c37a;margin:18px 0 8px}
+h1{font-family:var(--serif);font-size:clamp(36px,8vw,54px);margin:0 0 10px;line-height:.95}
+.lede{font-family:var(--serif);font-style:italic;font-size:20px;line-height:1.4;color:#d8cbb3;margin:0 0 18px}
+.stamp{font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#e8c37a;margin:0 0 18px}
+.card{background:var(--paper);color:var(--ink);border-radius:18px;padding:20px 18px;margin:0 0 14px}
+.card h2{font-family:var(--serif);font-size:26px;margin:0 0 8px}
+.card p,.card li{margin:0 0 10px;font-size:16px;line-height:1.45;color:var(--muted)}
+.card p:last-child,.card li:last-child{margin:0}
+.card ol,.card ul{margin:0;padding-left:1.2em}
+.copy{appearance:none;border:0;background:var(--navy);color:#fff8ee;border-radius:12px;padding:12px 14px;font-size:16px;margin:4px 6px 0 0;cursor:pointer}
+.rows{margin:8px 0 0;padding:0;list-style:none}
+.rows li{display:flex;justify-content:space-between;gap:12px;margin:0;padding:8px 0;border-top:1px solid rgba(42,34,24,.12);font-size:16px;color:var(--ink)}
+.rows li:first-child{border-top:0}
+.rows span{color:var(--muted)}
+.note{margin:22px 0 0;font-size:16px;line-height:1.5;color:#d8cbb3}
+</style>
+</head>
+<body>
+<div class="homebar">
+  <a href="../">← Back to Mark's Desk</a>
+</div>
+<div class="wrap">
+  <p class="eyebrow">Yours only · always on</p>
+  <h1>Profit Watch</h1>
+  <p class="lede">Started Monday Aug 17, 2026. This stays on. I watch for a clean way for the AI bill to earn its keep. You do not have to remind me.</p>
+  <p class="stamp">Selling · Monday Aug 17 · sample week is live · you send the note</p>
+
+  <div class="card">
+    <h2>How you sell it</h2>
+    <p>The sample week is written. I do not email anyone. You pick <strong>one</strong> person who already goes to BidCal or GovDeals. You send the note. If they pay, you send them the brief link each week. I keep writing it.</p>
+    <p><strong>Price:</strong> $99 a month. First week free — that is this sample. Two people cover Ultra. One person is a real first dollar.</p>
+    <p><strong>How they pay you:</strong> Venmo, the same way you already pay people. Gumroad can wait. You would open that yourself on Safari. I will not take that password.</p>
+    <p><strong>The note</strong> — tap Copy, paste it in a text, put their name at the top:</p>
+    <p id="offer" style="background:#efe4ce;border-radius:12px;padding:12px 14px;color:#2a2218;font-size:15px;line-height:1.4">I had a Saturday list made of what you can actually pick up this week within 100 miles of Redding — BidCal, NorCal estates, Gridley, GovDeals, the Friday floor in Chico. This week is free. If it saves you a wasted drive, $99 a month and I’ll send the next one every Monday. Here’s this week: https://whimsy-violet-dhgk.here.now/brief/</p>
+    <p><button type="button" class="copy" data-copy="offer">Copy the note</button> <a class="copy" href="../brief/?from=desk" style="text-decoration:none;display:inline-block">Open this week</a></p>
+  </div>
+
+  <div class="card">
+    <h2>The job</h2>
+    <p>Find work I can do from this chair that can cover Ultra, about $200 a month, with almost no work from you. Flag it here and in Talk. Do not spend your money. Do not use this account for anyone else. Do not email strangers until you say so.</p>
+  </div>
+
+  <div class="card">
+    <h2>What I actually opened</h2>
+    <p>Not another niche list. I went through your Gmail, this Desk, Carey’s two shops, Wendy’s helper, the Cursor ticket pile, and the public pages around the ranch and the North State sales.</p>
+    <p>The first pass asked “what could we invent.” This pass asked “what money is already moving, what is already yours, and what is still empty.”</p>
+  </div>
+
+  <div class="card">
+    <h2>The honest finding</h2>
+    <p>You already have a business that pays. Cold Water Ranch — the renovated farmhouse by Lassen — sends you a co-host cut. Brittany runs the listing. You get paid into your own account.</p>
+    <p>In the mail I can see, that cut was about <strong>$8,600 so far in 2026</strong>. From late May through mid-August it was about <strong>$7,600 in twelve weeks</strong>. That is many times Ultra.</p>
+    <p>So the real job is not “invent a $9 list so the AI bill feels earned.” The real job is: keep the ranch money clean, stop a personal bill that the business should pay, finish money already in motion, and only then sell something new to a stranger.</p>
+  </div>
+
+  <div class="card">
+    <h2>The ranch ledger</h2>
+    <p>These are the co-host payouts in your mail. Guest names and account numbers stay off this page.</p>
+    <ul class="rows">
+      <li>Jan 1, 2026 <span>$1,020</span></li>
+      <li>Feb–Apr <span>No payout mail</span></li>
+      <li>May 19 <span>Payouts unpaused after tax info</span></li>
+      <li>May 24 <span>$1,147</span></li>
+      <li>Jun 20 <span>$636</span></li>
+      <li>Jun 27 <span>$637</span></li>
+      <li>Jul 3 <span>$1,435</span></li>
+      <li>Jul 11 <span>$1,020</span></li>
+      <li>Jul 24 <span>$668</span></li>
+      <li>Jul 28 <span>$1,052</span></li>
+      <li>Aug 14 <span>$982</span></li>
+    </ul>
+    <p style="margin-top:12px">Winter is the hole. February through April went quiet. Lassen season is real, and payouts were also paused in May until the tax form went in. One extra winter stay, or fewer empty weeks, beats any Gumroad page.</p>
+    <p>Airbnb already sent a note that Brittany’s prices were adjusted. I will not touch the listing unless you or she ask.</p>
+  </div>
+
+  <div class="card">
+    <h2>Bills next to that money</h2>
+    <p><strong>Starlink.</strong> It auto-pays on your card. $240 a month through May, then $260. That is more than Ultra, every month, for internet the ranch uses. Brittany already asked, as CEO, to put that on the business. I have not sent her the login. Say <strong>yes, send Brittany Starlink</strong> if you want me to. I still will not put a password in email if there is a safer way.</p>
+    <p><strong>The extra Grok bill.</strong> The SpaceXAI API invoice for July was 84 cents, paid from prepaid tokens. That is not a second Ultra. Noise.</p>
+    <p><strong>Cursor survey.</strong> The $20 thank-you already landed. Nice. Not a plan.</p>
+    <p><strong>Trading.</strong> You already buy and sell on your own. That is capital at risk. I will not treat a stock pick as “how Ultra gets paid.”</p>
+  </div>
+
+  <div class="card">
+    <h2>Money already in motion</h2>
+    <p><strong>Viking / Trip Mate.</strong> Your claim is filed. A partial refund from Viking already came. Monica’s claim is on her side. I will watch the inbox. I will not put claim numbers or medical notes on this page.</p>
+    <p><strong>A.M. Briggs.</strong> Still no file in mail. That stays Layer 1 if we find it. One recovered overcharge can beat a year of $9 lists. I have not found it yet. I will keep looking.</p>
+    <p><strong>Carey’s closet.</strong> 399 live Poshmark pieces already hang in the pink shop. The helper is built. The empty shop stays empty until you say hang the rack. No posting bot. That does not cover Ultra by itself, and I will not pretend it does.</p>
+  </div>
+
+  <div class="card">
+    <h2>The real limit, still</h2>
+    <p>For <em>new</em> money from strangers, the hole is still <strong>who pays, without you becoming a salesman</strong>. Gumroad’s 2026 pile: about 44% of products earn $0. Typical creator makes about $72 a month. Email, not the store, drives most sales. No list means months, not days.</p>
+    <p>Three gates: I can do the work from this chair. You barely tap. Someone who already wants the thing can pay.</p>
+  </div>
+
+  <div class="card">
+    <h2>What I threw out, and why</h2>
+    <p><strong>General Redding news.</strong> Shasta Scout already sends a free weekday morning letter and a meeting preview. Record Searchlight still sits on the same towns. Competing with that is a second newspaper.</p>
+    <p><strong>Prompt packs, Etsy AI ebooks, Tesla tip sheets.</strong> Picked clean. Price sweet spot $30–$49 does not help if nobody sees it.</p>
+    <p><strong>Poshmark auto-listers.</strong> Sellers already pay $10–$70 a month. Many of those tools break Poshmark’s rules. Carey’s Corner is honest and already built.</p>
+    <p><strong>App Store games.</strong> No Mac. I will not promise that. VIPER and The World stay gifts you can share, not a store.</p>
+    <p><strong>Wildfire insurance “help” for a fee.</strong> The state and United Policyholders already give this away.</p>
+    <p><strong>CUSP farm-grant filling for a fee.</strong> California says no honest helper charges to apply through the official program.</p>
+    <p><strong>AI retainers, rank-and-rent, you flipping surplus.</strong> The blogs say $1,000+ a month. They need you on a call, in a truck, or both.</p>
+    <p><strong>LoopNet commercial listings.</strong> You already get those alerts. Watching Phoenix retail is not a $200 product I can run from this chair.</p>
+  </div>
+
+  <div class="card">
+    <h2>What is still empty nearby</h2>
+    <p>BidCal in Chico runs the farm and surplus sales. Machinery Trader is national. AuctionZip for Redding was blank. You already get NorCal estate-sale mail. Nobody publishes one Saturday list of <em>what you can pick up this week within 100 miles</em> — BidCal plus Gridley plus GovDeals plus NorCal estates plus county lots.</p>
+    <p>That hole is real. It is also the hard path, because a stranger has to pay. The ranch does not have that problem.</p>
+  </div>
+
+  <div class="card">
+    <h2>The stack I will run now</h2>
+    <p><strong>0. Count the ranch first.</strong> In the busy months it already covers Ultra. I will keep a quiet eye on payouts and the winter gap. I will not change the listing unless you say.</p>
+    <p><strong>1. Move a bill that is already yours.</strong> Starlink on the business, if you say yes. That is $260 a month off your personal card. Bigger than Ultra. I do not email Brittany until you say the words.</p>
+    <p><strong>2. Money already in motion.</strong> Viking claim. Briggs if the file shows up. Watch only. No new strangers.</p>
+    <p><strong>3. One extra ranch dollar, only if asked.</strong> A winter-week note, a guest FAQ, a receipt pile. Brittany said 2026 is already organized. I will not pester her.</p>
+    <p><strong>4. One new buyer — started.</strong> Sample week is live. You send the note. I still do not email them. Gumroad only if one person pays and you want a public checkout.</p>
+  </div>
+
+  <div class="card">
+    <h2>What I will not do</h2>
+    <ol>
+      <li>Take your bank, cards, Starlink password, or Cursor login share.</li>
+      <li>Email Brittany or Wendy unless you say so.</li>
+      <li>Promise a number.</li>
+      <li>Sell prompt packs or fake listing bots.</li>
+      <li>Put guest names, claim numbers, or this page on a Share button.</li>
+    </ol>
+  </div>
+
+  <p class="note">If a cleaner dollar opens — a winter booking, the Starlink move, the cruise check, the Briggs file — I will say so here and in Talk. This page is yours. Do not send it. Send the brief, not this page.</p>
+</div>
+<script>
+(function(){
+  var btn=document.querySelector(".copy");
+  if(!btn) return;
+  btn.addEventListener("click", function(){
+    var el=document.getElementById(btn.getAttribute("data-copy"));
+    var t=el?el.textContent.trim():"";
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t).then(function(){ btn.textContent="Copied. Paste it in a text."; });
+      return;
+    }
+    window.prompt("Copy this note", t);
+  });
+})();
+</script>
+</body>
+</html>
