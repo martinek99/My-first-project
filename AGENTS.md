@@ -9,3 +9,4 @@ https://whimsy-violet-dhgk.here.now/
 - Do not send a new Desk URL.
 - Publish with the saved API key: `publish.sh desk --slug whimsy-violet-dhgk --client cursor`
 - Keep share links on `https://whimsy-violet-dhgk.here.now/...`
+- Brittany’s pink shop is a copy of her public closet `@thecareycurated`. Refresh it with `python3 scripts/pull-poshshop.py` then publish the same Desk slug. A GitHub Action already does this twice a day.

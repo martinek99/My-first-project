@@ -17,3 +17,5 @@ Use Mark’s saved here.now API key and:
 `publish.sh desk --slug whimsy-violet-dhgk --client cursor`
 
 Share buttons must keep using `https://whimsy-violet-dhgk.here.now/...` so links people already have stay good.
+
+The pink shop copies Brittany’s public Poshmark closet. `scripts/pull-poshshop.py` re-pulls it. A GitHub Action runs that twice a day.
