@@ -56,16 +56,27 @@ h1{font-family:var(--serif);font-size:clamp(34px,8vw,58px);margin:0;line-height:
   background:var(--pink);color:#fff;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 6px 0 #c43b74;cursor:pointer}
 .ghost{background:#fff;color:var(--pink);border:2px solid #ffb6d2;box-shadow:none}
 .find{position:sticky;top:0;z-index:15;background:rgba(255,247,251,.94);backdrop-filter:blur(10px);
-  border:2px solid #ffb6d2;border-radius:22px;padding:14px 14px 10px;margin:16px 0 14px;
+  border:2px solid #ffb6d2;border-radius:22px;padding:14px;margin:16px 0 14px;
   box-shadow:0 10px 24px rgba(255,79,139,.12)}
 html.from-desk .find{top:calc(var(--st) + 72px)}
 .find label{display:block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#c43b74;margin:0 0 6px}
 .search{width:100%;font-size:17px;padding:14px 16px;border:2px solid #ffb6d2;border-radius:999px;background:#fff;color:var(--ink)}
-.row{margin:12px 0 0}
-.chips{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:2px 2px 8px}
-.chip{flex:0 0 auto;border:0;border-radius:999px;padding:10px 14px;min-height:44px;background:#fff;color:#c43b74;font-size:14px;cursor:pointer}
-.chip.on{background:var(--pink);color:#fff}
+.doors{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0 0}
+@media (min-width:560px){.doors{grid-template-columns:1fr 1fr 1fr 1fr}}
+.door{appearance:none;border:2px solid #ffb6d2;border-radius:16px;min-height:52px;padding:10px 12px;
+  background:#fff;color:var(--ink);font-family:var(--serif);font-size:20px;cursor:pointer}
+.door.on{background:var(--pink);border-color:var(--pink);color:#fff}
 .clear{margin:8px 0 0;border:0;background:transparent;color:#c43b74;font-size:15px;min-height:40px;cursor:pointer;text-decoration:underline}
+#picker{display:none;position:fixed;inset:0;z-index:45;background:rgba(74,32,64,.45);padding:calc(var(--st) + 16px) 14px calc(var(--sb) + 16px);overflow:auto}
+#picker.on{display:block}
+.pick-sheet{background:#fff7fb;border-radius:22px;padding:18px 16px 16px;max-width:720px;margin:0 auto;border:3px solid #ffb6d2}
+.pick-sheet h2{font-family:var(--serif);font-size:32px;margin:0 0 12px}
+.pick-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (min-width:700px){.pick-grid{grid-template-columns:1fr 1fr 1fr}}
+.tile{appearance:none;border:2px solid #ffb6d2;border-radius:16px;min-height:64px;padding:12px 10px;
+  background:#fff;color:var(--ink);font-size:16px;text-align:center;cursor:pointer;line-height:1.2}
+.tile.on{background:var(--pink);border-color:var(--pink);color:#fff}
+.tile small{display:block;font-size:12px;opacity:.75;margin-top:4px}
 .count{text-align:center;color:#c43b74;font-size:15px;margin:0 0 12px}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
 @media (min-width:820px){.grid{grid-template-columns:1fr 1fr 1fr}}
@@ -112,22 +123,7 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
     <label for="q">Find a piece</label>
     <input class="search" id="q" placeholder="Type a maker, color, blouse, size, or vibe" enterkeyhint="search" autocomplete="off">
 
-    <div class="row">
-      <label>Line them up</label>
-      <div class="chips" id="sorts"></div>
-    </div>
-    <div class="row">
-      <label>Type</label>
-      <div class="chips" id="types"></div>
-    </div>
-    <div class="row">
-      <label>Color</label>
-      <div class="chips" id="colors"></div>
-    </div>
-    <div class="row">
-      <label>Maker</label>
-      <div class="chips" id="makers"></div>
-    </div>
+    <div class="doors" id="doors"></div>
     <button type="button" class="clear" id="clearAll" hidden>Clear search and filters</button>
   </div>
 
@@ -135,6 +131,7 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
   <div class="grid" id="grid"></div>
   <p class="note">This is her Poshmark closet, dressed up so friends can find a piece faster. Buy on Poshmark. The Carey Curated is a different shop.</p>
 </div>
+<div id="picker"></div>
 <div id="detail"></div>
 <div class="toast" id="toast">Copied</div>
 <script>
@@ -165,15 +162,7 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
   };
   var STYLE_ORDER=["Dresses & Skirts","Tops","Pants","Denim","Sweaters","Jackets & Blazers","Shoes","Other"];
   var COLOR_ORDER=["Blue","Black","Pink","Green","White","Gray","Red","Tan","Orange","Purple","Cream","Brown","Yellow","Gold","Silver"];
-  var SORTS=[
-    ["listed","As she listed"],
-    ["price-asc","Price · low to high"],
-    ["price-desc","Price · high to low"],
-    ["type","By type"],
-    ["color","By color"],
-    ["maker","By maker"]
-  ];
-  var stock=[], query="", sort="listed", typeFilter="", colorFilter="", makerFilter="";
+  var stock=[], query="", priceSort="", typeFilters=[], colorFilters=[], makerFilters=[];
 
   function $(id){ return document.getElementById(id); }
   function toast(msg){
@@ -184,38 +173,33 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
   function primaryColor(c){ return String(c||"").split(",")[0].trim(); }
   function styleLabel(s){ return STYLE_LABEL[s]||s||"Other"; }
   function hay(p){ return [p.title,p.maker,p.color,p.style,p.size,p.blurb,styleLabel(p.style)].join(" ").toLowerCase(); }
-  function dirty(){ return !!(query || typeFilter || colorFilter || makerFilter || sort!=="listed"); }
+  function dirty(){ return !!(query || priceSort || typeFilters.length || colorFilters.length || makerFilters.length); }
+  function colorsOf(p){ return String(p.color||"").split(",").map(function(s){ return s.trim(); }).filter(Boolean); }
+  function inSet(list, value){ return list.indexOf(value)>=0; }
+  function toggleSet(list, value){
+    var i=list.indexOf(value);
+    if(i>=0) list.splice(i,1);
+    else list.push(value);
+    return list;
+  }
 
   function shown(){
     var q=query.toLowerCase().trim();
     return stock.filter(function(p){
-      if(typeFilter && (p.style||"")!==typeFilter) return false;
-      if(colorFilter && primaryColor(p.color)!==colorFilter) return false;
-      if(makerFilter && (p.maker||"")!==makerFilter) return false;
+      if(typeFilters.length && !inSet(typeFilters, p.style||"Other")) return false;
+      if(colorFilters.length && !colorsOf(p).some(function(c){ return inSet(colorFilters,c); })) return false;
+      if(makerFilters.length && !inSet(makerFilters, p.maker||"")) return false;
       if(!q) return true;
       return hay(p).indexOf(q)>=0;
     });
   }
   function ordered(list){
     var copy=list.slice();
-    function cmp(a,b){ return a<b?-1:a>b?1:0; }
-    if(sort==="price-asc") copy.sort(function(a,b){ return (a.price||0)-(b.price||0); });
-    else if(sort==="price-desc") copy.sort(function(a,b){ return (b.price||0)-(a.price||0); });
-    else if(sort==="type") copy.sort(function(a,b){
-      var ia=STYLE_ORDER.indexOf(a.style), ib=STYLE_ORDER.indexOf(b.style);
-      if(ia<0) ia=99; if(ib<0) ib=99;
-      return ia-ib || cmp(a.title||"", b.title||"");
-    });
-    else if(sort==="color") copy.sort(function(a,b){ return cmp(primaryColor(a.color), primaryColor(b.color)) || cmp(a.title||"", b.title||""); });
-    else if(sort==="maker") copy.sort(function(a,b){ return cmp(String(a.maker||"").toLowerCase(), String(b.maker||"").toLowerCase()) || cmp(a.title||"", b.title||""); });
+    if(priceSort==="asc") copy.sort(function(a,b){ return (a.price||0)-(b.price||0); });
+    else if(priceSort==="desc") copy.sort(function(a,b){ return (b.price||0)-(a.price||0); });
     return copy;
   }
-  function groupKey(item){
-    if(sort==="type") return styleLabel(item.style);
-    if(sort==="color") return primaryColor(item.color)||"Color mix";
-    if(sort==="maker") return item.maker||"Carey";
-    return "";
-  }
+  function groupKey(){ return ""; }
   function card(item){
     var b=document.createElement("button");
     b.type="button";
@@ -230,6 +214,7 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
       ? ("🌻 "+list.length+" pretty things")
       : ("🌻 "+list.length+" of "+stock.length+" pretty things");
     $("clearAll").hidden=!dirty();
+    paintDoors();
     var host=$("grid");
     host.innerHTML="";
     if(!list.length){
@@ -249,40 +234,84 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
       host.appendChild(card(item));
     });
   }
-  function chipRow(hostId, items, current, onPick){
-    var host=$(hostId);
+  function paintDoors(){
+    var host=$("doors");
     host.innerHTML="";
-    items.forEach(function(pair){
+    [
+      ["type","Type", !!typeFilters.length],
+      ["color","Color", !!colorFilters.length],
+      ["price","Price", !!priceSort],
+      ["maker","Maker", !!makerFilters.length]
+    ].forEach(function(row){
       var b=document.createElement("button");
       b.type="button";
-      b.className="chip"+(current===pair[0]?" on":"");
-      b.textContent=pair[1];
-      b.onclick=function(){ onPick(pair[0]); paintChips(); paint(); };
+      b.className="door"+(row[2]?" on":"");
+      b.textContent=row[1];
+      b.onclick=function(){ openPicker(row[0]); };
       host.appendChild(b);
     });
   }
-  function paintChips(){
-    chipRow("sorts", SORTS, sort, function(v){ sort=v; });
-    var typeCounts={};
-    stock.forEach(function(p){ var s=p.style||"Other"; typeCounts[s]=(typeCounts[s]||0)+1; });
-    var types=[["","All types"]].concat(STYLE_ORDER.filter(function(s){ return typeCounts[s]; }).map(function(s){
-      return [s, styleLabel(s)+" · "+typeCounts[s]];
-    }));
-    chipRow("types", types, typeFilter, function(v){ typeFilter=v; });
-
-    var colorCounts={};
-    stock.forEach(function(p){ var c=primaryColor(p.color); if(!c) return; colorCounts[c]=(colorCounts[c]||0)+1; });
-    var colors=[["","All colors"]].concat(COLOR_ORDER.filter(function(c){ return colorCounts[c]; }).map(function(c){
-      return [c, c+" · "+colorCounts[c]];
-    }));
-    chipRow("colors", colors, colorFilter, function(v){ colorFilter=v; });
-
-    var makerCounts={};
-    stock.forEach(function(p){ var m=p.maker||""; if(!m) return; makerCounts[m]=(makerCounts[m]||0)+1; });
-    var top=Object.keys(makerCounts).sort(function(a,b){ return makerCounts[b]-makerCounts[a] || a.localeCompare(b); }).slice(0,16);
-    var makers=[["","All makers"]].concat(top.map(function(m){ return [m, m+" · "+makerCounts[m]]; }));
-    chipRow("makers", makers, makerFilter, function(v){ makerFilter=v; });
+  function countsFor(kind){
+    var counts={};
+    stock.forEach(function(p){
+      if(kind==="type"){ var s=p.style||"Other"; counts[s]=(counts[s]||0)+1; }
+      else if(kind==="color"){ colorsOf(p).forEach(function(c){ counts[c]=(counts[c]||0)+1; }); }
+      else if(kind==="maker"){ var m=p.maker||""; if(m) counts[m]=(counts[m]||0)+1; }
+    });
+    return counts;
   }
+  function openPicker(kind){
+    var box=$("picker");
+    var title={type:"Type",color:"Color",price:"Price",maker:"Maker"}[kind];
+    var tiles=[];
+    if(kind==="price"){
+      tiles=[
+        {id:"", label:"All", sub:"As she listed", on:!priceSort},
+        {id:"asc", label:"Low to high", sub:"Least first", on:priceSort==="asc"},
+        {id:"desc", label:"High to low", sub:"Spendy first", on:priceSort==="desc"}
+      ];
+    } else {
+      var counts=countsFor(kind);
+      var keys;
+      if(kind==="type") keys=STYLE_ORDER.filter(function(s){ return counts[s]; });
+      else if(kind==="color") keys=COLOR_ORDER.filter(function(c){ return counts[c]; }).concat(Object.keys(counts).filter(function(c){ return COLOR_ORDER.indexOf(c)<0; }).sort());
+      else keys=Object.keys(counts).sort(function(a,b){ return a.toLowerCase().localeCompare(b.toLowerCase()); });
+      var selected=kind==="type"?typeFilters:kind==="color"?colorFilters:makerFilters;
+      tiles=[{id:"", label:"All", sub:stock.length+" pieces", on:!selected.length}].concat(keys.map(function(k){
+        return {id:k, label:kind==="type"?styleLabel(k):k, sub:(counts[k]||0)+" pieces", on:inSet(selected,k)};
+      }));
+    }
+    box.innerHTML="<div class='pick-sheet'><h2>"+esc(title)+"</h2><div class='pick-grid' id='pickGrid'></div><div class='actions' style='margin-top:14px'><button type='button' class='btn' id='pickDone'>Done</button></div></div>";
+    var grid=$("pickGrid");
+    tiles.forEach(function(tile){
+      var b=document.createElement("button");
+      b.type="button";
+      b.className="tile"+(tile.on?" on":"");
+      b.innerHTML=esc(tile.label)+(tile.sub?("<small>"+esc(tile.sub)+"</small>"):"");
+      b.onclick=function(){
+        if(kind==="price"){
+          priceSort=tile.id;
+        } else {
+          var list=kind==="type"?typeFilters:kind==="color"?colorFilters:makerFilters;
+          if(!tile.id){
+            list.length=0;
+          } else {
+            toggleSet(list, tile.id);
+          }
+          if(kind==="type") typeFilters=list;
+          else if(kind==="color") colorFilters=list;
+          else makerFilters=list;
+        }
+        paint();
+        openPicker(kind);
+      };
+      grid.appendChild(b);
+    });
+    box.classList.add("on");
+    $("pickDone").onclick=closePicker;
+    box.onclick=function(e){ if(e.target===box) closePicker(); };
+  }
+  function closePicker(){ $("picker").classList.remove("on"); $("picker").innerHTML=""; }
   function openDetail(item){
     var box=$("detail");
     box.innerHTML="<div class='sheet'>"+(item.photo?("<img alt='' src='"+item.photo+"'>"):"")+"<p class='eyebrow'>🌻 "+esc(item.maker||"")+"</p><h2 style='font-family:var(--serif);font-size:28px;margin:0 0 8px'>"+esc(item.title)+"</h2><p class='meta'>"+esc([styleLabel(item.style),item.color,item.size].filter(Boolean).join(" · "))+"</p><p class='ask'>"+(item.price?("$"+item.price):"")+"</p><p style='white-space:pre-wrap;line-height:1.45'>"+esc(item.blurb||"")+"</p><div class='actions' style='margin-top:14px'>"+(item.posh?("<a class='btn' href='"+item.posh+"' target='_blank' rel='noopener'>See it on Poshmark</a>"):"")+"<button type='button' class='btn ghost' id='wantIt'>Copy a note</button><button type='button' class='btn ghost' id='closeIt'>Close</button></div></div>";
@@ -303,14 +332,13 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
   };
   $("q").addEventListener("input", function(){ query=$("q").value; paint(); });
   $("clearAll").onclick=function(){
-    query=""; sort="listed"; typeFilter=""; colorFilter=""; makerFilter="";
+    query=""; priceSort=""; typeFilters=[]; colorFilters=[]; makerFilters=[];
     $("q").value="";
-    paintChips();
+    closePicker();
     paint();
   };
   fetch("stock.json",{cache:"no-store"}).then(function(r){ return r.ok?r.json():[]; }).then(function(rows){
     stock=rows||[];
-    paintChips();
     paint();
   }).catch(function(){ $("count").textContent="The rack could not open."; });
 })();
