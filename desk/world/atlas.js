@@ -244,7 +244,7 @@
     "02":"West","06":"West","15":"West","41":"West","53":"West"
   };
   var SHARE = (function () {
-    try { return location.origin + location.pathname; } catch (e) { return "https://mystic-pebble-9gz5.here.now/world/"; }
+    try { return location.origin + location.pathname; } catch (e) { return "https://whimsy-violet-dhgk.here.now/world/"; }
   })();
   function ratingFor(n) {
     if (n >= 10) return "World Master";

@@ -33,7 +33,7 @@
     { id: "drink", label: "Drink" }
   ];
   var SHARE = (function () {
-    try { return location.origin + location.pathname; } catch (e) { return "https://mystic-pebble-9gz5.here.now/dinner/"; }
+    try { return location.origin + location.pathname; } catch (e) { return "https://whimsy-violet-dhgk.here.now/dinner/"; }
   })();
 
   var map, world = [], mapReady = false, dataReady = false, playReady = false;
