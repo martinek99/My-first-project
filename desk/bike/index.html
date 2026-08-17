@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Dirt Bike Log">
+<meta name="theme-color" content="#1a1510">
+<title>Dirt Bike Log</title>
+<style>
+:root{
+  --dirt:#1a1510;--sand:#e8d7b8;--orange:#e85d04;--ink:#22180f;--muted:#6b5340;
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--dirt);color:var(--sand);font-family:var(--sans)}
+body{min-height:100dvh;padding:calc(var(--st) + 22px) 18px calc(var(--sb) + 28px)}
+.wrap{max-width:420px;margin:0 auto}
+.eyebrow{letter-spacing:.2em;text-transform:uppercase;font-size:12px;color:#e85d04;margin:0 0 8px}
+h1{font-size:40px;line-height:.95;margin:0 0 8px}
+.lede{color:#c9b396;font-size:17px;line-height:1.4;margin:0 0 22px}
+.card{background:#2a2118;border-radius:18px;padding:16px;margin:0 0 12px}
+label{display:block;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#c9b396;margin:0 0 6px}
+input{width:100%;font-size:18px;padding:12px 14px;border:0;border-radius:12px;background:#fff;color:var(--ink);margin:0 0 12px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn{appearance:none;border:0;width:100%;min-height:52px;border-radius:14px;background:var(--orange);color:#fff;font-size:18px;font-weight:700;cursor:pointer}
+.ghost{background:transparent;border:2px solid #e85d04;color:#e8d7b8;margin-top:8px}
+.stat{font-size:15px;color:#c9b396;margin:0 0 6px}
+.stat b{color:#fff;font-size:28px;display:block}
+.warn{color:#ffb703;margin:8px 0 0}
+.rides{list-style:none;padding:0;margin:0}
+.rides li{border-top:1px solid #3d3226;padding:10px 0;color:#c9b396;font-size:15px}
+.rides li:first-child{border-top:0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="eyebrow">A first program</p>
+  <h1>Dirt Bike Log</h1>
+  <p class="lede">Put in the bike and the hours. After a ride, add what you ran. It tells you when oil is due. This stays on your phone.</p>
+
+  <div class="card">
+    <label for="name">Bike</label>
+    <input id="name" placeholder="KTM, Yamaha, the beater…">
+    <div class="row">
+      <div>
+        <label for="hours">Hours now</label>
+        <input id="hours" inputmode="decimal" placeholder="47.2">
+      </div>
+      <div>
+        <label for="oil">Oil every</label>
+        <input id="oil" inputmode="decimal" placeholder="15">
+      </div>
+    </div>
+    <label for="lastOil">Last oil at hour</label>
+    <input id="lastOil" inputmode="decimal" placeholder="30">
+    <button class="btn" id="saveBike" type="button">Save the bike</button>
+  </div>
+
+  <div class="card" id="status"></div>
+
+  <div class="card">
+    <label for="add">Hours this ride</label>
+    <input id="add" inputmode="decimal" placeholder="2.5">
+    <label for="where">Where</label>
+    <input id="where" placeholder="French Gulch, backyard, who knows">
+    <button class="btn" id="logRide" type="button">Log the ride</button>
+    <button class="btn ghost" id="clearAll" type="button">Start over</button>
+  </div>
+
+  <div class="card">
+    <p class="stat">Rides</p>
+    <ul class="rides" id="rides"></ul>
+  </div>
+</div>
+<script>
+(function(){
+  var KEY="talon-bike-log-v1";
+  function $(id){ return document.getElementById(id); }
+  function load(){
+    try{ return JSON.parse(localStorage.getItem(KEY)||"{}"); }catch(e){ return {}; }
+  }
+  function save(data){ localStorage.setItem(KEY, JSON.stringify(data)); }
+  function num(v){ var n=parseFloat(v); return isNaN(n)?0:n; }
+  function paint(){
+    var d=load();
+    $("name").value=d.name||"";
+    $("hours").value=d.hours||"";
+    $("oil").value=d.oilEvery||"";
+    $("lastOil").value=d.lastOil||"";
+    var hours=num(d.hours), last=num(d.lastOil), every=num(d.oilEvery)||15;
+    var due=last+every;
+    var left=Math.round((due-hours)*10)/10;
+    var box=$("status");
+    if(!d.name && !hours){
+      box.innerHTML="<p class='stat'>Nothing saved yet. Name the bike and hit save.</p>";
+    } else {
+      box.innerHTML="<p class='stat'>Hours on <b>"+(d.name||"the bike")+"</b></p><p class='stat'><b>"+hours+"</b></p>"+
+        (left<=0
+          ? "<p class='warn'>Oil is due. Do it before the next long ride.</p>"
+          : "<p class='stat'>About <b>"+left+"</b> hours to oil.</p>");
+    }
+    var rides=d.rides||[];
+    $("rides").innerHTML=rides.length?rides.map(function(r){
+      return "<li>"+r.hours+" hrs"+(r.where?(" · "+r.where):"")+" · "+r.when+"</li>";
+    }).join(""):"<li>No rides logged yet.</li>";
+  }
+  $("saveBike").onclick=function(){
+    var d=load();
+    d.name=$("name").value.trim();
+    d.hours=num($("hours").value);
+    d.oilEvery=num($("oil").value)||15;
+    d.lastOil=num($("lastOil").value);
+    d.rides=d.rides||[];
+    save(d); paint();
+  };
+  $("logRide").onclick=function(){
+    var add=num($("add").value);
+    if(!add){ return; }
+    var d=load();
+    d.hours=num(d.hours)+add;
+    d.rides=d.rides||[];
+    d.rides.unshift({hours:add, where:$("where").value.trim(), when:new Date().toLocaleDateString()});
+    $("add").value=""; $("where").value="";
+    save(d); paint();
+  };
+  $("clearAll").onclick=function(){
+    if(confirm("Wipe the log on this phone?")){ localStorage.removeItem(KEY); paint(); }
+  };
+  paint();
+})();
+</script>
+</body>
+</html>
