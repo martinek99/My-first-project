@@ -30,6 +30,7 @@ h1{font-family:var(--serif);font-size:clamp(36px,8vw,54px);margin:0 0 10px;line-
 .card p,.card li{margin:0 0 10px;font-size:16px;line-height:1.45;color:var(--muted)}
 .card p:last-child,.card li:last-child{margin:0}
 .card ol,.card ul{margin:0;padding-left:1.2em}
+.copy{appearance:none;border:0;background:var(--navy);color:#fff8ee;border-radius:12px;padding:12px 14px;font-size:16px;margin:4px 6px 0 0;cursor:pointer}
 .rows{margin:8px 0 0;padding:0;list-style:none}
 .rows li{display:flex;justify-content:space-between;gap:12px;margin:0;padding:8px 0;border-top:1px solid rgba(42,34,24,.12);font-size:16px;color:var(--ink)}
 .rows li:first-child{border-top:0}
@@ -45,7 +46,17 @@ h1{font-family:var(--serif);font-size:clamp(36px,8vw,54px);margin:0 0 10px;line-
   <p class="eyebrow">Yours only · always on</p>
   <h1>Profit Watch</h1>
   <p class="lede">Started Monday Aug 17, 2026. This stays on. I watch for a clean way for the AI bill to earn its keep. You do not have to remind me.</p>
-  <p class="stamp">Deep dive · Monday Aug 17 · mail, Desk, shops, and the public record</p>
+  <p class="stamp">Selling · Monday Aug 17 · sample week is live · you send the note</p>
+
+  <div class="card">
+    <h2>How you sell it</h2>
+    <p>The sample week is written. I do not email anyone. You pick <strong>one</strong> person who already goes to BidCal or GovDeals. You send the note. If they pay, you send them the brief link each week. I keep writing it.</p>
+    <p><strong>Price:</strong> $99 a month. First week free — that is this sample. Two people cover Ultra. One person is a real first dollar.</p>
+    <p><strong>How they pay you:</strong> Venmo, the same way you already pay people. Gumroad can wait. You would open that yourself on Safari. I will not take that password.</p>
+    <p><strong>The note</strong> — tap Copy, paste it in a text, put their name at the top:</p>
+    <p id="offer" style="background:#efe4ce;border-radius:12px;padding:12px 14px;color:#2a2218;font-size:15px;line-height:1.4">I had a Saturday list made of what you can actually pick up this week within 100 miles of Redding — BidCal, NorCal estates, Gridley, GovDeals, the Friday floor in Chico. This week is free. If it saves you a wasted drive, $99 a month and I’ll send the next one every Monday. Here’s this week: https://whimsy-violet-dhgk.here.now/brief/</p>
+    <p><button type="button" class="copy" data-copy="offer">Copy the note</button> <a class="copy" href="../brief/?from=desk" style="text-decoration:none;display:inline-block">Open this week</a></p>
+  </div>
 
   <div class="card">
     <h2>The job</h2>
@@ -130,8 +141,7 @@ h1{font-family:var(--serif);font-size:clamp(36px,8vw,54px);margin:0 0 10px;line-
     <p><strong>1. Move a bill that is already yours.</strong> Starlink on the business, if you say yes. That is $260 a month off your personal card. Bigger than Ultra. I do not email Brittany until you say the words.</p>
     <p><strong>2. Money already in motion.</strong> Viking claim. Briggs if the file shows up. Watch only. No new strangers.</p>
     <p><strong>3. One extra ranch dollar, only if asked.</strong> A winter-week note, a guest FAQ, a receipt pile. Brittany said 2026 is already organized. I will not pester her.</p>
-    <p><strong>4. One new buyer, only if you want it.</strong> I write a free sample week of the North State buy brief. You show it to one person who already goes to BidCal or GovDeals. $75–$150 a month from two such people would cover Ultra without the ranch. Say <strong>write the sample week</strong> to start. Say <strong>you may draft one offer</strong> if you want the note to hand someone. I still do not email them.</p>
-    <p><strong>5. Public list later, only if 4 works.</strong> Then Gumroad. Not first.</p>
+    <p><strong>4. One new buyer — started.</strong> Sample week is live. You send the note. I still do not email them. Gumroad only if one person pays and you want a public checkout.</p>
   </div>
 
   <div class="card">
@@ -145,7 +155,22 @@ h1{font-family:var(--serif);font-size:clamp(36px,8vw,54px);margin:0 0 10px;line-
     </ol>
   </div>
 
-  <p class="note">If a cleaner dollar opens — a winter booking, the Starlink move, the cruise check, the Briggs file — I will say so here and in Talk. This page is yours. Do not send it.</p>
+  <p class="note">If a cleaner dollar opens — a winter booking, the Starlink move, the cruise check, the Briggs file — I will say so here and in Talk. This page is yours. Do not send it. Send the brief, not this page.</p>
 </div>
+<script>
+(function(){
+  var btn=document.querySelector(".copy");
+  if(!btn) return;
+  btn.addEventListener("click", function(){
+    var el=document.getElementById(btn.getAttribute("data-copy"));
+    var t=el?el.textContent.trim():"";
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t).then(function(){ btn.textContent="Copied. Paste it in a text."; });
+      return;
+    }
+    window.prompt("Copy this note", t);
+  });
+})();
+</script>
 </body>
 </html>
