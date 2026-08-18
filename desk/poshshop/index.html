@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Carey's Private Collection">
 <meta name="theme-color" content="#ffd6e7">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta name="collection-version" content="private-collection-4">
+<meta name="collection-version" content="private-collection-5">
 <title>Carey's Private Collection</title>
 <meta name="description" content="Carey's sunflower closet for friends. Pay Brittany on Venmo.">
 <meta property="og:title" content="Carey's Private Collection">
@@ -197,8 +197,9 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
       fetch("/.herenow/data/hidden",{cache:"no-store"}).then(function(r){ return r.ok?r.json():[]; }).catch(function(){ return []; })
     ]).then(function(sets){
       function add(row){
-        var rec=row && (row.record||row);
-        var id=rec && (rec.item_id||rec.itemId||rec.id||row);
+        if(typeof row==="string"){ sold[row]=1; return; }
+        var rec=row && (row.data||row.record||row);
+        var id=rec && (rec.item_id||rec.itemId);
         if(id && typeof id!=="object") sold[String(id)]=1;
       }
       (sets[0]||[]).forEach(add);
