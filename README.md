@@ -15,3 +15,5 @@ Always update that same slug. Publish the **whole** `desk/` folder with `scripts
 Share buttons must keep using `https://whimsy-violet-dhgk.here.now/...` so links people already have stay good.
 
 The pink shop copies Brittany’s public Poshmark closet. `scripts/pull-poshshop.py` re-pulls it. A GitHub Action runs that twice a day.
+
+Grok Bot iOS is frozen on Setting up until App Store **1.3**. See `AGENTS.md`. Do not install 1.2 as a fix.
