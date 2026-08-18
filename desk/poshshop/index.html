@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Carey's Poshmark Store">
 <meta name="theme-color" content="#ffd6e7">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta name="poshshop-version" content="pay-brittany-2">
+<meta name="poshshop-version" content="pay-brittany-3">
 <title>Carey's Poshmark Store</title>
 <meta name="description" content="Browse Brittany's closet. Pay her on Venmo, not Poshmark.">
 <meta property="og:title" content="Carey's Poshmark Store">
@@ -124,7 +124,7 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
     <p class="eyebrow">🌻 @thecareycurated · the posh rack</p>
     <h1>Carey's Poshmark Store</h1>
     <p class="lede">Every piece from her closet. Search it, then pay Brittany on Venmo. This is not a Poshmark checkout.</p>
-    <p class="stamp" id="stamp">I pull her closet twice a day so new posts show up here.</p>
+    <p class="stamp" id="stamp">I pull her closet twice a day. Pay Brittany on Venmo, not Poshmark.</p>
     <div class="actions">
       <button type="button" class="btn" id="shareShop">Share the sparkle</button>
     </div>
@@ -285,7 +285,7 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
     var b=document.createElement("button");
     b.type="button";
     b.className="card";
-    b.innerHTML=(item.thumb||item.photo?("<img alt='' loading='lazy' src='"+(item.thumb||item.photo)+"'>"):"")+"<div class='pad'><p class='meta'>"+esc(item.maker||"Carey")+" · "+esc(styleLabel(item.style))+" · "+esc(item.size||"")+"</p><h2>"+esc(item.title)+"</h2><p class='ask'>"+(item.price?("$"+item.price):"")+"</p></div>";
+    b.innerHTML=(item.thumb||item.photo?("<img alt='' loading='lazy' src='"+(item.thumb||item.photo)+"'>"):"")+"<div class='pad'><p class='meta'>"+esc(item.maker||"Carey")+" · "+esc(styleLabel(item.style))+" · "+esc(item.size||"")+"</p><h2>"+esc(item.title)+"</h2><p class='ask'>"+(item.price?("$"+item.price):"")+"</p><p class='meta'>Pay Brittany on Venmo</p></div>";
     b.onclick=function(){ openDetail(item); };
     return b;
   }
@@ -440,7 +440,7 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
     var label=sameDay
       ? ("Refreshed today at "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}))
       : ("Refreshed "+d.toLocaleDateString(undefined,{month:"short",day:"numeric"}));
-    $("stamp").textContent=label+" · I pull her closet twice a day.";
+    $("stamp").textContent=label+" · Pay Brittany on Venmo, not Poshmark.";
   }
   function takeStock(rows, meta){
     if(!rows||!rows.length) return false;
