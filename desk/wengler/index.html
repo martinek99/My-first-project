@@ -96,7 +96,7 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
   </div>
   <p class="count" id="count"></p>
   <div class="grid" id="grid"></div>
-  <p class="note">Pictures are from Wikimedia Commons. Sounds play when we have a free recording. The “brown bears” here are black bears in a cinnamon coat. Grizzlies are gone from California. Rattlesnakes are real — look, do not grab.</p>
+  <p class="note">Every card has a real picture. Sounds play when we have a free recording. The “brown bears” here are black bears in a cinnamon coat. Grizzlies are gone from California. Rattlesnakes are real — look, do not grab.</p>
 </div>
 <div id="detail"></div>
 <div class="toast" id="toast"></div>
@@ -128,17 +128,9 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
   function esc(s){ return String(s||"").replace(/[&<>\"']/g,function(c){ return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]); }); }
   function save(){ try{ localStorage.setItem("wengler-seen", JSON.stringify(seen)); }catch(e){} }
   function hay(a){ return [a.name,a.also,a.kind,a.blurb,a.sound].join(" ").toLowerCase(); }
-  var thumbs={};
-  function setPic(img, a, big){
-    var key=(a.wiki||a.name)+(big?"-big":"");
-    if(thumbs[key]){ img.src=thumbs[key]; return; }
-    fetch("https://en.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(a.wiki||a.name))
-      .then(function(r){ return r.ok?r.json():null; })
-      .then(function(d){
-        var src=d&&((big&&d.originalimage&&d.originalimage.source)||(d.thumbnail&&d.thumbnail.source));
-        if(src){ thumbs[key]=src; img.src=src; }
-        else if(a.photo) img.src=a.photo;
-      }).catch(function(){ if(a.photo) img.src=a.photo; });
+  function setPic(img, a){
+    if(a.photo) img.src=a.photo;
+    img.alt=a.name||"";
   }
   function list(){
     return stock.filter(function(a){
@@ -169,7 +161,7 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
     $("grid").querySelectorAll(".card").forEach(function(c){
       var id=c.getAttribute("data-id");
       var a=stock.filter(function(x){ return x.id===id; })[0];
-      if(a) setPic(c.querySelector("img"), a, false);
+      if(a) setPic(c.querySelector("img"), a);
       c.onclick=function(){ open(id); };
     });
   }
@@ -189,7 +181,7 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
         "<button type='button' class='btn ghost' id='closeIt'>Close</button>"+
       "</div></div>";
     box.classList.add("on");
-    setPic($("heroPic"), a, true);
+    setPic($("heroPic"), a);
     $("closeIt").onclick=close;
     box.onclick=function(e){ if(e.target===box) close(); };
     $("mark").onclick=function(){
