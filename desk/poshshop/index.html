@@ -51,6 +51,7 @@ h1{font-family:var(--serif);font-size:clamp(34px,8vw,58px);margin:0;line-height:
   -webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
 @keyframes shine{to{background-position:200% 0}}
 .lede{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--muted);margin:10px auto 0;max-width:26em}
+.stamp{margin:8px auto 0;font-size:13px;letter-spacing:.04em;color:#c43b74}
 .actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0 0}
 .btn{appearance:none;border:0;border-radius:999px;padding:12px 18px;min-height:48px;font-size:16px;
   background:var(--pink);color:#fff;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 6px 0 #c43b74;cursor:pointer}
@@ -98,6 +99,7 @@ h1{font-family:var(--serif);font-size:clamp(34px,8vw,58px);margin:0;line-height:
     <p class="eyebrow">🌻 @thecareycurated · the posh rack</p>
     <h1>Carey's Poshmark Store</h1>
     <p class="lede">Every piece from her closet, all in one sparkly place. If you want it, pay Brittany direct.</p>
+    <p class="stamp" id="stamp">I pull her closet twice a day so new posts show up here.</p>
     <div class="actions">
       <button type="button" class="btn" id="shareShop">Share the sparkle</button>
       <button type="button" class="btn ghost" id="howPay">How to pay Brittany</button>
@@ -287,10 +289,45 @@ h1{font-family:var(--serif);font-size:clamp(34px,8vw,58px);margin:0;line-height:
     if(first) first.scrollIntoView({behavior:"smooth",block:"start"});
   };
   $("q").addEventListener("input", function(){ query=$("q").value; paint(); });
-  fetch("stock.json",{cache:"no-store"}).then(function(r){ return r.ok?r.json():[]; }).then(function(rows){
-    stock=rows||[];
+  function stampFrom(iso){
+    if(!iso) return;
+    var d=new Date(iso);
+    if(isNaN(d.getTime())) return;
+    var sameDay=d.toDateString()===new Date().toDateString();
+    var label=sameDay
+      ? ("Refreshed today at "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}))
+      : ("Refreshed "+d.toLocaleDateString(undefined,{month:"short",day:"numeric"}));
+    $("stamp").textContent=label+" · I pull her closet twice a day.";
+  }
+  function takeStock(rows, meta){
+    if(!rows||!rows.length) return false;
+    stock=rows;
     chips();
     paint();
+    if(meta&&meta.pulledAt) stampFrom(meta.pulledAt);
+    return true;
+  }
+  function readPair(stockUrl, metaUrl){
+    return Promise.all([
+      fetch(stockUrl,{cache:"no-store"}).then(function(r){ return r.ok?r.json():[]; }).catch(function(){ return []; }),
+      fetch(metaUrl,{cache:"no-store"}).then(function(r){ return r.ok?r.json():{}; }).catch(function(){ return {}; })
+    ]);
+  }
+  Promise.all([
+    readPair("stock.json","updated.json"),
+    readPair(
+      "https://raw.githubusercontent.com/martinek99/My-first-project/main/desk/poshshop/stock.json",
+      "https://raw.githubusercontent.com/martinek99/My-first-project/main/desk/poshshop/updated.json"
+    )
+  ]).then(function(pairs){
+    var localRows=pairs[0][0], localMeta=pairs[0][1]||{};
+    var gitRows=pairs[1][0], gitMeta=pairs[1][1]||{};
+    var localT=Date.parse(localMeta.pulledAt||"")||0;
+    var gitT=Date.parse(gitMeta.pulledAt||"")||0;
+    if(gitRows&&gitRows.length&&gitT>=localT&&takeStock(gitRows, gitMeta)) return;
+    if(takeStock(localRows, localMeta)) return;
+    if(takeStock(gitRows, gitMeta)) return;
+    $("count").textContent="The rack could not open.";
   }).catch(function(){ $("count").textContent="The rack could not open."; });
 })();
 </script>
