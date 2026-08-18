@@ -10,11 +10,7 @@ This folder is only a backup. Mark uses the Safari links, not GitHub.
 
 Mark’s home-screen icon opens `https://whimsy-violet-dhgk.here.now/`.
 
-Always update that same slug. Never publish a new here.now site for the Desk. Never send Mark a replacement icon or a new Desk URL.
-
-Use Mark’s saved here.now API key and:
-
-`publish.sh desk --slug whimsy-violet-dhgk --client cursor`
+Always update that same slug. Publish the **whole** `desk/` folder with `scripts/publish-desk.sh`. Never publish a subfolder. A partial publish wipes programs off the icon. Never send Mark a replacement icon or a new Desk URL.
 
 Share buttons must keep using `https://whimsy-violet-dhgk.here.now/...` so links people already have stay good.
 
