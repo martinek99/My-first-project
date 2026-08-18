@@ -9,6 +9,8 @@
 <meta name="apple-mobile-web-app-title" content="Mark's Desk">
 <meta name="theme-color" content="#142033">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<link rel="manifest" href="https://whimsy-violet-dhgk.here.now/manifest.json">
 <title>Mark's Desk</title>
 <style>
 :root{
@@ -106,7 +108,7 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,5.5vw,48px);lin
     <p class="eyebrow">One page · iPad home screen</p>
     <h1>Mark's Desk</h1>
     <p class="lede">The gold <strong>Talk to me</strong> button opens the type box. If that box disappears, tap it again. You did not break it. Usage is the gas tank.</p>
-    <p class="stamp">Updated Tuesday Aug 18 · Full Desk is back on this icon</p>
+    <p class="stamp">Updated Tuesday Aug 18 · This icon stays. Animals of Wengler Hill is on it.</p>
     <div class="howto">
       <h2>How to share</h2>
       <p>Tap the gold <strong>Share</strong> button. Your iPad opens the usual sheet — Messages, Mail, or Copy. Send that link. Your friend gets the game itself, not the Desk.</p>
@@ -214,7 +216,7 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,5.5vw,48px);lin
         <h2>Animals of Wengler Hill</h2>
         <p>Birds, bears, bobcats, snakes, lizards, fish, the works. Pictures, blurbs, sounds, and a checklist.</p>
         <div class="actions">
-          <a class="go" href="wengler/?from=desk">Open the field guide</a>
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/wengler/?from=desk">Open the field guide</a>
           <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/wengler/" data-title="Animals of Wengler Hill Road" data-text="What you can see on the hill in Shingletown.">Share</button>
         </div>
       </div>
@@ -298,6 +300,11 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,5.5vw,48px);lin
       share(btn.getAttribute("data-title"), btn.getAttribute("data-text"), btn.getAttribute("data-url"));
     });
   });
+  try{
+    if("serviceWorker" in navigator){
+      navigator.serviceWorker.register("https://whimsy-violet-dhgk.here.now/sw.js", {scope:"/"});
+    }
+  }catch(e){}
 })();
 </script>
 </body>

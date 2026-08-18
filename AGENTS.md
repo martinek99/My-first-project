@@ -9,8 +9,9 @@ https://whimsy-violet-dhgk.here.now/
 - Update that slug in place. Do not create a new here.now site for the Desk.
 - Do not ask Mark to delete the icon or Add to Home Screen again.
 - Do not send a new Desk URL.
-- After every Desk change, publish the **entire** `desk/` folder:
+- After every Desk change, publish the **entire** `desk/` folder to that same slug:
   `scripts/publish-desk.sh`
+  That is how the home-screen icon stays current. Never make a second Desk.
   or
   `publish.sh desk --slug whimsy-violet-dhgk --client cursor`
 - Never publish a subfolder (`desk/poshshop`, `desk/cary`, `/tmp/desk-live` with missing pages). here.now replaces the whole site. A partial publish deletes programs from the icon.
