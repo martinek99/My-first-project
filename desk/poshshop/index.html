@@ -6,15 +6,15 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Carey's Poshmark Store">
+<meta name="apple-mobile-web-app-title" content="Carey's Private Collection">
 <meta name="theme-color" content="#ffd6e7">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <meta http-equiv="Pragma" content="no-cache">
-<meta name="poshshop-version" content="closet-refresh-2">
-<title>Carey's Poshmark Store</title>
-<meta name="description" content="Browse Carey's whole Poshmark closet. Search, then tap Type, Color, Size, Price, or Maker.">
-<meta property="og:title" content="Carey's Poshmark Store">
-<meta property="og:description" content="Sunflowers, sparkle, and every piece from her Poshmark closet. Easier to search than the closet itself.">
+<meta name="collection-version" content="private-collection-6">
+<title>Carey's Private Collection</title>
+<meta name="description" content="Carey's sunflower closet for friends. Pay Brittany on Venmo.">
+<meta property="og:title" content="Carey's Private Collection">
+<meta property="og:description" content="A private closet for friends. Sunflowers, sparkle, and Venmo.">
 <meta property="og:url" content="https://whimsy-violet-dhgk.here.now/poshshop/">
 <meta property="og:type" content="website">
 <style>
@@ -100,6 +100,11 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
 .toast{position:fixed;left:50%;bottom:calc(var(--sb) + 22px);transform:translateX(-50%);background:var(--pink);color:#fff;padding:12px 18px;border-radius:999px;opacity:0;z-index:80}
 .toast.show{opacity:1}
 .note{text-align:center;font-size:14px;color:var(--muted);max-width:36em;margin:18px auto 0}
+.paybox{margin:16px 0 0;padding:14px;border:2px dashed #ffb6d2;border-radius:18px;background:#fff}
+.paybox h3{font-family:var(--serif);font-size:22px;margin:0 0 8px}
+.paybox p{margin:0 0 10px;color:var(--muted);font-size:15px;line-height:1.4}
+.field{width:100%;font-size:17px;padding:14px 16px;border:2px solid #ffb6d2;border-radius:16px;background:#fff;margin:0 0 8px;color:var(--ink);font-family:var(--sans)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 </style>
 </head>
 <body>
@@ -117,13 +122,12 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
 </div>
 <div class="wrap">
   <div class="hero">
-    <p class="eyebrow">🌻 @thecareycurated · the posh rack</p>
-    <h1>Carey's Poshmark Store</h1>
-    <p class="lede">Every piece from her Poshmark closet. Search it, sort it, then tap through to buy on Poshmark.</p>
-    <p class="stamp" id="stamp">I pull her closet twice a day so new posts show up here.</p>
+    <p class="eyebrow">🌻 for friends</p>
+    <h1>Carey's Private Collection</h1>
+    <p class="lede">A sunflower closet she sends to friends. Find a piece, then pay Brittany on Venmo.</p>
+    <p class="stamp" id="stamp">Friends only · sold pieces come off the rack</p>
     <div class="actions">
       <button type="button" class="btn" id="shareShop">Share the sparkle</button>
-      <a class="btn ghost" href="https://poshmark.com/closet/thecareycurated" target="_blank" rel="noopener">Her Poshmark closet</a>
     </div>
   </div>
 
@@ -137,7 +141,7 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
 
   <p class="count" id="count"></p>
   <div class="grid" id="grid"></div>
-  <p class="note">This is her Poshmark closet, dressed up so friends can find a piece faster. Buy on Poshmark. The Carey Curated is a different shop.</p>
+  <p class="note">Tap a piece, pay Brittany on Venmo, then tap I paid. That takes it off the rack and sends Brittany your address.</p>
 </div>
 <div id="picker"></div>
 <div id="detail"></div>
@@ -158,6 +162,96 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
 <script>
 (function(){
   var SHARE="https://whimsy-violet-dhgk.here.now/poshshop/";
+  var PAY={
+    name:"Brittany Carey",
+    email:"brittanyloverly@yahoo.com",
+    venmo:"brittanyloverly"
+  };
+  var ship={};
+  var sold={};
+  var SOLDKEY="carey-private-sold-v1";
+  function money(item){ return item.price?String(item.price):""; }
+  function itemKey(item){ return String(item.id||item.title||""); }
+  function isSold(item){ return !!sold[itemKey(item)]; }
+  function rememberSold(){
+    try{ localStorage.setItem(SOLDKEY, JSON.stringify(Object.keys(sold))); }catch(e){}
+  }
+  function markSold(item){
+    var id=itemKey(item);
+    if(!id) return;
+    sold[id]=1;
+    rememberSold();
+    fetch("/.herenow/data/hidden",{
+      method:"POST",
+      headers:{"content-type":"application/json"},
+      body:JSON.stringify({item_id:id, title:(item.title||"").slice(0,80), price:money(item)})
+    }).catch(function(){});
+    closeDetail();
+    paint();
+  }
+  function loadSold(){
+    try{
+      JSON.parse(localStorage.getItem(SOLDKEY)||"[]").forEach(function(id){ if(id) sold[id]=1; });
+    }catch(e){}
+    return Promise.all([
+      fetch("sold.json",{cache:"no-store"}).then(function(r){ return r.ok?r.json():[]; }).catch(function(){ return []; }),
+      fetch("/.herenow/data/hidden",{cache:"no-store"}).then(function(r){ return r.ok?r.json():[]; }).catch(function(){ return []; })
+    ]).then(function(sets){
+      function add(row){
+        if(typeof row==="string"){ sold[row]=1; return; }
+        var rec=row && (row.data||row.record||row);
+        var id=rec && (rec.item_id||rec.itemId);
+        if(id && typeof id!=="object") sold[String(id)]=1;
+      }
+      (sets[0]||[]).forEach(add);
+      var remote=sets[1];
+      var rows=Array.isArray(remote)?remote:(remote&&remote.records)||(remote&&remote.items)||[];
+      rows.forEach(add);
+      rememberSold();
+    });
+  }
+  function readShip(){
+    ship={
+      who:($("shipName")&&$("shipName").value||"").trim(),
+      mail:($("shipMail")&&$("shipMail").value||"").trim(),
+      street:($("shipStreet")&&$("shipStreet").value||"").trim(),
+      city:($("shipCity")&&$("shipCity").value||"").trim(),
+      state:($("shipState")&&$("shipState").value||"").trim(),
+      zip:($("shipZip")&&$("shipZip").value||"").trim()
+    };
+    return ship;
+  }
+  function orderNote(item){
+    var s=readShip();
+    var lines=[
+      "Hi Brittany, I would like "+item.title+(money(item)?(" for $"+money(item)):"")+".",
+      "I paid on Venmo @brittanyloverly. Please take this off the rack.",
+      "",
+      "Ship to:",
+      s.who||"(name)",
+      s.street||"(street)",
+      [s.city,s.state,s.zip].filter(Boolean).join(", ")||"(city, state, zip)",
+      s.mail?("Email: "+s.mail):""
+    ];
+    return lines.filter(function(line,i,arr){ return line || arr[i-1]!==""; }).join("\n").replace(/\n+$/,"");
+  }
+  function venmoUrl(item){
+    var q="txn=pay&recipients="+encodeURIComponent(PAY.venmo);
+    if(money(item)) q+="&amount="+encodeURIComponent(money(item));
+    q+="&note="+encodeURIComponent(item.title+(money(item)?(" $"+money(item)):"")+" from Brittany's shop");
+    return "https://venmo.com/?"+q;
+  }
+  function paypalUrl(item){
+    var q="cmd=_xclick&business="+encodeURIComponent(PAY.email);
+    q+="&item_name="+encodeURIComponent(item.title);
+    q+="&currency_code=USD&no_shipping=2";
+    if(money(item)) q+="&amount="+encodeURIComponent(money(item));
+    return "https://www.paypal.com/cgi-bin/webscr?"+q;
+  }
+  function mailUrl(item){
+    var sub="Order: "+item.title+(money(item)?(" $"+money(item)):"");
+    return "mailto:"+PAY.email+"?subject="+encodeURIComponent(sub)+"&body="+encodeURIComponent(orderNote(item));
+  }
   var STYLE_LABEL={
     "Dresses & Skirts":"Dresses",
     "Tops":"Tops & blouses",
@@ -218,10 +312,10 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
     return hay(p).indexOf(q)>=0;
   }
   function shown(){
-    return stock.filter(function(p){ return matchesFilters(p); });
+    return stock.filter(function(p){ return !isSold(p) && matchesFilters(p); });
   }
   function poolFor(kind){
-    return stock.filter(function(p){ return matchesFilters(p, kind); });
+    return stock.filter(function(p){ return !isSold(p) && matchesFilters(p, kind); });
   }
   function ordered(list){
     var copy=list.slice();
@@ -233,15 +327,16 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
     var b=document.createElement("button");
     b.type="button";
     b.className="card";
-    b.innerHTML=(item.thumb||item.photo?("<img alt='' loading='lazy' src='"+(item.thumb||item.photo)+"'>"):"")+"<div class='pad'><p class='meta'>"+esc(item.maker||"Carey")+" · "+esc(styleLabel(item.style))+" · "+esc(item.size||"")+"</p><h2>"+esc(item.title)+"</h2><p class='ask'>"+(item.price?("$"+item.price):"")+"</p></div>";
+    b.innerHTML=(item.thumb||item.photo?("<img alt='' loading='lazy' src='"+(item.thumb||item.photo)+"'>"):"")+"<div class='pad'><p class='meta'>"+esc(item.maker||"Carey")+" · "+esc(styleLabel(item.style))+" · "+esc(item.size||"")+"</p><h2>"+esc(item.title)+"</h2><p class='ask'>"+(item.price?("$"+item.price):"")+"</p><p class='meta'>Pay Brittany on Venmo</p></div>";
     b.onclick=function(){ openDetail(item); };
     return b;
   }
   function paint(){
     var list=ordered(shown());
-    $("count").textContent=list.length===stock.length
+    var live=stock.filter(function(p){ return !isSold(p); }).length;
+    $("count").textContent=list.length===live
       ? ("🌻 "+list.length+" pretty things")
-      : ("🌻 "+list.length+" of "+stock.length+" pretty things");
+      : ("🌻 "+list.length+" of "+live+" pretty things");
     $("clearAll").hidden=!dirty();
     paintDoors();
     var host=$("grid");
@@ -335,19 +430,47 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
   function closePicker(){ $("picker").classList.remove("on"); $("picker").innerHTML=""; }
   function openDetail(item){
     var box=$("detail");
-    box.innerHTML="<div class='sheet'>"+(item.photo?("<img alt='' src='"+item.photo+"'>"):"")+"<p class='eyebrow'>🌻 "+esc(item.maker||"")+"</p><h2 style='font-family:var(--serif);font-size:28px;margin:0 0 8px'>"+esc(item.title)+"</h2><p class='meta'>"+esc([styleLabel(item.style),item.color,item.size].filter(Boolean).join(" · "))+"</p><p class='ask'>"+(item.price?("$"+item.price):"")+"</p><p style='white-space:pre-wrap;line-height:1.45'>"+esc(item.blurb||"")+"</p><div class='actions' style='margin-top:14px'>"+(item.posh?("<a class='btn' href='"+item.posh+"' target='_blank' rel='noopener'>Pay on Poshmark</a>"):"")+"<button type='button' class='btn ghost' id='wantIt'>Copy a note</button><button type='button' class='btn ghost' id='closeIt'>Close</button></div></div>";
+    var html="<div class='sheet'>"+(item.photo?("<img alt='' src='"+item.photo+"'>"):"")+"<p class='eyebrow'>🌻 "+esc(item.maker||"")+"</p><h2 style='font-family:var(--serif);font-size:28px;margin:0 0 8px'>"+esc(item.title)+"</h2><p class='meta'>"+esc([styleLabel(item.style),item.color,item.size].filter(Boolean).join(" · "))+"</p><p class='ask'>"+(item.price?("$"+item.price):"")+"</p><p style='white-space:pre-wrap;line-height:1.45'>"+esc(item.blurb||"")+"</p>";
+    html+="<div class='paybox'><h3>Pay Brittany</h3><p>Venmo is @brittanyloverly. After you pay, tap I paid so this piece comes off the rack and Brittany gets your address.</p>";
+    html+="<div class='actions'>";
+    html+="<a class='btn' id='payVenmo' href='"+venmoUrl(item)+"' target='_blank' rel='noopener'>"+(money(item)?("Pay Brittany $"+money(item)+" on Venmo"):"Pay Brittany on Venmo")+"</a>";
+    html+="<a class='btn ghost' id='payPal' href='"+paypalUrl(item)+"' target='_blank' rel='noopener'>"+(money(item)?("Pay $"+money(item)+" on PayPal"):"Pay Brittany on PayPal")+"</a>";
+    html+="</div>";
+    html+="<p style='margin:14px 0 8px'>Your name and ship-to, so she can send it.</p>";
+    html+="<input class='field' id='shipName' placeholder='Your name' autocomplete='name' value='"+esc(ship.who||"")+"'>";
+    html+="<input class='field' id='shipMail' type='email' placeholder='Your email' autocomplete='email' value='"+esc(ship.mail||"")+"'>";
+    html+="<input class='field' id='shipStreet' placeholder='Street address' autocomplete='street-address' value='"+esc(ship.street||"")+"'>";
+    html+="<div class='row2'><input class='field' id='shipCity' placeholder='City' autocomplete='address-level2' value='"+esc(ship.city||"")+"'><input class='field' id='shipState' placeholder='State' autocomplete='address-level1' value='"+esc(ship.state||"")+"'></div>";
+    html+="<input class='field' id='shipZip' placeholder='ZIP' autocomplete='postal-code' inputmode='numeric' value='"+esc(ship.zip||"")+"'>";
+    html+="<div class='actions'>";
+    html+="<button type='button' class='btn' id='paidIt'>I paid — take it off the rack</button>";
+    html+="<a class='btn ghost' id='mailIt' href='#'>Email Brittany the order</a>";
+    html+="<button type='button' class='btn ghost' id='wantIt'>Copy the order</button>";
+    html+="<button type='button' class='btn ghost' id='closeIt'>Close</button>";
+    html+="</div></div></div>";
+    box.innerHTML=html;
     box.classList.add("on");
     $("closeIt").onclick=closeDetail;
     box.onclick=function(e){ if(e.target===box) closeDetail(); };
+    $("paidIt").onclick=function(){
+      markSold(item);
+      location.href=mailUrl(item);
+      toast("Taken off the rack. Send the note to Brittany. 🌻");
+    };
+    $("mailIt").onclick=function(e){
+      e.preventDefault();
+      this.href=mailUrl(item);
+      location.href=this.href;
+    };
     $("wantIt").onclick=function(){
-      var t="Hi Carey, I would like "+item.title+(item.price?(" for $"+item.price):"")+" from Carey's Poshmark Store.";
-      if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function(){ toast("Note copied 🌻"); });
-      else window.prompt("Copy this note", t);
+      var t=orderNote(item);
+      if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function(){ toast("Order copied 🌻"); });
+      else window.prompt("Copy this order", t);
     };
   }
   function closeDetail(){ $("detail").classList.remove("on"); $("detail").innerHTML=""; }
   $("shareShop").onclick=function(){
-    if(navigator.share){ navigator.share({title:"Carey's Poshmark Store",text:"Sunflowers, sparkle, and her whole Poshmark closet. Search it easier than Poshmark.",url:SHARE}).catch(function(){}); return; }
+    if(navigator.share){ navigator.share({title:"Carey's Private Collection",text:"A sunflower closet for friends. Pay Brittany on Venmo.",url:SHARE}).catch(function(){}); return; }
     if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(SHARE).then(function(){ toast("Link copied 🌻"); });
     else window.prompt("Copy this link", SHARE);
   };
@@ -358,44 +481,13 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
     closePicker();
     paint();
   };
-  function stampFrom(iso){
-    if(!iso) return;
-    var d=new Date(iso);
-    if(isNaN(d.getTime())) return;
-    var sameDay=d.toDateString()===new Date().toDateString();
-    var label=sameDay
-      ? ("Refreshed today at "+d.toLocaleTimeString(undefined,{hour:"numeric",minute:"2-digit"}))
-      : ("Refreshed "+d.toLocaleDateString(undefined,{month:"short",day:"numeric"}));
-    $("stamp").textContent=label+" · I check her Poshmark closet twice a day.";
-  }
-  function takeStock(rows, meta){
-    if(!rows||!rows.length) return false;
-    stock=rows;
-    paint();
-    if(meta&&meta.pulledAt) stampFrom(meta.pulledAt);
-    return true;
-  }
-  function readPair(stockUrl, metaUrl){
-    return Promise.all([
-      fetch(stockUrl,{cache:"no-store"}).then(function(r){ return r.ok?r.json():[]; }).catch(function(){ return []; }),
-      fetch(metaUrl,{cache:"no-store"}).then(function(r){ return r.ok?r.json():{}; }).catch(function(){ return {}; })
-    ]);
-  }
   Promise.all([
-    readPair("stock.json","updated.json"),
-    readPair(
-      "https://raw.githubusercontent.com/martinek99/My-first-project/main/desk/poshshop/stock.json",
-      "https://raw.githubusercontent.com/martinek99/My-first-project/main/desk/poshshop/updated.json"
-    )
-  ]).then(function(pairs){
-    var localRows=pairs[0][0], localMeta=pairs[0][1]||{};
-    var gitRows=pairs[1][0], gitMeta=pairs[1][1]||{};
-    var localT=Date.parse(localMeta.pulledAt||"")||0;
-    var gitT=Date.parse(gitMeta.pulledAt||"")||0;
-    if(gitRows&&gitRows.length&&gitT>=localT&&takeStock(gitRows, gitMeta)) return;
-    if(takeStock(localRows, localMeta)) return;
-    if(takeStock(gitRows, gitMeta)) return;
-    $("count").textContent="The rack could not open.";
+    loadSold(),
+    fetch("stock.json",{cache:"no-store"}).then(function(r){ return r.ok?r.json():[]; }).catch(function(){ return []; })
+  ]).then(function(parts){
+    stock=parts[1]||[];
+    if(!stock.length){ $("count").textContent="The rack could not open."; return; }
+    paint();
   }).catch(function(){ $("count").textContent="The rack could not open."; });
 })();
 </script>
