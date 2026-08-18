@@ -1,0 +1,18 @@
+{
+  "collections": {
+    "sold": {
+      "fields": {
+        "itemId": { "type": "string", "required": true, "maxLength": 160, "trim": true },
+        "title": { "type": "string", "required": true, "maxLength": 200, "trim": true },
+        "price": { "type": "string", "maxLength": 20, "trim": true }
+      },
+      "access": {
+        "read": "public",
+        "insert": "public",
+        "update": "owner",
+        "delete": "owner"
+      },
+      "rateLimit": "30/hour/ip"
+    }
+  }
+}
