@@ -130,7 +130,7 @@ h1{font-family:var(--serif);font-size:clamp(34px,8vw,58px);margin:0;line-height:
   var PAY={
     name:"Brittany Carey",
     email:"brittanyloverly@yahoo.com",
-    venmo:""
+    venmo:"brittanyloverly"
   };
   var stock=[], filter="", query="", ship={};
   function $(id){ return document.getElementById(id); }
@@ -231,7 +231,7 @@ h1{font-family:var(--serif);font-size:clamp(34px,8vw,58px);margin:0;line-height:
     var box=$("detail");
     var fromDesk=document.documentElement.classList.contains("from-desk");
     var html="<div class='sheet'>"+(item.photo?("<img alt='' src='"+item.photo+"'>"):"")+"<p class='eyebrow'>🌻 "+esc(item.maker||"")+"</p><h2 style='font-family:var(--serif);font-size:28px;margin:0 0 8px'>"+esc(item.title)+"</h2><p class='meta'>"+esc([item.style,item.color,item.size].filter(Boolean).join(" · "))+"</p><p class='ask'>"+(item.price?("$"+item.price):"")+"</p><p style='white-space:pre-wrap;line-height:1.45'>"+esc(item.blurb||"")+"</p>";
-    html+="<div class='paybox'><h3>Pay Brittany direct</h3><p>Venmo or PayPal goes to Brittany Carey. Then email her this order so she has your address. She ships from sunny California.</p>";
+    html+="<div class='paybox'><h3>Pay Brittany direct</h3><p>Venmo is @brittanyloverly. PayPal works too. Then email her this order so she has your address. She ships from sunny California.</p>";
     html+="<input class='field' id='shipName' placeholder='Your name' autocomplete='name' value='"+esc(ship.who||"")+"'>";
     html+="<input class='field' id='shipMail' type='email' placeholder='Your email' autocomplete='email' value='"+esc(ship.mail||"")+"'>";
     html+="<input class='field' id='shipStreet' placeholder='Street address' autocomplete='street-address' value='"+esc(ship.street||"")+"'>";
