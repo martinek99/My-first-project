@@ -128,18 +128,7 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
   function esc(s){ return String(s||"").replace(/[&<>\"']/g,function(c){ return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]); }); }
   function save(){ try{ localStorage.setItem("wengler-seen", JSON.stringify(seen)); }catch(e){} }
   function hay(a){ return [a.name,a.also,a.kind,a.blurb,a.sound].join(" ").toLowerCase(); }
-  var thumbs={};
-  function setPic(img, a, big){
-    var key=(a.wiki||a.name)+(big?"-big":"");
-    if(thumbs[key]){ img.src=thumbs[key]; return; }
-    fetch("https://en.wikipedia.org/api/rest_v1/page/summary/"+encodeURIComponent(a.wiki||a.name))
-      .then(function(r){ return r.ok?r.json():null; })
-      .then(function(d){
-        var src=d&&((big&&d.originalimage&&d.originalimage.source)||(d.thumbnail&&d.thumbnail.source));
-        if(src){ thumbs[key]=src; img.src=src; }
-        else if(a.photo) img.src=a.photo;
-      }).catch(function(){ if(a.photo) img.src=a.photo; });
-  }
+  function pic(a){ return a.photo || ""; }
   function list(){
     return stock.filter(function(a){
       if(kind!=="All" && a.kind!==kind) return false;
@@ -163,13 +152,11 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
     $("grid").innerHTML=rows.map(function(a){
       return "<button type='button' class='card"+(seen[a.id]?" got":"")+"' data-id='"+a.id+"'>"+
         "<span class='seen'>Seen</span>"+
-        "<img alt='' data-id='"+a.id+"' loading='lazy'>"+
+        "<img alt='' src='"+esc(pic(a))+"' loading='lazy'>"+
         "<div class='pad'><p class='meta'>"+esc(a.kind)+(a.also?" · "+esc(a.also):"")+"</p><h2>"+esc(a.name)+"</h2></div></button>";
     }).join("");
     $("grid").querySelectorAll(".card").forEach(function(c){
       var id=c.getAttribute("data-id");
-      var a=stock.filter(function(x){ return x.id===id; })[0];
-      if(a) setPic(c.querySelector("img"), a, false);
       c.onclick=function(){ open(id); };
     });
   }
@@ -178,7 +165,7 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
     if(!a) return;
     var box=$("detail");
     box.innerHTML="<div class='sheet'>"+
-      "<img alt='' id='heroPic'>"+
+      "<img alt='' id='heroPic' src='"+esc(pic(a))+"'>"+
       "<p class='meta'>"+esc(a.kind)+(a.also?" · "+esc(a.also):"")+"</p>"+
       "<h2>"+esc(a.name)+"</h2>"+
       "<p>"+esc(a.blurb)+"</p>"+
@@ -189,7 +176,6 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
         "<button type='button' class='btn ghost' id='closeIt'>Close</button>"+
       "</div></div>";
     box.classList.add("on");
-    setPic($("heroPic"), a, true);
     $("closeIt").onclick=close;
     box.onclick=function(e){ if(e.target===box) close(); };
     $("mark").onclick=function(){
