@@ -43,8 +43,8 @@ h1{font-family:var(--serif);font-size:clamp(34px,8vw,58px);line-height:.92;margi
 .actions{display:flex;flex-wrap:wrap;gap:10px;margin:16px 0 0}
 .btn{appearance:none;border:0;border-radius:999px;padding:12px 18px;min-height:48px;font-size:16px;
   background:var(--gold);color:#1c2618;font-weight:700;cursor:pointer;text-decoration:none;
-  display:inline-flex;align-items:center}
-.ghost{background:transparent;color:var(--gold);border:1px solid rgba(224,194,122,.45)}
+  display:inline-flex;align-items:center;justify-content:center}
+.ghost{background:#3d5a34;color:#fff8ee;border:2px solid #e0c27a}
 .find{position:sticky;top:0;z-index:15;background:rgba(28,38,24,.92);backdrop-filter:blur(10px);
   border:1px solid rgba(224,194,122,.28);border-radius:20px;padding:12px;margin:18px 0 14px}
 html.from-desk .find{top:calc(var(--st) + 72px)}
@@ -74,8 +74,12 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
 .sheet h2{font-family:var(--serif);font-size:30px;margin:0 0 6px}
 .sheet .meta{color:var(--clay);letter-spacing:.12em;text-transform:uppercase;font-size:12px}
 .sheet p{line-height:1.45;font-size:16px}
-.sound{background:#efe4ce;border-radius:14px;padding:12px 14px;margin:12px 0}
-.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.sound{background:#efe4ce;border:2px solid #8c4a2a;border-radius:14px;padding:12px 14px;margin:12px 0;color:#221c14}
+.row{display:flex;flex-direction:column;gap:10px;margin-top:14px}
+.sheet .btn{width:100%;min-height:54px;font-size:18px;font-weight:800;border-radius:14px;border:3px solid #221c14}
+.sheet .btn-play{background:#143018;color:#ffe7a0}
+.sheet .btn-seen{background:#8c2f14;color:#fff8ee}
+.sheet .btn-close{background:#221c14;color:#fff8ee}
 .toast{position:fixed;left:16px;right:16px;bottom:calc(var(--sb) + 18px);text-align:center;
   background:#e8c37a;color:#142033;padding:14px;border-radius:14px;font-weight:700;opacity:0;z-index:70}
 .note{color:#d8cbb3;font-size:14px;max-width:38em;margin:18px 0 0}
@@ -98,11 +102,11 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
   </div>
   <p class="count" id="count"></p>
   <div class="grid" id="grid"></div>
-  <p class="note">Pictures are from Wikimedia Commons. Sounds play when we have a free recording. The “brown bears” here are black bears in a cinnamon coat. Grizzlies are gone from California. Rattlesnakes are real — look, do not grab.</p>
+  <p class="note">Pictures and sounds are saved on this Desk. The “brown bears” here are black bears in a cinnamon coat. Grizzlies are gone from California. Rattlesnakes are real — look, do not grab.</p>
 </div>
 <div id="detail"></div>
 <div class="toast" id="toast"></div>
-<script src="https://whimsy-violet-dhgk.here.now/wengler/animals.js?v=20260818c"></script>
+<script src="https://whimsy-violet-dhgk.here.now/wengler/animals.js?v=20260818e"></script>
 <script>
 (function(){
   try{
@@ -183,9 +187,9 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
       "<p>"+esc(a.blurb)+"</p>"+
       "<div class='sound'><strong>What it sounds like</strong><br>"+esc(a.sound)+"</div>"+
       "<div class='row'>"+
-        (a.call?("<button type='button' class='btn' id='play'>Play a sound</button>"):"")+
-        "<button type='button' class='btn ghost' id='mark'>"+(seen[a.id]?"Uncheck it":"I saw this")+"</button>"+
-        "<button type='button' class='btn ghost' id='closeIt'>Close</button>"+
+        "<button type='button' class='btn btn-play' id='play'>Play what it sounds like</button>"+
+        "<button type='button' class='btn btn-seen' id='mark'>"+(seen[a.id]?"Uncheck it":"I saw this")+"</button>"+
+        "<button type='button' class='btn btn-close' id='closeIt'>Close</button>"+
       "</div></div>";
     box.classList.add("on");
     $("closeIt").onclick=close;
@@ -195,17 +199,20 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
       save(); paint(); open(id);
       toast(seen[a.id]?"Checked. It’s on your hill list.":"Unchecked.");
     };
-    if($("play")) $("play").onclick=function(){ play(a.call); };
+    $("play").onclick=function(){ play(a); };
   }
   function close(){
     $("detail").classList.remove("on");
     $("detail").innerHTML="";
     if(audio){ try{ audio.pause(); }catch(e){} }
   }
-  function play(url){
+  function play(a){
+    var url=a.call||"";
+    if(url && !/^https?:/i.test(url)) url="https://whimsy-violet-dhgk.here.now/wengler/"+url.replace(/^\//,"");
+    if(!url){ toast("This one is still quiet. Pull down to refresh."); return; }
     if(audio){ try{ audio.pause(); }catch(e){} }
     audio=new Audio(url);
-    audio.play().then(function(){ toast("Listen."); }).catch(function(){ toast("This one would not play. Read the blurb."); });
+    audio.play().then(function(){ toast("Listen."); }).catch(function(){ toast("This one would not play. Pull down to refresh."); });
   }
   $("q").addEventListener("input", function(){ query=$("q").value.toLowerCase(); paint(); });
   $("clearSeen").onclick=function(){ seen={}; save(); paint(); toast("Checks cleared."); };
