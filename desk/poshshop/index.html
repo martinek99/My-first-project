@@ -10,9 +10,9 @@
 <meta name="theme-color" content="#ffd6e7">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
 <title>Carey's Poshmark Store</title>
-<meta name="description" content="Carey's whole Poshmark closet, dressed up with sunflowers and sparkle.">
+<meta name="description" content="Carey's closet, dressed up with sunflowers. Pay Brittany direct.">
 <meta property="og:title" content="Carey's Poshmark Store">
-<meta property="og:description" content="Sunflowers, sparkle, and every piece from her Poshmark closet.">
+<meta property="og:description" content="Sunflowers, sparkle, and pay Brittany direct. Not a Poshmark checkout.">
 <meta property="og:url" content="https://whimsy-violet-dhgk.here.now/poshshop/">
 <meta property="og:type" content="website">
 <style>
@@ -53,7 +53,7 @@ h1{font-family:var(--serif);font-size:clamp(34px,8vw,58px);margin:0;line-height:
 .lede{font-family:var(--serif);font-style:italic;font-size:18px;color:var(--muted);margin:10px auto 0;max-width:26em}
 .actions{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:16px 0 0}
 .btn{appearance:none;border:0;border-radius:999px;padding:12px 18px;min-height:48px;font-size:16px;
-  background:var(--pink);color:#fff;text-decoration:none;display:inline-flex;align-items:center;box-shadow:0 6px 0 #c43b74}
+  background:var(--pink);color:#fff;text-decoration:none;display:inline-flex;align-items:center;justify-content:center;box-shadow:0 6px 0 #c43b74;cursor:pointer}
 .ghost{background:#fff;color:var(--pink);border:2px solid #ffb6d2;box-shadow:none}
 .search{width:100%;max-width:520px;margin:18px auto 0;display:block;font-size:17px;padding:14px 16px;border:2px solid #ffb6d2;border-radius:999px;background:#fff}
 .chips{display:flex;gap:8px;overflow-x:auto;-webkit-overflow-scrolling:touch;padding:12px 2px}
@@ -76,6 +76,11 @@ h1{font-family:var(--serif);font-size:clamp(34px,8vw,58px);margin:0;line-height:
 .toast{position:fixed;left:50%;bottom:calc(var(--sb) + 22px);transform:translateX(-50%);background:var(--pink);color:#fff;padding:12px 18px;border-radius:999px;opacity:0;z-index:80}
 .toast.show{opacity:1}
 .note{text-align:center;font-size:14px;color:var(--muted);max-width:34em;margin:18px auto 0}
+.paybox{margin:16px 0 0;padding:14px;border:2px dashed #ffb6d2;border-radius:18px;background:#fff}
+.paybox h3{font-family:var(--serif);font-size:22px;margin:0 0 8px}
+.paybox p{margin:0 0 10px;color:var(--muted);font-size:15px;line-height:1.4}
+.field{width:100%;font-size:17px;padding:14px 16px;border:2px solid #ffb6d2;border-radius:16px;background:#fff;margin:0 0 8px;color:var(--ink);font-family:var(--sans)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 </style>
 </head>
 <body>
@@ -92,17 +97,17 @@ h1{font-family:var(--serif);font-size:clamp(34px,8vw,58px);margin:0;line-height:
   <div class="hero">
     <p class="eyebrow">🌻 @thecareycurated · the posh rack</p>
     <h1>Carey's Poshmark Store</h1>
-    <p class="lede">Every piece from her Poshmark closet, all in one sparkly place. Sunflowers included.</p>
+    <p class="lede">Every piece from her closet, all in one sparkly place. If you want it, pay Brittany direct.</p>
     <div class="actions">
       <button type="button" class="btn" id="shareShop">Share the sparkle</button>
-      <a class="btn ghost" href="https://poshmark.com/closet/thecareycurated" target="_blank" rel="noopener">Her Poshmark closet</a>
+      <button type="button" class="btn ghost" id="howPay">How to pay Brittany</button>
     </div>
     <input class="search" id="q" placeholder="Search a maker, color, or vibe" enterkeyhint="search">
   </div>
   <div class="chips" id="chips"></div>
   <p class="count" id="count"></p>
   <div class="grid" id="grid"></div>
-  <p class="note">This is her Poshmark closet, dressed up. The Carey Curated is a different shop. Buy on Poshmark, or copy a note for Carey.</p>
+  <p class="note">Tap a piece, then pay Brittany on Venmo or PayPal. She ships it from sunny California. This is not a Poshmark checkout. The Carey Curated is a different shop.</p>
 </div>
 <div id="detail"></div>
 <div class="toast" id="toast">Copied</div>
@@ -122,13 +127,69 @@ h1{font-family:var(--serif);font-size:clamp(34px,8vw,58px);margin:0;line-height:
 <script>
 (function(){
   var SHARE="https://whimsy-violet-dhgk.here.now/poshshop/";
-  var stock=[], filter="", query="";
+  var PAY={
+    name:"Brittany Carey",
+    email:"brittanyloverly@yahoo.com",
+    venmo:""
+  };
+  var stock=[], filter="", query="", ship={};
   function $(id){ return document.getElementById(id); }
   function toast(msg){
     var t=$("toast"); t.textContent=msg; t.classList.add("show");
     clearTimeout(toast._id); toast._id=setTimeout(function(){ t.classList.remove("show"); },1800);
   }
   function esc(s){ return String(s||"").replace(/[&<>\"']/g, function(c){ return ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]); }); }
+  function money(item){ return item.price?String(item.price):""; }
+  function readShip(){
+    ship={
+      who:($("shipName")&&$("shipName").value||"").trim(),
+      mail:($("shipMail")&&$("shipMail").value||"").trim(),
+      street:($("shipStreet")&&$("shipStreet").value||"").trim(),
+      city:($("shipCity")&&$("shipCity").value||"").trim(),
+      state:($("shipState")&&$("shipState").value||"").trim(),
+      zip:($("shipZip")&&$("shipZip").value||"").trim()
+    };
+    return ship;
+  }
+  function hasShip(){
+    var s=readShip();
+    return !!(s.who && s.street && s.city && s.state && s.zip);
+  }
+  function orderNote(item){
+    var s=readShip();
+    var lines=[
+      "Hi Brittany, I would like "+item.title+(money(item)?(" for $"+money(item)):"")+".",
+      "I am paying you direct, not on Poshmark.",
+      "",
+      "Ship to:",
+      s.who||"(name)",
+      s.street||"(street)",
+      [s.city,s.state,s.zip].filter(Boolean).join(", ")||"(city, state, zip)",
+      s.mail?("Email: "+s.mail):""
+    ];
+    return lines.filter(function(line,i,arr){ return line || arr[i-1]!==""; }).join("\n").replace(/\n+$/,"");
+  }
+  function venmoUrl(item){
+    var who=PAY.venmo||PAY.email;
+    var q="txn=pay&recipients="+encodeURIComponent(who);
+    if(money(item)) q+="&amount="+encodeURIComponent(money(item));
+    q+="&note="+encodeURIComponent(item.title+(money(item)?(" $"+money(item)):"")+" from Brittany's shop");
+    return "https://venmo.com/?"+q;
+  }
+  function paypalUrl(item){
+    var q="cmd=_xclick&business="+encodeURIComponent(PAY.email);
+    q+="&item_name="+encodeURIComponent(item.title);
+    q+="&currency_code=USD&no_shipping=2";
+    if(money(item)) q+="&amount="+encodeURIComponent(money(item));
+    return "https://www.paypal.com/cgi-bin/webscr?"+q;
+  }
+  function mailUrl(item){
+    var sub="Order: "+item.title+(money(item)?(" $"+money(item)):"");
+    return "mailto:"+PAY.email+"?subject="+encodeURIComponent(sub)+"&body="+encodeURIComponent(orderNote(item));
+  }
+  function needShip(){
+    toast("Add your ship-to first, so Brittany can send it.");
+  }
   function shown(){
     var q=query.toLowerCase();
     return stock.filter(function(p){
@@ -168,21 +229,62 @@ h1{font-family:var(--serif);font-size:clamp(34px,8vw,58px);margin:0;line-height:
   }
   function openDetail(item){
     var box=$("detail");
-    box.innerHTML="<div class='sheet'>"+(item.photo?("<img alt='' src='"+item.photo+"'>"):"")+"<p class='eyebrow'>🌻 "+esc(item.maker||"")+"</p><h2 style='font-family:var(--serif);font-size:28px;margin:0 0 8px'>"+esc(item.title)+"</h2><p class='meta'>"+esc([item.style,item.color,item.size].filter(Boolean).join(" · "))+"</p><p class='ask'>"+(item.price?("$"+item.price):"")+"</p><p style='white-space:pre-wrap;line-height:1.45'>"+esc(item.blurb||"")+"</p><div class='actions' style='margin-top:14px'>"+(item.posh?("<a class='btn' href='"+item.posh+"' target='_blank' rel='noopener'>See it on Poshmark</a>"):"")+"<button type='button' class='btn ghost' id='wantIt'>Copy a note</button><button type='button' class='btn ghost' id='closeIt'>Close</button></div></div>";
+    var fromDesk=document.documentElement.classList.contains("from-desk");
+    var html="<div class='sheet'>"+(item.photo?("<img alt='' src='"+item.photo+"'>"):"")+"<p class='eyebrow'>🌻 "+esc(item.maker||"")+"</p><h2 style='font-family:var(--serif);font-size:28px;margin:0 0 8px'>"+esc(item.title)+"</h2><p class='meta'>"+esc([item.style,item.color,item.size].filter(Boolean).join(" · "))+"</p><p class='ask'>"+(item.price?("$"+item.price):"")+"</p><p style='white-space:pre-wrap;line-height:1.45'>"+esc(item.blurb||"")+"</p>";
+    html+="<div class='paybox'><h3>Pay Brittany direct</h3><p>Venmo or PayPal goes to Brittany Carey. Then email her this order so she has your address. She ships from sunny California.</p>";
+    html+="<input class='field' id='shipName' placeholder='Your name' autocomplete='name' value='"+esc(ship.who||"")+"'>";
+    html+="<input class='field' id='shipMail' type='email' placeholder='Your email' autocomplete='email' value='"+esc(ship.mail||"")+"'>";
+    html+="<input class='field' id='shipStreet' placeholder='Street address' autocomplete='street-address' value='"+esc(ship.street||"")+"'>";
+    html+="<div class='row2'><input class='field' id='shipCity' placeholder='City' autocomplete='address-level2' value='"+esc(ship.city||"")+"'><input class='field' id='shipState' placeholder='State' autocomplete='address-level1' value='"+esc(ship.state||"")+"'></div>";
+    html+="<input class='field' id='shipZip' placeholder='ZIP' autocomplete='postal-code' inputmode='numeric' value='"+esc(ship.zip||"")+"'>";
+    html+="<div class='actions' style='margin-top:8px'>";
+    html+="<a class='btn' id='payVenmo' href='#'>"+(money(item)?("Pay Brittany $"+money(item)+" on Venmo"):"Pay Brittany on Venmo")+"</a>";
+    html+="<a class='btn ghost' id='payPal' href='#'>"+(money(item)?("Pay $"+money(item)+" on PayPal"):"Pay Brittany on PayPal")+"</a>";
+    html+="<a class='btn ghost' id='mailIt' href='#'>Email her this order</a>";
+    html+="<button type='button' class='btn ghost' id='wantIt'>Copy the order</button>";
+    html+="<button type='button' class='btn ghost' id='closeIt'>Close</button>";
+    html+="</div></div>";
+    if(fromDesk && item.posh) html+="<p class='note' style='margin-top:12px'><a href='"+esc(item.posh)+"' target='_blank' rel='noopener'>Poshmark listing — desk only</a></p>";
+    html+="</div>";
+    box.innerHTML=html;
     box.classList.add("on");
     $("closeIt").onclick=closeDetail;
     box.onclick=function(e){ if(e.target===box) closeDetail(); };
+    $("payVenmo").onclick=function(e){
+      if(!hasShip()){ e.preventDefault(); needShip(); return; }
+      this.href=venmoUrl(item);
+      this.target="_blank";
+      this.rel="noopener";
+      toast("Venmo is open. Then email her the order. 🌻");
+    };
+    $("payPal").onclick=function(e){
+      if(!hasShip()){ e.preventDefault(); needShip(); return; }
+      this.href=paypalUrl(item);
+      this.target="_blank";
+      this.rel="noopener";
+      toast("PayPal is open. Then email her the order. 🌻");
+    };
+    $("mailIt").onclick=function(e){
+      if(!hasShip()){ e.preventDefault(); needShip(); return; }
+      this.href=mailUrl(item);
+    };
     $("wantIt").onclick=function(){
-      var t="Hi Carey, I would like "+item.title+(item.price?(" for $"+item.price):"")+" from Carey's Poshmark Store.";
-      if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function(){ toast("Note copied 🌻"); });
-      else window.prompt("Copy this note", t);
+      if(!hasShip()){ needShip(); return; }
+      var t=orderNote(item);
+      if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(t).then(function(){ toast("Order copied 🌻"); });
+      else window.prompt("Copy this order", t);
     };
   }
   function closeDetail(){ $("detail").classList.remove("on"); $("detail").innerHTML=""; }
   $("shareShop").onclick=function(){
-    if(navigator.share){ navigator.share({title:"Carey's Poshmark Store",text:"Sunflowers, sparkle, and her whole Poshmark closet.",url:SHARE}).catch(function(){}); return; }
+    if(navigator.share){ navigator.share({title:"Carey's Poshmark Store",text:"Sunflowers, sparkle, and pay Brittany direct.",url:SHARE}).catch(function(){}); return; }
     if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(SHARE).then(function(){ toast("Link copied 🌻"); });
     else window.prompt("Copy this link", SHARE);
+  };
+  $("howPay").onclick=function(){
+    toast("Tap a piece, then pay Brittany. Not Poshmark.");
+    var first=document.querySelector(".card");
+    if(first) first.scrollIntoView({behavior:"smooth",block:"start"});
   };
   $("q").addEventListener("input", function(){ query=$("q").value; paint(); });
   fetch("stock.json",{cache:"no-store"}).then(function(r){ return r.ok?r.json():[]; }).then(function(rows){
