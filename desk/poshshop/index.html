@@ -9,7 +9,7 @@
 <meta name="apple-mobile-web-app-title" content="Carey's Private Collection">
 <meta name="theme-color" content="#ffd6e7">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-<meta name="collection-version" content="private-collection-2">
+<meta name="collection-version" content="private-collection-3">
 <title>Carey's Private Collection</title>
 <meta name="description" content="Carey's sunflower closet for friends. Pay Brittany on Venmo.">
 <meta property="og:title" content="Carey's Private Collection">
@@ -169,7 +169,6 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
   var ship={};
   var sold={};
   var SOLDKEY="carey-private-sold-v1";
-  var DATASLUG="whimsy-violet-dhgk";
   function money(item){ return item.price?String(item.price):""; }
   function itemKey(item){ return String(item.id||item.title||""); }
   function isSold(item){ return !!sold[itemKey(item)]; }
@@ -181,7 +180,7 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
     if(!id) return;
     sold[id]=1;
     rememberSold();
-    fetch("https://here.now/api/v1/publishes/"+DATASLUG+"/data/sold",{
+    fetch("/.herenow/data/sold",{
       method:"POST",
       headers:{"content-type":"application/json"},
       body:JSON.stringify({itemId:id, title:item.title||"", price:money(item)})
@@ -195,7 +194,7 @@ html.from-desk .find{top:calc(var(--st) + 72px)}
     }catch(e){}
     return Promise.all([
       fetch("sold.json",{cache:"no-store"}).then(function(r){ return r.ok?r.json():[]; }).catch(function(){ return []; }),
-      fetch("https://here.now/api/v1/publishes/"+DATASLUG+"/data/sold",{cache:"no-store"}).then(function(r){ return r.ok?r.json():[]; }).catch(function(){ return []; })
+      fetch("/.herenow/data/sold",{cache:"no-store"}).then(function(r){ return r.ok?r.json():[]; }).catch(function(){ return []; })
     ]).then(function(sets){
       function add(row){
         var id=row && (row.itemId||row.id||row);
