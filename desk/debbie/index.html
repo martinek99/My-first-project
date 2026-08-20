@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Debbie's Diet">
+<meta name="theme-color" content="#2d4a3e">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Debbie's Diet Plan</title>
+<meta name="description" content="Debbie's kitchen book. Seven days of breakfast, noon lunch, and dinner. Diabetic, made to lose weight.">
+<meta property="og:title" content="Debbie's Diet Plan">
+<meta property="og:description" content="A week of full meals for Debbie. Breakfast, noon lunch, and dinner, with every recipe.">
+<meta property="og:url" content="https://whimsy-violet-dhgk.here.now/debbie/">
+<meta property="og:type" content="website">
+<style>
+:root{
+  --green:#2d4a3e;--leaf:#3f6b55;--blush:#b56a5a;--cream:#f6efe3;--paper:#fffdf8;
+  --ink:#241c16;--muted:#5d5346;--gold:#c9a24a;--line:rgba(45,74,62,.18);
+  --st:env(safe-area-inset-top,0px);--sb:env(safe-area-inset-bottom,0px);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--cream);color:var(--ink);font-family:var(--sans)}
+body{min-height:100dvh;padding:0 0 calc(var(--sb) + 28px)}
+.escape{display:none;position:fixed;left:12px;right:12px;top:calc(var(--st) + 8px);z-index:40;
+  align-items:center;justify-content:center;text-decoration:none;background:#e8c37a;color:#142033;
+  border-radius:14px;padding:14px 16px;font-family:var(--serif);font-size:20px;font-weight:600}
+html.from-desk .escape{display:flex}
+html.from-desk body{padding-top:calc(var(--st) + 72px)}
+.hero{background:var(--green);color:#f6efe3;padding:28px 18px 22px}
+.wrap{max-width:920px;margin:0 auto}
+.eyebrow{letter-spacing:.22em;text-transform:uppercase;font-size:12px;color:#e8c37a;margin:0 0 8px}
+h1{font-family:var(--serif);font-size:clamp(36px,8vw,56px);margin:0;line-height:.95;font-weight:600}
+.lede{font-family:var(--serif);font-style:italic;font-size:18px;line-height:1.35;color:#e4d6c0;margin:12px 0 0;max-width:28em}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:18px 0 0}
+.btn{appearance:none;border:0;border-radius:12px;padding:14px 16px;min-height:50px;font-size:16px;
+  background:#e8c37a;color:#142033;text-decoration:none;display:inline-flex;align-items:center;cursor:pointer;font-family:var(--sans)}
+.btn.ghost{background:transparent;color:#f6efe3;border:1px solid rgba(232,195,122,.55)}
+.page{max-width:920px;margin:0 auto;padding:16px 16px 0}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 14px;position:sticky;top:0;z-index:8;
+  background:var(--cream);padding:8px 0}
+html.from-desk .tabs{top:calc(var(--st) + 72px)}
+.tab{appearance:none;border:1px solid var(--line);background:#fff;border-radius:999px;padding:10px 14px;
+  min-height:44px;font-size:15px;cursor:pointer;color:var(--ink)}
+.tab.on{background:var(--green);color:#fff;border-color:var(--green)}
+.panel{display:none}
+.panel.on{display:block}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:16px;padding:16px 16px 14px;margin:0 0 12px}
+.card h2{font-family:var(--serif);font-size:26px;margin:0 0 6px;line-height:1.1}
+.card h3{font-family:var(--serif);font-size:22px;margin:0 0 6px}
+.hint{color:var(--muted);font-size:15px;line-height:1.45;margin:0 0 10px}
+.mood{font-family:var(--serif);font-style:italic;color:var(--leaf);margin:0 0 8px}
+.nums{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0}
+@media (max-width:560px){.nums{grid-template-columns:1fr 1fr}}
+.num{background:#eef4ee;border-radius:12px;padding:10px}
+.num b{display:block;font-family:var(--serif);font-size:20px}
+.num span{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#5a6b58}
+.meal{width:100%;text-align:left;appearance:none;border:1px solid var(--line);background:#fff;
+  border-radius:14px;padding:12px 12px 12px;margin:0 0 8px;cursor:pointer;color:inherit}
+.meal.on{border-color:var(--green);background:#f3f8f3}
+.slot{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--blush);margin:0 0 4px}
+.meal b{display:block;font-family:var(--serif);font-size:20px;line-height:1.15}
+.meta{font-size:14px;color:var(--muted);margin:4px 0 0}
+.check{display:flex;align-items:center;gap:8px;margin:8px 0 0;font-size:15px}
+.check input{width:20px;height:20px}
+.days{display:flex;gap:6px;flex-wrap:wrap;margin:0 0 12px}
+.daybtn{appearance:none;border:1px solid var(--line);background:#fff;border-radius:12px;
+  min-height:48px;padding:8px 10px;font-size:14px;cursor:pointer}
+.daybtn.on{background:var(--green);color:#fff;border-color:var(--green)}
+.recipe{margin-top:8px}
+.recipe ol,.recipe ul{margin:6px 0 10px;padding-left:1.2em;font-size:16px;line-height:1.45}
+.recipe li{margin:0 0 6px}
+.why{background:#f6efe0;border-radius:12px;padding:12px;font-size:15px;line-height:1.45;margin:8px 0}
+.tip{font-size:15px;color:var(--muted);line-height:1.4}
+.shop label{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--line);font-size:16px}
+.shop input{width:20px;height:20px;margin-top:2px;flex:0 0 auto}
+.aisle{font-family:var(--serif);font-size:20px;margin:16px 0 4px}
+.swap{padding:10px 0;border-bottom:1px solid var(--line)}
+.swap b{display:block}
+.warn{background:#fff6e8;border:1px solid rgba(201,162,74,.45);border-radius:14px;padding:14px;font-size:15px;line-height:1.45}
+.plate{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:10px 0}
+.plate div{background:#eef4ee;border-radius:12px;padding:12px;font-size:15px}
+.toast{position:fixed;left:16px;right:16px;bottom:calc(var(--sb) + 20px);text-align:center;
+  background:var(--green);color:#fff;padding:14px;border-radius:14px;opacity:0;pointer-events:none;z-index:50}
+.toast.show{opacity:1}
+@media print{
+  .escape,.tabs,.actions,.toast,.check{display:none !important}
+  body{background:#fff;padding:0}
+  .hero{background:#fff;color:#000;padding:0 0 12px}
+  .card,.meal{break-inside:avoid}
+}
+</style>
+</head>
+<body>
+<a class="escape" href="../">← Back to Mark's Desk</a>
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">For Debbie · her kitchen book</p>
+    <h1>Debbie's Diet Plan</h1>
+    <p class="lede">Breakfast, noon lunch, and dinner. Every recipe written out. Made for a woman who is 69, diabetic, and trying to lose weight after a hysterectomy.</p>
+    <div class="actions">
+      <button type="button" class="btn" id="shareBtn">Share Debbie's plan</button>
+      <button type="button" class="btn ghost" id="printBtn">Print this page</button>
+    </div>
+  </div>
+</header>
+<div class="page">
+  <div class="tabs">
+    <button class="tab on" data-tab="today">Today</button>
+    <button class="tab" data-tab="week">This week</button>
+    <button class="tab" data-tab="shop">Shopping</button>
+    <button class="tab" data-tab="how">How it works</button>
+  </div>
+
+  <section class="panel on" id="today"></section>
+  <section class="panel" id="week"></section>
+
+  <section class="panel" id="shop">
+    <div class="card">
+      <h2>One shopping trip</h2>
+      <p class="hint">This fills Debbie's fridge for the whole week. Check things off as they go in the cart. The list stays on this iPad.</p>
+      <div class="actions" style="margin-top:0">
+        <button type="button" class="btn" id="clearShop" style="background:var(--green);color:#fff">Clear the checks</button>
+      </div>
+    </div>
+    <div id="shopList" class="card shop"></div>
+  </section>
+
+  <section class="panel" id="how">
+    <div class="card">
+      <h2>This is Debbie's plan</h2>
+      <p class="hint">Not a generic diabetes printout. It is built for her: slower metabolism after a hysterectomy, blood sugar that needs a steady plate, and weight that has been hard to move.</p>
+      <div class="nums">
+        <div class="num"><b>~1,500</b><span>calories</span></div>
+        <div class="num"><b>110–130g</b><span>carbs a day</span></div>
+        <div class="num"><b>95–110g</b><span>protein</span></div>
+        <div class="num"><b>4</b><span>eating times</span></div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Her plate, every meal</h3>
+      <div class="plate">
+        <div><b>Half the plate</b><br>vegetables that are not starchy — broccoli, salad, beans, zucchini, spinach</div>
+        <div><b>A palm of protein</b><br>eggs, chicken, fish, turkey, yogurt, cottage cheese</div>
+        <div><b>A small planned carb</b><br>berries, a little potato, a measured scoop of beans or quinoa</div>
+        <div><b>A thumb of fat</b><br>olive oil, avocado, nuts, or cheese — measured, not poured</div>
+      </div>
+    </div>
+    <div class="card">
+      <h3>Why this helps after a hysterectomy</h3>
+      <p class="hint">The body often holds weight after that surgery. Muscle wants more protein. Bones want calcium. Crash diets make both worse. This week is protein-first, vegetable-heavy, and calm on the carbs so she can lose fat without starving.</p>
+    </div>
+    <div class="card">
+      <h3>Why this helps diabetes</h3>
+      <ul>
+        <li>Same three meals every day, plus one optional snack. No all-day picking.</li>
+        <li>No juice, no regular soda, no sweet tea, no flavored yogurt.</li>
+        <li>Bread, pasta, rice, and potatoes show up only when the recipe says so, and in a measured amount.</li>
+        <li>Water, black coffee, or unsweetened tea with meals.</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>If she does not like a meal</h3>
+      <div id="swaps"></div>
+    </div>
+    <div class="card warn">
+      <b>Her doctor still comes first.</b>
+      <p class="hint" style="margin:8px 0 0">This is a kitchen plan, not a prescription. If her doctor or dietitian set a different carb number, medicine time, or kidney limit, follow them. The calories and grams here are estimates. If she feels dizzy, shaky, or her sugar runs low, she should eat a planned carb and call her doctor — do not just skip meals.</p>
+    </div>
+  </section>
+</div>
+<div class="toast" id="toast"></div>
+<script>
+(function(){
+  try{
+    var q=new URLSearchParams(location.search);
+    if(q.get("from")==="desk"){
+      sessionStorage.setItem("marksdesk","1");
+      q.delete("from");
+      history.replaceState({},"",location.pathname+(q.toString()?"?"+q:"")+location.hash);
+    }
+    if(sessionStorage.getItem("marksdesk")==="1") document.documentElement.classList.add("from-desk");
+  }catch(e){}
+})();
+</script>
+<script src="plan.js"></script>
+<script>
+(function(){
+  var SHARE="https://whimsy-violet-dhgk.here.now/debbie/";
+  var ATEKEY="debbie-ate-v1";
+  var SHOPKEY="debbie-shop-v1";
+  var DAYS=["sun","mon","tue","wed","thu","fri","sat"];
+  var SHORT=["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+
+  function $(id){ return document.getElementById(id); }
+  function toast(msg){
+    var t=$("toast"); t.textContent=msg; t.classList.add("show");
+    clearTimeout(toast._id); toast._id=setTimeout(function(){ t.classList.remove("show"); },2000);
+  }
+  function load(key, fallback){
+    try{ return JSON.parse(localStorage.getItem(key)||JSON.stringify(fallback)); }
+    catch(e){ return fallback; }
+  }
+  function save(key, val){ localStorage.setItem(key, JSON.stringify(val)); }
+  function todayId(){ return DAYS[new Date().getDay()]; }
+  function dayById(id){ return DEBBIE_PLAN.days.filter(function(d){ return d.id===id; })[0]; }
+  function ate(){ return load(ATEKEY, {}); }
+  function markAte(key, on){
+    var m=ate(); m[key]=on; save(ATEKEY, m);
+  }
+  function mealKey(day, slot){ return day+"|"+slot; }
+  function nums(m){
+    return '<div class="nums">'+
+      '<div class="num"><b>'+m.cal+'</b><span>calories</span></div>'+
+      '<div class="num"><b>'+m.carbs+'g</b><span>carbs</span></div>'+
+      '<div class="num"><b>'+m.protein+'g</b><span>protein</span></div>'+
+      '<div class="num"><b>'+m.fiber+'g</b><span>fiber</span></div></div>';
+  }
+  function recipeHtml(m){
+    return '<div class="recipe">'+
+      '<p class="meta">'+m.time+' · '+m.serves+'</p>'+
+      nums(m)+
+      '<div class="why">'+m.why+'</div>'+
+      '<h3>What she needs</h3><ul>'+m.need.map(function(x){ return "<li>"+x+"</li>"; }).join("")+"</ul>"+
+      '<h3>How to cook it</h3><ol>'+m.steps.map(function(x){ return "<li>"+x+"</li>"; }).join("")+"</ol>"+
+      '<p class="tip">'+m.tip+"</p></div>";
+  }
+  function mealButton(day, m, open){
+    var key=mealKey(day.id, m.slot);
+    var done=!!ate()[key];
+    var el=document.createElement("div");
+    el.className="meal"+(open?" on":"");
+    el.innerHTML='<p class="slot">'+m.slot+'</p><b>'+m.name+'</b>'+
+      '<p class="meta">'+m.cal+' calories · '+m.carbs+'g carbs · '+m.protein+'g protein</p>'+
+      '<label class="check"><input type="checkbox" '+(done?"checked":"")+'> I ate this</label>'+
+      (open?recipeHtml(m):'<p class="tip">Tap the name for the full recipe.</p>');
+    el.onclick=function(e){
+      if(e.target && e.target.tagName==="INPUT") return;
+      if(el.getAttribute("data-locked")==="today") return;
+      var on=el.classList.toggle("on");
+      var box=el.querySelector(".recipe");
+      var hint=el.querySelector(".tip");
+      if(on && !box){
+        el.insertAdjacentHTML("beforeend", recipeHtml(m));
+        if(hint) hint.remove();
+      }else if(!on && box){
+        box.remove();
+      }
+    };
+    el.querySelector("input").onchange=function(){
+      markAte(key, this.checked);
+      toast(this.checked?"Marked for Debbie":"Unchecked");
+    };
+    return el;
+  }
+
+  var openDay=todayId();
+
+  function renderToday(){
+    var d=dayById(todayId());
+    var host=$("today");
+    var total=d.meals.reduce(function(s,m){ return {cal:s.cal+m.cal,carbs:s.carbs+m.carbs,protein:s.protein+m.protein}; }, {cal:0,carbs:0,protein:0});
+    host.innerHTML='<div class="card"><p class="mood">Today is '+d.name+'</p><h2>'+d.mood+'</h2><p class="hint">'+d.note+
+      " If she starts midweek, that is fine. Use today's page and keep going.</p>"+
+      '<div class="nums"><div class="num"><b>'+total.cal+'</b><span>if she eats all four</span></div>'+
+      '<div class="num"><b>'+total.carbs+'g</b><span>carbs</span></div>'+
+      '<div class="num"><b>'+total.protein+'g</b><span>protein</span></div>'+
+      '<div class="num"><b>3 meals</b><span>+ optional snack</span></div></div></div>';
+    d.meals.forEach(function(m){
+      var card=document.createElement("div");
+      card.className="card";
+      var btn=mealButton(d,m,true);
+      btn.setAttribute("data-locked","today");
+      card.appendChild(btn);
+      host.appendChild(card);
+    });
+  }
+
+  function renderWeek(){
+    var host=$("week");
+    host.innerHTML='<div class="card"><h2>The whole week</h2><p class="hint">Tap a day. Tap a meal for the recipe. Repeat this week as long as it is working.</p><div class="days" id="dayRow"></div></div>';
+    var row=host.querySelector("#dayRow");
+    DAYS.forEach(function(id,i){
+      var b=document.createElement("button");
+      b.type="button";
+      b.className="daybtn"+(id===openDay?" on":"");
+      b.textContent=SHORT[i];
+      b.onclick=function(){ openDay=id; renderWeek(); };
+      row.appendChild(b);
+    });
+    var d=dayById(openDay);
+    var box=document.createElement("div");
+    box.className="card";
+    box.innerHTML='<p class="mood">'+d.name+'</p><h2>'+d.mood+'</h2><p class="hint">'+d.note+"</p>";
+    d.meals.forEach(function(m){ box.appendChild(mealButton(d,m,false)); });
+    host.appendChild(box);
+  }
+
+  function renderShop(){
+    var checks=load(SHOPKEY, {});
+    var host=$("shopList");
+    var n=0;
+    host.innerHTML=DEBBIE_SHOP.map(function(group){
+      return "<h3 class='aisle'>"+group.aisle+"</h3>"+group.items.map(function(item){
+        var key="s"+n++;
+        var on=!!checks[key];
+        return "<label><input type='checkbox' data-key='"+key+"' "+(on?"checked":"")+"><span>"+item+"</span></label>";
+      }).join("");
+    }).join("");
+    host.querySelectorAll("input").forEach(function(inp){
+      inp.onchange=function(){
+        var c=load(SHOPKEY, {});
+        c[inp.getAttribute("data-key")]=inp.checked;
+        save(SHOPKEY, c);
+      };
+    });
+  }
+
+  function renderSwaps(){
+    $("swaps").innerHTML=DEBBIE_SWAPS.map(function(s){
+      return "<div class='swap'><b>"+s[0]+"</b><span class='hint'>"+s[1]+"</span></div>";
+    }).join("");
+  }
+
+  function showTab(name){
+    document.querySelectorAll(".panel").forEach(function(p){ p.classList.toggle("on", p.id===name); });
+    document.querySelectorAll(".tab").forEach(function(t){ t.classList.toggle("on", t.getAttribute("data-tab")===name); });
+  }
+
+  document.querySelectorAll(".tab").forEach(function(t){
+    t.onclick=function(){ showTab(t.getAttribute("data-tab")); };
+  });
+  $("shareBtn").onclick=function(){
+    if(navigator.share){
+      navigator.share({title:"Debbie's Diet Plan",text:"Debbie's kitchen book. Breakfast, noon lunch, and dinner for the week.",url:SHARE}).catch(function(){});
+      return;
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(SHARE).then(function(){ toast("Link copied. Send it to Debbie."); });
+      return;
+    }
+    window.prompt("Copy this link", SHARE);
+  };
+  $("printBtn").onclick=function(){ window.print(); };
+  $("clearShop").onclick=function(){ save(SHOPKEY, {}); renderShop(); toast("Shopping list cleared"); };
+
+  renderToday();
+  renderWeek();
+  renderShop();
+  renderSwaps();
+})();
+</script>
+</body>
+</html>
