@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Carey Mechanical">
+<meta name="theme-color" content="#0a0610">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<title>Carey Mechanical · Luke Carey</title>
+<meta name="description" content="Luke Carey. Heat, cool, and air. A first page for the new shop.">
+<meta property="og:title" content="Carey Mechanical">
+<meta property="og:description" content="Luke Carey. Heat on one side. Ice on the other. The house in the middle.">
+<meta property="og:url" content="https://whimsy-violet-dhgk.here.now/carey/">
+<meta property="og:type" content="website">
+<style>
+:root{
+  --ember:#ff4d1a;
+  --copper:#d9854a;
+  --gold:#f2c48a;
+  --ice:#7ee7ff;
+  --frost:#d8f6ff;
+  --night:#07040c;
+  --ink:#14080a;
+  --st:env(safe-area-inset-top,0px);
+  --sb:env(safe-area-inset-bottom,0px);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+  --display:Impact,"Arial Black",system-ui,sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--night);color:#fff8f2;font-family:var(--sans)}
+body{min-height:100dvh;overflow-x:hidden}
+.escape{
+  display:none;position:fixed;left:12px;right:12px;top:calc(var(--st) + 8px);z-index:50;
+  align-items:center;justify-content:center;text-decoration:none;
+  background:#e8c37a;color:#142033;border-radius:14px;padding:12px 16px;
+  font-family:var(--serif);font-size:18px;font-weight:600;min-height:48px
+}
+html.from-desk .escape{display:flex}
+html.from-desk .hero{padding-top:calc(var(--st) + 86px)}
+
+.sky{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 70% 55% at 0% 100%, rgba(255,70,16,.55), transparent 58%),
+    radial-gradient(ellipse 70% 55% at 100% 0%, rgba(70,210,255,.38), transparent 58%),
+    radial-gradient(circle at 50% 70%, rgba(217,133,74,.18), transparent 42%),
+    linear-gradient(180deg,#12071a 0%,#0a0610 46%,#140808 100%);
+}
+.sky:after{
+  content:"";position:absolute;inset:0;
+  background-image:
+    radial-gradient(1.5px 1.5px at 12% 18%, #fff 0, transparent 100%),
+    radial-gradient(1px 1px at 28% 42%, #fff8 0, transparent 100%),
+    radial-gradient(1.5px 1.5px at 71% 14%, #fff 0, transparent 100%),
+    radial-gradient(1px 1px at 83% 36%, #cfefff 0, transparent 100%),
+    radial-gradient(1px 1px at 46% 22%, #ffd0b0 0, transparent 100%),
+    radial-gradient(1.5px 1.5px at 91% 72%, #fff 0, transparent 100%);
+  animation:twinkle 4.8s ease-in-out infinite;
+}
+@keyframes twinkle{50%{opacity:.45}}
+
+.heat,.ice{
+  position:fixed;width:55vw;height:70vh;filter:blur(40px);opacity:.55;pointer-events:none;z-index:0
+}
+.heat{
+  left:-8vw;bottom:-12vh;
+  background:radial-gradient(circle at 40% 70%, #ff6a1a, #ff2d00 42%, transparent 70%);
+  animation:rise 9s ease-in-out infinite;
+}
+.ice{
+  right:-10vw;top:-8vh;
+  background:radial-gradient(circle at 60% 30%, #b8f6ff, #3ad0ff 40%, transparent 70%);
+  animation:fall 11s ease-in-out infinite;
+}
+@keyframes rise{50%{transform:translateY(-28px) scale(1.08)}}
+@keyframes fall{50%{transform:translateY(24px) scale(1.06)}}
+
+.pipe{
+  position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.55
+}
+
+.wrap{position:relative;z-index:2;max-width:1100px;margin:0 auto;padding:0 18px calc(var(--sb) + 48px)}
+.hero{min-height:100dvh;display:flex;flex-direction:column;justify-content:flex-end;padding:calc(var(--st) + 28px) 0 36px}
+.eyebrow{
+  margin:0 0 10px;letter-spacing:.42em;text-transform:uppercase;font-size:12px;color:var(--gold)
+}
+h1{
+  font-family:var(--display);font-weight:900;font-size:clamp(64px,18vw,160px);
+  line-height:.78;letter-spacing:-.04em;margin:0;text-transform:uppercase;
+  background:linear-gradient(110deg,#fff4e6 10%, #ffb36a 28%, #ff4d1a 48%, #7ee7ff 72%, #f4fbff 92%);
+  background-size:220% 100%;
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  animation:wash 10s linear infinite;
+  filter:drop-shadow(0 10px 0 rgba(80,16,8,.35));
+}
+h1 span{display:block;font-size:.34em;letter-spacing:.18em;margin-top:.18em;
+  background:linear-gradient(90deg,#f2c48a,#fff,#7ee7ff);
+  -webkit-background-clip:text;background-clip:text}
+@keyframes wash{to{background-position:220% 0}}
+.byline{
+  font-family:var(--serif);font-style:italic;font-size:clamp(20px,4.4vw,30px);
+  max-width:18em;margin:18px 0 0;color:#ffe7d2;line-height:1.25
+}
+.byline b{font-style:normal;color:#fff}
+.actions{display:flex;flex-wrap:wrap;gap:10px;margin:22px 0 0}
+.btn{
+  appearance:none;border:0;cursor:pointer;text-decoration:none;
+  min-height:52px;padding:14px 20px;border-radius:999px;font-size:16px;
+  display:inline-flex;align-items:center;justify-content:center;font-weight:700
+}
+.fire{background:linear-gradient(180deg,#ff7a2d,#e12600);color:#fff;box-shadow:0 8px 0 #7a1400}
+.cool{background:rgba(255,255,255,.08);color:#d8f6ff;border:1px solid rgba(126,231,255,.45)}
+
+.ribbon{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:8px 0 28px
+}
+@media (min-width:720px){.ribbon{grid-template-columns:repeat(4,1fr)}}
+.chip{
+  border-radius:18px;padding:16px 14px;min-height:92px;
+  background:rgba(10,6,16,.46);border:1px solid rgba(255,180,120,.22);
+  backdrop-filter:blur(10px)
+}
+.chip.cold{border-color:rgba(126,231,255,.28)}
+.chip p{margin:0;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}
+.chip.cold p{color:#9befff}
+.chip h2{margin:6px 0 0;font-family:var(--display);font-size:28px;letter-spacing:.02em}
+
+.story{
+  display:grid;gap:16px;margin:0 0 28px
+}
+@media (min-width:800px){.story{grid-template-columns:1.2fr .8fr}}
+.panel{
+  border-radius:28px;padding:26px 22px;
+  background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.03));
+  border:1px solid rgba(242,196,138,.22)
+}
+.panel h3{font-family:var(--serif);font-size:clamp(28px,5vw,42px);margin:0 0 10px;line-height:.95}
+.panel p{margin:0;font-size:17px;line-height:1.45;color:#f0d8c4}
+.hot{
+  background:
+    linear-gradient(180deg,rgba(255,80,20,.28),rgba(20,8,8,.35)),
+    rgba(20,8,8,.4);
+  border-color:rgba(255,90,30,.4)
+}
+.coldp{
+  background:
+    linear-gradient(180deg,rgba(80,210,255,.2),rgba(8,16,24,.4)),
+    rgba(8,16,24,.4);
+  border-color:rgba(126,231,255,.35)
+}
+.coldp p{color:#d8f6ff}
+
+.note{
+  font-family:var(--serif);font-style:italic;color:#c9b09a;font-size:16px;max-width:34em;margin:0
+}
+.toast{
+  position:fixed;left:16px;right:16px;bottom:calc(var(--sb) + 18px);z-index:60;
+  text-align:center;background:#e8c37a;color:#142033;padding:14px;border-radius:14px;
+  font-weight:700;opacity:0;pointer-events:none;transition:opacity .25s
+}
+</style>
+</head>
+<body>
+<a class="escape" href="https://whimsy-violet-dhgk.here.now/">← Back to Mark's Desk</a>
+<div class="sky"></div>
+<div class="heat"></div>
+<div class="ice"></div>
+<svg class="pipe" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+  <path d="M-5 78 C 22 78, 28 62, 48 62 S 72 82, 105 70" fill="none" stroke="#d9854a" stroke-width="1.15" opacity=".7"/>
+  <path d="M-5 82 C 24 84, 34 68, 52 68 S 78 88, 105 74" fill="none" stroke="#7ee7ff" stroke-width=".55" opacity=".55"/>
+</svg>
+
+<div class="wrap">
+  <header class="hero">
+    <p class="eyebrow">Luke Carey · HVAC</p>
+    <h1>Carey<span>Mechanical</span></h1>
+    <p class="byline">Heat on one side. Ice on the other. <b>The house in the middle.</b></p>
+    <div class="actions">
+      <button type="button" class="btn fire" id="share">Share this first page</button>
+      <a class="btn cool" href="#work">See the work</a>
+    </div>
+  </header>
+
+  <section class="ribbon" id="work">
+    <div class="chip">
+      <p>When it is dead</p>
+      <h2>Heat</h2>
+    </div>
+    <div class="chip cold">
+      <p>When it is a furnace</p>
+      <h2>Cool</h2>
+    </div>
+    <div class="chip">
+      <p>The quiet kind</p>
+      <h2>Air</h2>
+    </div>
+    <div class="chip cold">
+      <p>Tonight, not Monday</p>
+      <h2>Now</h2>
+    </div>
+  </section>
+
+  <section class="story">
+    <div class="panel hot">
+      <h3>A tech with his own name on the truck.</h3>
+      <p>This is the start of Luke Carey’s shop. Furnaces, air conditioners, the breath of a house. We will put his number, his towns, and his real jobs here. Tonight it just has to look like it already belongs to him.</p>
+    </div>
+    <div class="panel coldp">
+      <h3>First spark.</h3>
+      <p>No fake phone. No fake reviews. A wild front door we can dress from here — copper, flame, frost, and his name spelled the family way. Carey.</p>
+    </div>
+  </section>
+
+  <p class="note">Carey Mechanical. Luke Carey. Brittany’s husband. We build the rest when you say what goes on the truck.</p>
+</div>
+<div class="toast" id="toast">Copied</div>
+<script>
+(function(){
+  try{
+    var q=new URLSearchParams(location.search);
+    if(q.get("from")==="desk"){
+      sessionStorage.setItem("marksdesk","1");
+      q.delete("from");
+      history.replaceState({},"",location.pathname+(q.toString()?"?"+q:"")+location.hash);
+    }
+    if(sessionStorage.getItem("marksdesk")==="1") document.documentElement.classList.add("from-desk");
+  }catch(e){}
+  var SHARE="https://whimsy-violet-dhgk.here.now/carey/";
+  var toastT=null;
+  function toast(msg){
+    var el=document.getElementById("toast");
+    el.textContent=msg; el.style.opacity="1";
+    clearTimeout(toastT);
+    toastT=setTimeout(function(){ el.style.opacity="0"; }, 2000);
+  }
+  document.getElementById("share").onclick=function(){
+    if(navigator.share){
+      navigator.share({title:"Carey Mechanical",text:"Luke Carey. Heat, cool, and air.",url:SHARE}).catch(function(){});
+      return;
+    }
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(SHARE).then(function(){ toast("Link copied. Send it to Luke."); });
+      return;
+    }
+    window.prompt("Copy this link", SHARE);
+  };
+})();
+</script>
+</body>
+</html>
