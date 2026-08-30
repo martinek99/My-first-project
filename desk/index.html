@@ -9,7 +9,24 @@
 <meta name="apple-mobile-web-app-title" content="Mark's Desk">
 <meta name="theme-color" content="#142033">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="canonical" href="https://whimsy-violet-dhgk.here.now/">
 <title>Mark's Desk</title>
+<script>
+(function(){
+  var LIVE="https://whimsy-violet-dhgk.here.now";
+  try{
+    if(location.protocol.indexOf("http")===0 && location.hostname && location.hostname!=="whimsy-violet-dhgk.here.now" && location.hostname!=="127.0.0.1" && location.hostname!=="localhost"){
+      location.replace(LIVE+"/");
+      return;
+    }
+  }catch(e){}
+  window.addEventListener("pageshow", function(ev){
+    if(ev.persisted) location.reload();
+  });
+})();
+</script>
 <style>
 :root{
   --navy:#142033;
@@ -24,24 +41,49 @@
   --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Georgia,serif;
   --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
 }
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{margin:0;background:var(--navy);color:var(--cream);font-family:var(--sans)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+html,body{margin:0;background:var(--navy);color:var(--cream);font-family:var(--sans);touch-action:manipulation}
 body{min-height:100dvh;padding:0 0 calc(var(--sb) + 36px)}
+.rank{
+  display:flex;align-items:center;justify-content:flex-start;
+  background:#0d1826;border-bottom:2px solid #e8c37a;
+  padding:calc(var(--st) + 8px) 12px 0;
+}
+.rank a{
+  display:inline-flex;align-items:center;justify-content:center;
+  text-decoration:none;min-height:40px;padding:6px 14px;border-radius:10px;
+  background:#e8c37a;color:#142033;font-family:var(--serif);font-size:16px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;
+}
+.chrome{position:sticky;top:0;z-index:20;background:#0d1826}
 .talkbar{
-  position:sticky;top:0;z-index:20;
   background:#0d1826;
-  padding:calc(var(--st) + 8px) 12px 8px;
+  padding:8px 12px 8px;
   display:grid;grid-template-columns:1fr 1fr;gap:8px;
   border-bottom:2px solid #e8c37a;
 }
 .talkbar a{
   display:flex;align-items:center;justify-content:center;text-align:center;
-  text-decoration:none;min-height:48px;border-radius:12px;padding:8px 10px;
-  font-family:var(--serif);font-size:18px;font-weight:600;line-height:1.1;
+  text-decoration:none;min-height:56px;border-radius:12px;padding:10px 12px;
+  font-family:var(--serif);font-size:20px;font-weight:600;line-height:1.1;
   background:#e8c37a;color:#142033;
 }
-.talkbar a:active{filter:brightness(.92)}
-.wrap{max-width:1180px;margin:0 auto;padding:16px 14px 0}
+.talkbar a[href*="talk"]{font-size:21px}
+.talkbar a:active,.rank a:active{filter:brightness(.92)}
+@media (min-width:700px){
+  .rank{
+    position:fixed;left:0;top:0;bottom:0;width:58px;z-index:30;
+    padding:0;border-bottom:0;border-right:2px solid #e8c37a;
+    align-items:center;justify-content:center;
+  }
+  .rank a{
+    writing-mode:vertical-rl;transform:rotate(180deg);
+    min-height:auto;min-width:40px;padding:18px 8px;letter-spacing:.28em;
+  }
+  .talkbar{padding-left:70px}
+  html,body{padding-left:58px}
+}
+.wrap{max-width:1180px;margin:0 auto;padding:16px max(14px,env(safe-area-inset-right,0px)) 0 max(14px,env(safe-area-inset-left,0px))}
 .eyebrow{font-family:var(--serif);letter-spacing:.28em;text-transform:uppercase;font-size:11px;color:#e8c37a;margin:0 0 6px}
 h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,5.5vw,48px);line-height:.95;margin:0 0 6px}
 .lede{font-family:var(--serif);font-style:italic;font-size:16px;line-height:1.3;color:#d8cbb3;max-width:40em;margin:0 0 8px}
@@ -57,14 +99,14 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,5.5vw,48px);lin
   box-shadow:0 10px 22px rgba(0,0,0,.18);
 }
 .tag{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:#8a7040;margin:0 0 4px}
-.card h2{font-family:var(--serif);font-size:20px;margin:0 0 6px;line-height:1.1}
+.card h2{font-family:var(--serif);font-size:20px;margin:0 0 6px;line-height:1.1;overflow-wrap:anywhere}
 .card p{margin:0;font-size:13px;line-height:1.3;color:var(--muted);
   display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
-.actions{display:flex;flex-wrap:nowrap;gap:6px;margin-top:10px}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
 .card > .go{margin-top:10px}
 .go,.share{
   display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
-  flex:1;min-height:40px;padding:6px 8px;border-radius:999px;font-size:13px;font-family:var(--sans);border:0;cursor:pointer
+  flex:1 1 120px;min-height:44px;padding:8px 10px;border-radius:999px;font-size:14px;font-family:var(--sans);border:0;cursor:pointer
 }
 .go{background:var(--navy);color:#fff8ee}
 .share{background:#e8c37a;color:#142033;font-weight:600}
@@ -73,6 +115,11 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,5.5vw,48px);lin
 .card.viper p{color:#d8cbb3}
 .card.viper .go{background:var(--red)}
 .card.viper .share{background:#e8c37a;color:#142033}
+.card.cary{background:#14080a;color:#fff4e6}
+.card.cary .tag{color:#ff8a4a}
+.card.cary p{color:#e8c4a8}
+.card.cary .go{background:linear-gradient(180deg,#ff7a2d,#e12600)}
+.card.cary .share{background:#7ee7ff;color:#073044}
 .card.wait{border:1.5px dashed rgba(201,162,74,.55);background:transparent;color:var(--cream);box-shadow:none}
 .card.wait p{color:#d8cbb3}
 .card.wait .go{background:transparent;border:1px solid #e8c37a;color:#e8c37a}
@@ -85,152 +132,311 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,5.5vw,48px);lin
 .toast{position:fixed;left:16px;right:16px;bottom:calc(var(--sb) + 20px);text-align:center;
   background:#e8c37a;color:#142033;padding:14px 16px;border-radius:14px;font-size:18px;font-weight:600;
   opacity:0;pointer-events:none;transition:opacity .25s;z-index:40}
+
+.card.is-archived{display:none!important}
+.del-box{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:6px;flex:1 1 100%}
+.del,.keep,.sure,.putback{
+  display:inline-flex;align-items:center;justify-content:center;text-decoration:none;
+  font-family:var(--sans);border:0;cursor:pointer;font-weight:600;border-radius:999px
+}
+.del{flex:0 0 auto;min-height:26px;padding:3px 9px;font-size:11px;background:#c81e1e;color:#fff8ee}
+.sure{flex:0 0 auto;min-height:32px;padding:5px 10px;font-size:12px;background:#8a1515;color:#fff8ee}
+.keep{flex:0 0 auto;min-height:32px;padding:5px 10px;font-size:12px;background:#e8c37a;color:#142033}
+.putback{flex:0 0 auto;min-width:96px;min-height:36px;padding:6px 12px;font-size:13px;background:#e8c37a;color:#142033}
+.card.viper .del,.card.cary .del{background:#c81e1e;color:#fff8ee}
+.card.viper .sure,.card.cary .sure{background:#ffd4a8;color:#3a1208}
+.card.viper .keep,.card.cary .keep{background:#e8c37a;color:#142033}
+.card.wait .del{background:#c81e1e;color:#fff8ee}
+.card.wait .keep,.card.wait .sure{border:0}
+.archived{background:#0d1826;border:1px solid rgba(232,195,122,.45);border-radius:14px;padding:12px 14px;margin:16px 0 0}
+.archived[hidden]{display:none}
+.archived h2{font-family:var(--serif);font-size:18px;margin:0 0 8px;color:#e8c37a}
+.archived p.hint{margin:0 0 10px;font-size:13px;line-height:1.35;color:#d8cbb3}
+.archived-row{display:flex;align-items:center;gap:8px;margin:0 0 8px}
+.archived-row:last-child{margin:0}
+.archived-name{flex:1;font-family:var(--serif);font-size:16px;color:var(--cream);overflow-wrap:anywhere}
 </style>
-</head>
+<meta property="og:title" content="Marks Desk" />
+<meta property="og:description" content="A personal iPad dashboard featuring specialized tools for household management, auction tracking, resale inventory, and meal planning." />
+<meta property="og:url" content="https://whimsy-violet-dhgk.here.now/index.html" />
+<meta property="og:type" content="website" />
+<meta property="og:image" content="https://here.now/og/whimsy-violet-dhgk.jpg" />
+<meta property="og:image:width" content="1280" />
+<meta property="og:image:height" content="720" />
+<meta name="twitter:image" content="https://here.now/og/whimsy-violet-dhgk.jpg" />
+<meta name="twitter:card" content="summary_large_image" /></head>
 <body>
+  <div class="chrome">
+  <aside class="rank">
+    <a href="https://cursor.com/agents/bc-01a00afa-77d2-7708-a534-c4d579439aa4">First Lieutenant</a>
+  </aside>
   <div class="talkbar">
-    <a href="talk/#me">Talk to me</a>
-    <a href="talk/#chief">Talk to Chief of Staff</a>
+    <a href="https://whimsy-violet-dhgk.here.now/">← Back to Desk</a>
+    <a href="https://whimsy-violet-dhgk.here.now/talk/?v=openmic10">Cosmo</a>
+  </div>
   </div>
   <div class="wrap">
-    <p class="eyebrow">One page · iPad home screen</p>
+    <p class="eyebrow">One page · original Desk</p>
     <h1>Mark's Desk</h1>
-    <p class="lede">The gold buttons open a simple Talk page first. Usage is the gas tank. Everything else stays on this Desk.</p>
-    <p class="stamp">Updated Monday Aug 17 · The Hunt is on</p>
+    <p class="lede"><strong>First Lieutenant</strong> on the left is this main thread. The gold <strong>Back to Desk</strong> button is the original live Desk. Use those so you do not land in an old chat. Cosmo can keep taking other work.</p>
+    <p class="stamp">Sunday Aug 30 · live Desk · Karaoke / Voice</p>
     <div class="howto">
       <h2>How to share</h2>
       <p>Tap the gold <strong>Share</strong> button. Your iPad opens the usual sheet — Messages, Mail, or Copy. Send that link. Your friend gets the game itself, not the Desk.</p>
-      <p>Talk, Usage, Profit Watch, The Hunt, A.M. Briggs, and Monica stay yours. No Share button on those. The buy brief has Share — that is the one you send a picker.</p>
+      <p>Talk, Water, Receipts, Usage, Profit Watch, The Hunt, A.M. Briggs, and Monica stay yours. No Share button on those. The buy brief has Share — that is the one you send a picker.</p>
+      <p>Tap <strong>Delete</strong> to hide a tile on this iPad. A second tap — <strong>Are you sure?</strong> — archives it. Files stay put. <strong>Put back</strong> at the bottom brings a tile home.</p>
+
     </div>
     <div class="grid">
-      <div class="card viper">
-        <p class="tag">The showcase</p>
-        <h2>VIPER 99.1</h2>
-        <p>Six chapters on Wengler Hill. Two short thumb sliders. The original 99 is still here to compare.</p>
+      <div class="card cary" data-id="carey">
+        <p class="tag">For Luke · HVAC</p>
+        <h2>Carey Mechanical</h2>
+        <p>Luke Carey. Heat, cool, and air. A first page we can dress from here.</p>
         <div class="actions">
-          <a class="go" href="viper91/?from=desk">Fire it up</a>
-          <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/viper91/" data-title="VIPER 99.1" data-text="He sold the car. Not the attitude.">Share</button>
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/carey/?from=desk">Open his page</a>
+          <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/carey/" data-title="Carey Mechanical" data-text="Luke Carey. Heat, cool, and air.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
         </div>
       </div>
-      <a class="card" href="usage/">
+      <div class="card" data-id="games">
+        <p class="tag">For Mark &amp; Wendy · daily</p>
+        <h2>Mark &amp; Wendy · Daily games</h2>
+        <p>Wordle, Quordle, Octordle, Connections, and Blossom. New board at Wendy’s midnight East Coast. Stays open until midnight Pacific, about 27 hours.</p>
+        <div class="actions">
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/games/?from=desk">Open the games</a>
+          <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/games/" data-title="Mark &amp; Wendy · Daily games" data-text="Play today's five games with me.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
+        </div>
+      </div>
+      <div class="card" data-id="karaoke">
+        <p class="tag">For Mark · voice</p>
+        <h2>Karaoke / Voice</h2>
+        <p>Sing along, hit the note, hold it, and keep a streak. Public-domain songs. Scores stay on this phone.</p>
+        <div class="actions">
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/karaoke/?from=desk">Open Karaoke</a>
+          <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/karaoke/" data-title="Karaoke / Voice" data-text="A voice practice gym. Karaoke and pitch games.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
+        </div>
+      </div>
+      <div class="card viper" data-id="viper91">
+        <p class="tag">The showcase</p>
+        <h2>VIPER 99.1</h2>
+        <p>Six chapters on Wengler Hill. Four lanes. The whole screen is the road. Tap left or right to change lanes. The original 99 is still here to compare.</p>
+        <div class="actions">
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/viper91/?from=desk">Fire it up</a>
+          <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/viper91/" data-title="VIPER 99.1" data-text="He sold the car. Not the attitude.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
+        </div>
+      </div>
+      <div class="card" data-id="usage">
         <p class="tag">Yours only</p>
         <h2>Usage</h2>
         <p>See what's left, stop extra charges, and open the Cursor bill. One tap each. No plus-minus numbers. Do not send this page.</p>
-        <span class="go">Check usage</span>
-      </a>
-      <a class="card" href="talk/">
+        <div class="actions">
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/usage/">Check usage</a>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
+        </div>
+      </div>
+      <div class="card" data-id="talk">
         <p class="tag">Yours only</p>
         <h2>Talk</h2>
-        <p>A calmer front door. Pick me or Chief of Staff, then start talking like a text message. This one stays on your Desk.</p>
-        <span class="go">Open Talk</span>
-      </a>
-      <a class="card" href="profit/">
+        <p>A calmer front door. Pick me or Cosmo, then start talking like a text message. This one stays on your Desk.</p>
+        <div class="actions">
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/talk/?v=openmic10">Open Talk</a>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
+        </div>
+      </div>
+      <div class="card" data-id="water">
+        <p class="tag">Yours only · ranch</p>
+        <h2>Water</h2>
+        <p>Shoot binder pages. Spring, ditch, or other. Cosmo files them.</p>
+        <div class="actions">
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/water/">Open Water</a>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
+        </div>
+      </div>
+      <div class="card" data-id="receipts">
+        <p class="tag">Yours only · taxes</p>
+        <h2>Receipts</h2>
+        <p>Shoot receipts. Airbnb, ranch, home, or other. Cosmo files them for taxes.</p>
+        <div class="actions">
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/receipts/">Open Receipts</a>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
+        </div>
+      </div>
+      <div class="card" data-id="profit">
         <p class="tag">Yours only · always on</p>
         <h2>Profit Watch</h2>
         <p>The ranch already covers Ultra in the busy months. The brief is ready. Copy the note on this page. Do not send Profit Watch.</p>
-        <span class="go">See the watch</span>
-      </a>
-      <a class="card" href="hunt/">
+        <div class="actions">
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/profit/">See the watch</a>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
+        </div>
+      </div>
+      <div class="card" data-id="hunt">
         <p class="tag">Yours only · daily</p>
         <h2>The Hunt</h2>
         <p>Twenty free or cheap finds within 100 miles. Keep or flip. I cannot scrape Facebook. Do not send this page.</p>
-        <span class="go">See today's 20</span>
-      </a>
-      <div class="card">
+        <div class="actions">
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/hunt/">See today's 20</a>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
+        </div>
+      </div>
+      <div class="card" data-id="brief">
         <p class="tag">For one picker</p>
         <h2>North State Buy Brief</h2>
         <p>This week's pickup list within 100 miles. Share sends the clean brief, not the Desk.</p>
         <div class="actions">
-          <a class="go" href="brief/?from=desk">Open this week</a>
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/brief/?from=desk">Open this week</a>
           <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/brief/" data-title="North State Buy Brief" data-text="This week's pickup list within 100 miles of Redding.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-id="careys">
         <p class="tag">For Brittany</p>
         <h2>Carey's Corner</h2>
         <p>Makers start as the brands she already lists. Type to find or add. Remove what she never uses.</p>
         <div class="actions">
-          <a class="go" href="careys/">Open the helper</a>
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/careys/">Open the helper</a>
           <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/careys/" data-title="Carey's Corner" data-text="A Poshmark listing helper in Carey's closet style.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
         </div>
       </div>
-      <div class="card">
-        <p class="tag">Her Poshmark closet · pink</p>
-        <h2>Carey's Poshmark Store</h2>
-        <p>A sparkly sunflower shop filled with every piece from her Poshmark closet. Separate from The Carey Curated.</p>
+      <div class="card" data-id="poshshop">
+        <p class="tag">Her closet · friends · Venmo</p>
+        <h2>Carey's Private Collection</h2>
+        <p>A sunflower closet she can send to friends. They pay Brittany on Venmo. Sold pieces come off the rack.</p>
         <div class="actions">
-          <a class="go" href="poshshop/?from=desk">Open the pink shop</a>
-          <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/poshshop/" data-title="Carey's Poshmark Store" data-text="Sunflowers, sparkle, and her whole Poshmark closet.">Share</button>
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/poshshop/?from=desk&fresh=3">Open the collection</a>
+          <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/poshshop/" data-title="Carey's Private Collection" data-text="Carey's Private Collection. A sunflower closet for friends.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-id="shop">
         <p class="tag">Her shop · secondary</p>
         <h2>The Carey Curated</h2>
         <p>Her own shop. Separate from the helper. Put a piece on the shop from Carey's Corner. Share sends the clean shop, not the Desk.</p>
         <div class="actions">
-          <a class="go" href="shop/?from=desk">Open the shop</a>
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/shop/?from=desk">Open the shop</a>
           <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/shop/" data-title="The Carey Curated" data-text="A cute curated clothing collection.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-id="wendy">
         <p class="tag">For Wendy · parks work</p>
         <h2>Wendy's Helper</h2>
         <p>Dog parks, the dog desk, memorials, pickleball, tennis. Share sends her the clean page — no Desk on it. Do not give her this account.</p>
         <div class="actions">
-          <a class="go" href="wendy/?from=desk">Open her helper</a>
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/wendy/?from=desk">Open her helper</a>
           <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/wendy/" data-title="Wendy's Helper" data-text="A parks helper for Wendy. Dog desk, memorials, pickleball, tennis.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
         </div>
       </div>
-      <div class="card viper">
+      <div class="card" data-id="connections">
+        <p class="tag">For Wendy · word games</p>
+        <h2>Wendy's board</h2>
+        <p>Sixteen words from Thursday’s board. No answers on the page. Share sends her the clean grid, not the Desk.</p>
+        <div class="actions">
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/connections/?from=desk">Open the board</a>
+          <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/connections/" data-title="Connections · Aug 20" data-text="Sixteen words. Yesterday’s Connections board.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
+        </div>
+      </div>
+      <div class="card" data-id="wengler">
+        <p class="tag">Your road · Shingletown</p>
+        <h2>Animals of Wengler Hill</h2>
+        <p>Birds, bears, bobcats, snakes, lizards, fish, the works. Pictures, blurbs, sounds, and a checklist.</p>
+        <div class="actions">
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/wengler/?from=desk">Open the field guide</a>
+          <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/wengler/" data-title="Animals of Wengler Hill Road" data-text="What you can see on the hill in Shingletown.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
+        </div>
+      </div>
+      <div class="card" data-id="debbie">
+        <p class="tag">For Debbie · her kitchen</p>
+        <h2>Debbie's Diet Plan</h2>
+        <p>Breakfast, noon lunch, and dinner for a week. Full recipes. Made for her diabetes, her weight, and life after a hysterectomy.</p>
+        <div class="actions">
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/debbie/?from=desk">Open her plan</a>
+          <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/debbie/" data-title="Debbie's Diet Plan" data-text="Debbie's kitchen book. Breakfast, noon lunch, and dinner for the week.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
+        </div>
+      </div>
+      <div class="card viper" data-id="viper99">
         <p class="tag">The original</p>
         <h2>VIPER 99</h2>
         <p>The first one. Wengler Hill Road. Tap left or right, stay on the road, watch the deer.</p>
         <div class="actions">
           <a class="go" href="https://indigo-sequin-t7za.here.now/">Play the original</a>
           <button type="button" class="share" data-url="https://indigo-sequin-t7za.here.now/" data-title="VIPER 99" data-text="The original VIPER 99. Wengler Hill Road.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
         </div>
       </div>
-      <div class="card">
-        <p class="tag">Your game · v34</p>
+      <div class="card" data-id="world">
+        <p class="tag">Your game · v35</p>
         <h2>The World by Mark</h2>
         <p>Spin the globe. Food now has a cook card and a shopping list. Globe puts the card away so you can tap another country.</p>
         <div class="actions">
-          <a class="go" href="world/?from=desk">Open the world</a>
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/world/?from=desk">Open the world</a>
           <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/world/" data-title="The World by Mark" data-text="Play The World by Mark with me. Ten countries.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
         </div>
       </div>
-      <div class="card">
+      <div class="card" data-id="dinner">
         <p class="tag">The new kitchen</p>
         <h2>What's for Dinner</h2>
         <p>Tap a country, then a dish. Cook card, shopping list, and a Globe button so you can see the map again.</p>
         <div class="actions">
-          <a class="go" href="dinner/?from=desk">Open the kitchen</a>
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/dinner/?from=desk">Open the kitchen</a>
           <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/dinner/" data-title="What's for Dinner" data-text="Spin the globe. Pick tonight's meal.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
         </div>
       </div>
-      <div class="card wait">
+      <div class="card" data-id="bike">
+        <p class="tag">Your barn · hours</p>
+        <h2>Dirt Bike Log</h2>
+        <p>Put in the bike and the hours. After a ride, add what you ran. It tells you when oil is due. Stays on this phone.</p>
+        <div class="actions">
+          <a class="go" href="https://whimsy-violet-dhgk.here.now/bike/?from=desk">Open the log</a>
+          <button type="button" class="share" data-url="https://whimsy-violet-dhgk.here.now/bike/" data-title="Dirt Bike Log" data-text="A dirt bike hour and oil log.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
+        </div>
+      </div>
+      <div class="card wait" data-id="briggs">
         <p class="tag">Tomorrow · yours only</p>
         <h2>A.M. Briggs</h2>
         <p>Anne Briggs stock-trade overcharge. I am looking through your mail for the file. I will put the working notes here, not a public dump.</p>
-        <span class="go">In progress</span>
+        <div class="actions">
+          <span class="go">In progress</span>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
+        </div>
       </div>
-      <div class="card wait">
+      <div class="card wait" data-id="monica">
         <p class="tag">Private · yours only</p>
         <h2>Monica Medical</h2>
         <p>I will not put medical files on a public page. When I have the folder, it gets its own locked link.</p>
-        <span class="go">Kept private</span>
+        <div class="actions">
+          <span class="go">Kept private</span>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
+        </div>
       </div>
-      <div class="card">
+      <div class="card" data-id="first-careys">
         <p class="tag">Earlier version</p>
         <h2>First Carey's Corner</h2>
         <p>The listing helper Grokbot already sent Brittany.</p>
         <div class="actions">
           <a class="go" href="https://gentle-quiche-6d8s.here.now/">Open the first one</a>
           <button type="button" class="share" data-url="https://gentle-quiche-6d8s.here.now/" data-title="Carey's Corner" data-text="The first Carey's Corner listing helper.">Share</button>
+          <div class="del-box"><button type="button" class="del">Delete</button></div>
         </div>
       </div>
     </div>
-    <p class="note">Open a game or the brief from this Desk and you get a gold <strong>Back to Mark's Desk</strong> button. Share sends the clean link. Talk, Usage, Profit Watch, and The Hunt stay yours. If the old iPad icon is a frozen copy, delete it, open this page in <strong>Safari</strong>, tap Share, then <strong>Add to Home Screen</strong> again.</p>
+    <section class="archived" id="archived" hidden>
+      <h2>Show archived</h2>
+      <p class="hint">Hidden on this iPad only. The pages stay live. Tap Put back to restore a tile.</p>
+      <div id="archived-list"></div>
+    </section>
+    <p class="note">The gold <strong>Back to Desk</strong> button always opens this same live page — the original one you sent people. Every tab opens fresh from here. Share sends the clean tab, not the Desk. First Lieutenant on the left is the main thread. If a shop looks old, tap Back to Desk. Do not hunt through old chats.</p>
   </div>
   <div class="toast" id="toast"></div>
 <script>
@@ -254,6 +460,120 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(32px,5.5vw,48px);lin
     }
     window.prompt("Copy this link", url);
   }
+
+  var ARCHIVE_KEY="desk-archived-v1";
+  var pending=null;
+  function loadArchived(){
+    try{
+      var raw=localStorage.getItem(ARCHIVE_KEY);
+      var arr=raw?JSON.parse(raw):[];
+      return Array.isArray(arr)?arr.filter(function(x){return typeof x==="string"&&x;}):[];
+    }catch(e){ return []; }
+  }
+  function saveArchived(arr){
+    localStorage.setItem(ARCHIVE_KEY, JSON.stringify(arr));
+  }
+  function cardById(id){
+    return document.querySelector('.grid > .card[data-id="'+id+'"]');
+  }
+  function cardName(id){
+    var card=cardById(id);
+    var h=card&&card.querySelector("h2");
+    return h?h.textContent.trim():id;
+  }
+  function clearConfirm(){
+    if(!pending) return;
+    pending.classList.remove("confirming");
+    var box=pending.querySelector(".del-box");
+    if(box){
+      box.innerHTML='<button type="button" class="del">Delete</button>';
+      bindDel(box.querySelector(".del"), pending);
+    }
+    pending=null;
+  }
+  function startConfirm(card){
+    if(pending && pending!==card) clearConfirm();
+    pending=card;
+    card.classList.add("confirming");
+    var box=card.querySelector(".del-box");
+    box.innerHTML='<button type="button" class="sure">Are you sure?</button><button type="button" class="keep">Keep it</button>';
+    box.querySelector(".sure").addEventListener("click", function(e){
+      e.preventDefault(); e.stopPropagation();
+      archive(card.getAttribute("data-id"));
+    });
+    box.querySelector(".keep").addEventListener("click", function(e){
+      e.preventDefault(); e.stopPropagation();
+      clearConfirm();
+    });
+  }
+  function bindDel(btn, card){
+    btn.addEventListener("click", function(e){
+      e.preventDefault();
+      e.stopPropagation();
+      startConfirm(card);
+    });
+  }
+  function renderArchived(ids){
+    var section=document.getElementById("archived");
+    var list=document.getElementById("archived-list");
+    if(!ids.length){
+      section.hidden=true;
+      list.innerHTML="";
+      return;
+    }
+    section.hidden=false;
+    list.innerHTML="";
+    ids.forEach(function(id){
+      var row=document.createElement("div");
+      row.className="archived-row";
+      var name=document.createElement("span");
+      name.className="archived-name";
+      name.textContent=cardName(id);
+      var btn=document.createElement("button");
+      btn.type="button";
+      btn.className="putback";
+      btn.textContent="Put back";
+      btn.addEventListener("click", function(){ restore(id); });
+      row.appendChild(name);
+      row.appendChild(btn);
+      list.appendChild(row);
+    });
+  }
+  function applyArchive(){
+    var ids=loadArchived();
+    document.querySelectorAll(".grid > .card").forEach(function(card){
+      var id=card.getAttribute("data-id");
+      var hide=id && ids.indexOf(id)!==-1;
+      card.classList.toggle("is-archived", !!hide);
+    });
+    renderArchived(ids);
+  }
+  function archive(id){
+    if(!id) return;
+    var ids=loadArchived();
+    if(ids.indexOf(id)===-1) ids.push(id);
+    saveArchived(ids);
+    clearConfirm();
+    applyArchive();
+    toast("Archived. Put back is at the bottom.");
+  }
+  function restore(id){
+    saveArchived(loadArchived().filter(function(x){ return x!==id; }));
+    applyArchive();
+    toast("Put back on the Desk.");
+  }
+  document.querySelectorAll(".grid > .card").forEach(function(card){
+    var btn=card.querySelector(".del");
+    if(btn) bindDel(btn, card);
+  });
+  document.addEventListener("click", function(e){
+    if(!pending) return;
+    var box=pending.querySelector(".del-box");
+    if(box && box.contains(e.target)) return;
+    if(pending.contains(e.target)){ e.preventDefault(); e.stopPropagation(); }
+    clearConfirm();
+  }, true);
+  applyArchive();
   document.querySelectorAll(".share").forEach(function(btn){
     btn.addEventListener("click", function(e){
       e.preventDefault();

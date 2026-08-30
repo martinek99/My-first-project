@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Karaoke">
+<meta name="theme-color" content="#142033">
+<meta name="format-detection" content="telephone=no">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<link rel="canonical" href="https://whimsy-violet-dhgk.here.now/karaoke/">
+<title>Karaoke / Voice</title>
+<meta name="description" content="Sing along and practice pitch. Public-domain songs. Scores stay on this phone.">
+<style>
+:root{
+  --navy:#142033;
+  --navy2:#0d1826;
+  --cream:#f3ead6;
+  --paper:#fffaf0;
+  --gold:#e8c37a;
+  --ink:#2a2218;
+  --muted:#6a5a3a;
+  --green:#2f9e5a;
+  --green2:#b8f0c8;
+  --yellow:#d4a017;
+  --yellow2:#ffe08a;
+  --red:#c81e1e;
+  --low:#e86a3a;
+  --high:#3a8ad4;
+  --st:env(safe-area-inset-top,0px);
+  --sb:env(safe-area-inset-bottom,0px);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--navy);color:var(--cream);font-family:var(--sans);touch-action:manipulation}
+body{min-height:100dvh;padding:0 0 calc(var(--sb) + 20px)}
+.homebar{
+  position:sticky;top:0;z-index:30;
+  background:var(--navy2);
+  padding:calc(var(--st) + 8px) 12px 8px;
+  border-bottom:2px solid var(--gold);
+}
+.homebar a{
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;min-height:52px;border-radius:12px;padding:10px 14px;
+  font-family:var(--serif);font-size:22px;font-weight:600;
+  background:var(--gold);color:#142033;
+}
+.wrap{max-width:720px;margin:0 auto;padding:16px 14px 0}
+.eyebrow{font-family:var(--serif);letter-spacing:.22em;text-transform:uppercase;font-size:13px;color:var(--gold);margin:0 0 6px}
+h1{font-family:var(--serif);font-weight:600;font-size:clamp(34px,7vw,46px);line-height:.95;margin:0 0 8px}
+.lede{font-family:var(--serif);font-style:italic;font-size:20px;line-height:1.35;color:#d8cbb3;margin:0 0 16px}
+.panel{display:none}
+.panel.on{display:block}
+.scores{
+  background:#0d1826;border:1px solid rgba(232,195,122,.4);border-radius:16px;
+  padding:14px 16px;margin:0 0 16px
+}
+.scores h2{font-family:var(--serif);font-size:22px;margin:0 0 8px;color:var(--gold)}
+.scores ul{margin:0;padding:0;list-style:none}
+.scores li{display:flex;justify-content:space-between;gap:10px;font-size:18px;line-height:1.5;border-top:1px solid rgba(232,195,122,.18);padding:6px 0}
+.scores li:first-child{border-top:0;padding-top:0}
+.scores b{color:#fff8ee;font-weight:700}
+.modes{display:grid;gap:10px}
+.mode{
+  display:flex;flex-direction:column;align-items:flex-start;text-align:left;
+  width:100%;border:0;border-radius:16px;padding:16px 16px 14px;cursor:pointer;
+  background:var(--paper);color:var(--ink);
+  box-shadow:0 10px 22px rgba(0,0,0,.18);
+}
+.mode .tag{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:#8a7040;margin:0 0 4px}
+.mode h3{font-family:var(--serif);font-size:28px;margin:0 0 6px;line-height:1.05}
+.mode p{margin:0;font-size:17px;line-height:1.35;color:var(--muted)}
+.mode:active{filter:brightness(.96)}
+.note{font-size:16px;line-height:1.4;color:#d8cbb3;margin:16px 0 0}
+.warn{
+  background:#3a1414;border:1px solid #e8a0a0;color:#ffe8e8;
+  border-radius:14px;padding:14px 16px;font-size:20px;line-height:1.35;margin:0 0 14px
+}
+.warn[hidden]{display:none}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:56px;padding:10px 18px;border-radius:999px;border:0;cursor:pointer;
+  font-family:var(--sans);font-size:20px;font-weight:700;
+}
+.btn.gold{background:var(--gold);color:#142033}
+.btn.navy{background:#0d1826;color:var(--cream);border:2px solid var(--gold)}
+.btn.red{background:var(--red);color:#fff8ee}
+.btn.go{background:#1e4d32;color:#e8ffe8;flex:1}
+.bigtarget{
+  text-align:center;margin:8px 0 10px
+}
+.bigtarget .you,.bigtarget .aim{
+  font-family:var(--serif);font-weight:700;line-height:1
+}
+.bigtarget .aim{font-size:clamp(42px,12vw,72px);color:var(--gold)}
+.bigtarget .you{font-size:clamp(36px,10vw,60px);margin-top:6px}
+.bigtarget .lbl{font-size:15px;letter-spacing:.14em;text-transform:uppercase;color:#cbbfa6;margin:0 0 4px}
+.cue{
+  min-height:48px;text-align:center;font-size:26px;font-weight:700;
+  padding:8px 10px;border-radius:12px;margin:0 0 10px
+}
+.cue.ok{background:#1e4d32;color:#d8ffe4}
+.cue.low{background:#5a2a10;color:#ffd8b0}
+.cue.high{background:#14324e;color:#cfe6ff}
+.cue.quiet{background:#2a2430;color:#d8cbb3}
+.cue.idle{background:#0d1826;color:#d8cbb3}
+.highway{
+  position:relative;height:168px;border-radius:16px;overflow:hidden;
+  background:#0a1220;border:2px solid rgba(232,195,122,.35);margin:0 0 12px
+}
+.highway canvas{display:block;width:100%;height:100%}
+.meter-legend{
+  display:flex;justify-content:space-between;font-size:15px;color:#cbbfa6;margin:-4px 2px 12px
+}
+.meter-legend span:first-child{color:#ffd8b0}
+.meter-legend span:last-child{color:#cfe6ff}
+#challengeOpts[hidden],#holdBarWrap[hidden],#lyricBox[hidden]{display:none!important}
+.lyric{
+  text-align:center;min-height:88px;padding:8px 8px 12px
+}
+.lyric .now{font-family:var(--serif);font-size:clamp(28px,7vw,40px);line-height:1.2;color:#fff8ee}
+.lyric .next{font-size:18px;color:#cbbfa6;margin-top:6px}
+.statline{display:flex;justify-content:space-between;gap:8px;font-size:20px;margin:0 0 10px}
+.statline b{color:var(--gold)}
+.bar{
+  height:22px;border-radius:999px;background:#0a1220;border:1px solid rgba(232,195,122,.35);overflow:hidden;margin:0 0 14px
+}
+.bar > i{display:block;height:100%;width:0;background:var(--green);transition:width .08s linear}
+.songs{display:grid;gap:10px;margin:8px 0 16px}
+.song{
+  width:100%;text-align:left;border:0;border-radius:14px;padding:14px 16px;cursor:pointer;
+  background:var(--paper);color:var(--ink)
+}
+.song h3{font-family:var(--serif);font-size:24px;margin:0 0 4px}
+.song p{margin:0;font-size:16px;color:var(--muted)}
+.result-score{
+  font-family:var(--serif);font-size:clamp(64px,18vw,96px);line-height:1;text-align:center;color:var(--gold);margin:8px 0
+}
+.result-box{
+  background:#0d1826;border:1px solid rgba(232,195,122,.4);border-radius:16px;padding:16px;margin:0 0 16px
+}
+.result-box p{font-size:20px;line-height:1.4;margin:0 0 8px}
+.result-box p:last-child{margin:0}
+.newbest{background:#1e4d32;color:#d8ffe4;border-radius:12px;padding:12px;font-size:22px;font-weight:700;text-align:center;margin:0 0 14px}
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+  <div class="homebar">
+    <a href="https://whimsy-violet-dhgk.here.now/">← Back to Desk</a>
+  </div>
+
+  <section id="hub" class="panel on wrap">
+    <p class="eyebrow">Voice gym · this phone</p>
+    <h1>Karaoke / Voice</h1>
+    <p class="lede">Tap Start, grant the mic, then sing. Pitch is the score — not how loud you are. Public-domain songs only.</p>
+    <div id="micWarn" class="warn" hidden></div>
+    <div class="scores">
+      <h2>High scores on this phone</h2>
+      <ul>
+        <li>Your range <b id="hubRange">not set</b></li>
+        <li>Hit the note streak <b id="hubHit">0</b></li>
+        <li>Longest hold <b id="hubHold">0.0s</b></li>
+        <li>Challenge <b id="hubChallenge">0</b></li>
+        <li>Best karaoke <b id="hubKaraoke">—</b></li>
+      </ul>
+    </div>
+    <div class="modes">
+      <button type="button" class="mode" data-go="range">
+        <span class="tag">First run</span>
+        <h3>Range finder</h3>
+        <p>Hum low, then high. Later games stay in notes you can hit.</p>
+      </button>
+      <button type="button" class="mode" data-go="hit">
+        <span class="tag">Pitch match</span>
+        <h3>Hit the note</h3>
+        <p>Hear a tone. Hold it in the green. Keep a streak.</p>
+      </button>
+      <button type="button" class="mode" data-go="hold">
+        <span class="tag">Sustain</span>
+        <h3>Hold it</h3>
+        <p>Stay in tune. The bar fills only while you are green.</p>
+      </button>
+      <button type="button" class="mode" data-go="challenge">
+        <span class="tag">Round</span>
+        <h3>Challenge</h3>
+        <p>Thirty seconds of match and short holds. Combos count.</p>
+      </button>
+      <button type="button" class="mode" data-go="karaoke">
+        <span class="tag">Sing along</span>
+        <h3>Karaoke</h3>
+        <p>Public-domain tunes with a pitch highway and a 0–100 score.</p>
+      </button>
+    </div>
+    <p class="note">Works in Safari. No App Store. No account. If the iPhone asks for the microphone, tap Allow. Pinch zoom still works. Double-tap will not zoom the page.</p>
+  </section>
+
+  <section id="play" class="panel wrap">
+    <p class="eyebrow" id="playTag">Practice</p>
+    <h1 id="playTitle">Hit the note</h1>
+    <p class="lede" id="playHelp">Listen, then sing the same note.</p>
+    <div id="playWarn" class="warn" hidden></div>
+    <div class="bigtarget">
+      <div class="lbl">Target</div>
+      <div class="aim" id="targetName">—</div>
+      <div class="lbl">You</div>
+      <div class="you" id="youName">—</div>
+    </div>
+    <div class="cue idle" id="cue">Tap Start. Safari will ask for the mic.</div>
+    <div class="highway"><canvas id="highway" width="720" height="168"></canvas></div>
+    <div class="meter-legend"><span>↓ too low</span><span>in tune</span><span>too high ↑</span></div>
+    <div class="statline">
+      <span id="statLeft">Streak <b>0</b></span>
+      <span id="statRight">Best <b>0</b></span>
+    </div>
+    <div class="bar" id="holdBarWrap" hidden><i id="holdBar"></i></div>
+    <div class="lyric" id="lyricBox" hidden>
+      <div class="now" id="lyricNow"> </div>
+      <div class="next" id="lyricNext"> </div>
+    </div>
+    <div class="row">
+      <button type="button" class="btn go" id="startBtn">Start</button>
+      <button type="button" class="btn red hidden" id="stopBtn">Stop</button>
+      <button type="button" class="btn navy" id="backBtn">Hub</button>
+    </div>
+    <div class="row" id="challengeOpts" hidden>
+      <button type="button" class="btn gold" id="warmBtn">30s warm-up first</button>
+    </div>
+  </section>
+
+  <section id="pick" class="panel wrap">
+    <p class="eyebrow">Public domain</p>
+    <h1>Pick a song</h1>
+    <p class="lede">Original folk and hymn words. No ripped tracks. The backing is a simple tone we make on this phone.</p>
+    <div class="songs" id="songList"></div>
+    <div class="row">
+      <button type="button" class="btn navy" id="pickBack">Hub</button>
+    </div>
+  </section>
+
+  <section id="result" class="panel wrap">
+    <p class="eyebrow" id="resultTag">Round over</p>
+    <h1 id="resultTitle">Score</h1>
+    <div class="result-score" id="resultScore">0</div>
+    <div class="newbest hidden" id="newBest">New high score</div>
+    <div class="result-box" id="resultBox"></div>
+    <div class="row">
+      <button type="button" class="btn go" id="againBtn">Play again</button>
+      <button type="button" class="btn navy" id="resultHub">Hub</button>
+    </div>
+  </section>
+
+<script src="songs.js"></script>
+<script src="voice.js"></script>
+</body>
+</html>
