@@ -117,6 +117,9 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(34px,7vw,46px);line-
 .meter-legend{
   display:flex;justify-content:space-between;font-size:15px;color:#cbbfa6;margin:-4px 2px 12px
 }
+.meter-legend span:first-child{color:#ffd8b0}
+.meter-legend span:last-child{color:#cfe6ff}
+#challengeOpts[hidden],#holdBarWrap[hidden],#lyricBox[hidden]{display:none!important}
 .lyric{
   text-align:center;min-height:88px;padding:8px 8px 12px
 }
@@ -210,7 +213,7 @@ h1{font-family:var(--serif);font-weight:600;font-size:clamp(34px,7vw,46px);line-
     </div>
     <div class="cue idle" id="cue">Tap Start. Safari will ask for the mic.</div>
     <div class="highway"><canvas id="highway" width="720" height="168"></canvas></div>
-    <div class="meter-legend"><span>too low</span><span>in tune</span><span>too high</span></div>
+    <div class="meter-legend"><span>↓ too low</span><span>in tune</span><span>too high ↑</span></div>
     <div class="statline">
       <span id="statLeft">Streak <b>0</b></span>
       <span id="statRight">Best <b>0</b></span>

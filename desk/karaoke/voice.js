@@ -271,6 +271,7 @@
       state.buf = new Float32Array(state.analyser.fftSize);
       return true;
     } catch (err) {
+      if (DEMO) return false;
       var name = (err && err.name) || "";
       if (name === "NotAllowedError" || name === "PermissionDeniedError") {
         failMic("Microphone permission was denied. On iPhone: Settings → Safari → Microphone, then reload this page and tap Start again.");
@@ -485,6 +486,10 @@
     resetSession();
     var ok = await startMic();
     if (!ok && !DEMO) return;
+    if (DEMO) {
+      $("playWarn").hidden = true;
+      $("micWarn").hidden = true;
+    }
     state.running = true;
     $("startBtn").classList.add("hidden");
     $("stopBtn").classList.remove("hidden");
