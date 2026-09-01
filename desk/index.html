@@ -17,7 +17,7 @@
 (function(){
   var LIVE="https://whimsy-violet-dhgk.here.now";
   try{
-    if(location.protocol.indexOf("http")===0 && location.hostname && location.hostname!=="whimsy-violet-dhgk.here.now"){
+    if(location.protocol.indexOf("http")===0 && location.hostname && location.hostname!=="whimsy-violet-dhgk.here.now" && location.hostname!=="127.0.0.1" && location.hostname!=="localhost"){
       location.replace(LIVE+"/");
       return;
     }
