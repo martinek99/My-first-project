@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Color War">
+<meta name="theme-color" content="#0b1220">
+<meta name="description" content="Watch two balls paint a grid. Or many colors fight for continents.">
+<title>Color War</title>
+<style>
+:root{
+  --navy:#0b1220;
+  --navy2:#101a2c;
+  --gold:#e8c37a;
+  --ink:#142033;
+  --cream:#f4ead4;
+  --st:env(safe-area-inset-top,0px);
+  --sb:env(safe-area-inset-bottom,0px);
+  --sl:env(safe-area-inset-left,0px);
+  --sr:env(safe-area-inset-right,0px);
+  --serif:"Iowan Old Style","Palatino Linotype",Palatino,"Times New Roman",Georgia,serif;
+  --sans:-apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",sans-serif;
+  --bar:calc(56px + var(--st));
+  --dock:calc(132px + var(--sb));
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+html,body{
+  margin:0;height:100%;background:var(--navy);color:var(--cream);
+  font-family:var(--sans);overflow:hidden;touch-action:manipulation;
+  user-select:none;-webkit-user-select:none;
+}
+body{min-height:100dvh;min-height:100svh}
+.homebar{
+  position:fixed;left:0;right:0;top:0;z-index:30;
+  padding:calc(var(--st) + 8px) max(12px,var(--sr)) 8px max(12px,var(--sl));
+  background:var(--navy2);border-bottom:2px solid var(--gold);
+}
+.homebar a{
+  display:flex;align-items:center;justify-content:center;
+  text-decoration:none;min-height:52px;border-radius:12px;padding:10px 14px;
+  font-family:var(--serif);font-size:22px;font-weight:600;
+  background:var(--gold);color:var(--ink);
+}
+.homebar a:active{filter:brightness(.92)}
+#board{
+  position:fixed;left:0;right:0;top:var(--bar);bottom:var(--dock);
+  background:#070b14;
+}
+#board canvas{display:block;width:100%;height:100%}
+.hud{
+  position:absolute;left:8px;top:8px;z-index:5;
+  display:flex;flex-wrap:wrap;gap:6px;max-width:calc(100% - 16px);
+  pointer-events:none;
+}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;
+  background:rgba(7,11,20,.72);border:1px solid rgba(232,195,122,.28);
+  border-radius:999px;padding:4px 8px 4px 5px;
+  font-size:13px;font-weight:700;letter-spacing:.02em;color:#fff8ee;
+}
+.swatch{width:14px;height:14px;border-radius:4px;border:1px solid rgba(255,255,255,.35);flex:0 0 14px}
+.hint{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  z-index:6;text-align:center;pointer-events:none;
+  font-family:var(--serif);font-weight:700;line-height:1.05;
+  font-size:clamp(28px,8vw,48px);color:#fff8ee;
+  text-shadow:0 2px 16px rgba(0,0,0,.55);
+  opacity:0;transition:opacity .25s;
+}
+.hint.on{opacity:1}
+.dock{
+  position:fixed;left:0;right:0;bottom:0;z-index:30;
+  padding:8px max(10px,var(--sr)) calc(10px + var(--sb)) max(10px,var(--sl));
+  background:var(--navy2);border-top:2px solid var(--gold);
+  display:grid;grid-template-columns:1fr 1fr;gap:8px;
+}
+@media (min-width:560px){
+  :root{--dock:calc(78px + var(--sb))}
+  .dock{grid-template-columns:1fr 1fr 1fr 1fr}
+}
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:56px;border:0;border-radius:14px;cursor:pointer;
+  font-family:var(--sans);font-size:22px;font-weight:800;letter-spacing:.02em;
+  color:#fff8ee;background:#1a2740;
+}
+.btn.on{background:var(--gold);color:var(--ink)}
+.btn.pause{background:#3a2a12;color:var(--gold)}
+.btn.pause.is-paused{background:#c81e1e;color:#fff8ee}
+.btn.reset{background:#142033;color:var(--cream);border:2px solid rgba(232,195,122,.55)}
+.btn:active{filter:brightness(.92)}
+</style>
+</head>
+<body>
+  <div class="homebar">
+    <a href="https://whimsy-violet-dhgk.here.now/">← Back to Desk</a>
+  </div>
+  <div id="board">
+    <canvas id="c"></canvas>
+    <div class="hud" id="hud"></div>
+    <div class="hint" id="hint">PAUSED</div>
+  </div>
+  <div class="dock">
+    <button type="button" class="btn on" id="btnTwo">Two</button>
+    <button type="button" class="btn" id="btnMany">Many</button>
+    <button type="button" class="btn pause" id="btnPause">Pause</button>
+    <button type="button" class="btn reset" id="btnReset">Reset</button>
+  </div>
+<script>
+(function(){
+  var TWO = [
+    {hex:"#1d4ed8", rim:"#93c5fd"},
+    {hex:"#f59e0b", rim:"#fde68a"}
+  ];
+  var MANY = [
+    {hex:"#ef4444", rim:"#fecaca"},
+    {hex:"#f59e0b", rim:"#fde68a"},
+    {hex:"#22c55e", rim:"#bbf7d0"},
+    {hex:"#06b6d4", rim:"#a5f3fc"},
+    {hex:"#3b82f6", rim:"#bfdbfe"},
+    {hex:"#a855f7", rim:"#e9d5ff"},
+    {hex:"#ec4899", rim:"#fbcfe8"},
+    {hex:"#f97316", rim:"#fed7aa"}
+  ];
+
+  var canvas = document.getElementById("c");
+  var ctx = canvas.getContext("2d", {alpha:false});
+  var hud = document.getElementById("hud");
+  var hint = document.getElementById("hint");
+  var btnTwo = document.getElementById("btnTwo");
+  var btnMany = document.getElementById("btnMany");
+  var btnPause = document.getElementById("btnPause");
+  var board = document.getElementById("board");
+
+  var mode = "two";
+  var running = true;
+  var palette = TWO;
+  var cols = 24;
+  var rows = 36;
+  var cell = 16;
+  var grid = null;
+  var counts = null;
+  var balls = [];
+  var dpr = 1;
+  var last = 0;
+  var speed = 380;
+  var dirtyHud = true;
+
+  function clamp(n, a, b){ return n < a ? a : n > b ? b : n; }
+  function rand(a, b){ return a + Math.random() * (b - a); }
+
+  function layout(){
+    var w = board.clientWidth;
+    var h = board.clientHeight;
+    if(w < 40 || h < 40) return false;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    canvas.width = Math.floor(w * dpr);
+    canvas.height = Math.floor(h * dpr);
+    canvas.style.width = w + "px";
+    canvas.style.height = h + "px";
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    var target = w < 430 ? 22 : 20;
+    cols = clamp(Math.round(w / target), 20, 36);
+    if(cols % 2) cols -= 1;
+    cell = w / cols;
+    rows = Math.max(10, Math.floor(h / cell));
+    if(rows < 1) rows = 1;
+    speed = clamp(cell * 16.5, 300, 520);
+    return true;
+  }
+
+  function emptyGrid(){
+    var n = cols * rows;
+    grid = new Uint8Array(n);
+    counts = new Uint16Array(palette.length);
+  }
+
+  function setCell(i, color){
+    var old = grid[i];
+    if(old === color) return;
+    counts[old]--;
+    grid[i] = color;
+    counts[color]++;
+    dirtyHud = true;
+  }
+
+  function paintTwo(){
+    var half = cols >> 1;
+    var i = 0;
+    for(var r = 0; r < rows; r++){
+      for(var c = 0; c < cols; c++, i++){
+        grid[i] = c < half ? 0 : 1;
+      }
+    }
+    counts[0] = rows * half;
+    counts[1] = rows * cols - counts[0];
+  }
+
+  function paintMany(){
+    var n = palette.length;
+    var gw = 4;
+    var gh = 2;
+    var i = 0;
+    for(var r = 0; r < rows; r++){
+      var br = Math.min(gh - 1, Math.floor(r * gh / rows));
+      for(var c = 0; c < cols; c++, i++){
+        var bc = Math.min(gw - 1, Math.floor(c * gw / cols));
+        grid[i] = br * gw + bc;
+      }
+    }
+    counts.fill(0);
+    for(i = 0; i < grid.length; i++) counts[grid[i]]++;
+  }
+
+  function launchAngle(){
+    var a = rand(0.38, Math.PI / 2 - 0.38);
+    if(Math.random() < 0.5) a = -a;
+    if(Math.random() < 0.5) a = Math.PI - a;
+    return a;
+  }
+
+  function setVel(ball, ang){
+    ball.vx = Math.cos(ang) * speed;
+    ball.vy = Math.sin(ang) * speed;
+  }
+
+  function keepAlive(ball){
+    var s = Math.hypot(ball.vx, ball.vy) || speed;
+    var min = s * 0.32;
+    if(Math.abs(ball.vx) < min) ball.vx = (ball.vx < 0 ? -1 : 1) * min;
+    if(Math.abs(ball.vy) < min) ball.vy = (ball.vy < 0 ? -1 : 1) * min;
+    var n = Math.hypot(ball.vx, ball.vy);
+    ball.vx = ball.vx / n * speed;
+    ball.vy = ball.vy / n * speed;
+  }
+
+  function jitter(ball){
+    var ang = Math.atan2(ball.vy, ball.vx) + rand(-0.22, 0.22);
+    setVel(ball, ang);
+    keepAlive(ball);
+  }
+
+  function spawnBall(color, x, y, ang){
+    return {
+      color: color,
+      x: x,
+      y: y,
+      r: Math.max(5.5, cell * 0.38),
+      vx: 0,
+      vy: 0,
+      ang: ang
+    };
+  }
+
+  function placeBalls(){
+    balls = [];
+    var fieldW = cols * cell;
+    var fieldH = rows * cell;
+    if(mode === "two"){
+      var left = spawnBall(0, cell * (cols * 0.25), fieldH * 0.5, launchAngle());
+      var right = spawnBall(1, cell * (cols * 0.75), fieldH * 0.5, launchAngle());
+      setVel(left, left.ang); keepAlive(left);
+      setVel(right, right.ang); keepAlive(right);
+      balls.push(left, right);
+      return;
+    }
+    var gw = 4, gh = 2;
+    for(var i = 0; i < palette.length; i++){
+      var bc = i % gw;
+      var br = Math.floor(i / gw);
+      var x0 = (bc / gw) * fieldW;
+      var y0 = (br / gh) * fieldH;
+      var x = x0 + (fieldW / gw) * 0.5;
+      var y = y0 + (fieldH / gh) * 0.5;
+      var b = spawnBall(i, x, y, launchAngle());
+      setVel(b, b.ang); keepAlive(b);
+      balls.push(b);
+    }
+  }
+
+  function reset(){
+    if(!layout()) return;
+    palette = mode === "two" ? TWO : MANY;
+    emptyGrid();
+    if(mode === "two") paintTwo();
+    else paintMany();
+    placeBalls();
+    dirtyHud = true;
+    drawHud();
+    drawBoard();
+    drawBalls();
+  }
+
+  function at(x, y){
+    var c = clamp(Math.floor(x / cell), 0, cols - 1);
+    var r = clamp(Math.floor(y / cell), 0, rows - 1);
+    return r * cols + c;
+  }
+
+  function bounceWall(ball, w, h){
+    var hit = false;
+    if(ball.x < ball.r){ ball.x = ball.r; ball.vx = Math.abs(ball.vx); hit = true; }
+    else if(ball.x > w - ball.r){ ball.x = w - ball.r; ball.vx = -Math.abs(ball.vx); hit = true; }
+    if(ball.y < ball.r){ ball.y = ball.r; ball.vy = Math.abs(ball.vy); hit = true; }
+    else if(ball.y > h - ball.r){ ball.y = h - ball.r; ball.vy = -Math.abs(ball.vy); hit = true; }
+    if(hit) jitter(ball);
+  }
+
+  function paintEdge(ball, axis){
+    var lead = axis === "x"
+      ? ball.x + Math.sign(ball.vx || 1) * ball.r * 0.82
+      : ball.x;
+    var leadY = axis === "y"
+      ? ball.y + Math.sign(ball.vy || 1) * ball.r * 0.82
+      : ball.y;
+    var i = at(lead, leadY);
+    if(grid[i] === ball.color) return;
+    setCell(i, ball.color);
+    if(axis === "x") ball.vx *= -1;
+    else ball.vy *= -1;
+    jitter(ball);
+  }
+
+  function stepBall(ball, dt){
+    var w = cols * cell;
+    var h = rows * cell;
+    ball.x += ball.vx * dt;
+    bounceWall(ball, w, h);
+    paintEdge(ball, "x");
+    ball.y += ball.vy * dt;
+    bounceWall(ball, w, h);
+    paintEdge(ball, "y");
+    keepAlive(ball);
+  }
+
+  function drawBoard(){
+    var w = board.clientWidth;
+    var h = board.clientHeight;
+    ctx.fillStyle = "#070b14";
+    ctx.fillRect(0, 0, w, h);
+    var i = 0;
+    for(var r = 0; r < rows; r++){
+      var y = r * cell;
+      for(var c = 0; c < cols; c++, i++){
+        ctx.fillStyle = palette[grid[i]].hex;
+        ctx.fillRect(c * cell, y, cell + 0.6, cell + 0.6);
+      }
+    }
+  }
+
+  function drawBalls(){
+    for(var i = 0; i < balls.length; i++){
+      var b = balls[i];
+      var p = palette[b.color];
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, Math.PI * 2);
+      ctx.fillStyle = p.hex;
+      ctx.fill();
+      ctx.lineWidth = Math.max(2, b.r * 0.22);
+      ctx.strokeStyle = "#0b1220";
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.arc(b.x - b.r * 0.22, b.y - b.r * 0.22, b.r * 0.32, 0, Math.PI * 2);
+      ctx.fillStyle = p.rim;
+      ctx.fill();
+    }
+  }
+
+  function drawHud(){
+    if(!dirtyHud) return;
+    dirtyHud = false;
+    var html = "";
+    for(var i = 0; i < palette.length; i++){
+      html += '<span class="chip"><span class="swatch" style="background:'+palette[i].hex+'"></span>'+counts[i]+'</span>';
+    }
+    hud.innerHTML = html;
+  }
+
+  function frame(ts){
+    if(!last) last = ts;
+    var dt = Math.min(0.033, (ts - last) / 1000);
+    last = ts;
+    if(running && grid){
+      for(var i = 0; i < balls.length; i++) stepBall(balls[i], dt);
+      drawBoard();
+      drawBalls();
+      drawHud();
+    }
+    requestAnimationFrame(frame);
+  }
+
+  function setMode(next){
+    mode = next;
+    btnTwo.classList.toggle("on", mode === "two");
+    btnMany.classList.toggle("on", mode === "many");
+    reset();
+  }
+
+  function setPaused(p){
+    running = !p;
+    btnPause.textContent = running ? "Pause" : "Play";
+    btnPause.classList.toggle("is-paused", !running);
+    hint.textContent = running ? "TAP TO PAUSE" : "PAUSED";
+    hint.classList.add("on");
+    clearTimeout(setPaused._t);
+    setPaused._t = setTimeout(function(){
+      if(running) hint.classList.remove("on");
+    }, running ? 900 : 999999);
+  }
+
+  function togglePause(){ setPaused(running); }
+
+  btnTwo.addEventListener("click", function(){ setMode("two"); });
+  btnMany.addEventListener("click", function(){ setMode("many"); });
+  btnPause.addEventListener("click", togglePause);
+  document.getElementById("btnReset").addEventListener("click", reset);
+  board.addEventListener("click", function(e){
+    if(e.target.closest && e.target.closest(".hud")) return;
+    togglePause();
+  });
+
+  var resizeT = 0;
+  window.addEventListener("resize", function(){
+    clearTimeout(resizeT);
+    resizeT = setTimeout(reset, 120);
+  });
+  window.addEventListener("orientationchange", function(){
+    setTimeout(reset, 220);
+  });
+
+  reset();
+  setPaused(false);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>
